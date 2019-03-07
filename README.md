@@ -1,6 +1,6 @@
 # rescope
 
-rescope is a tool (Go) that lets you quickly define scopes in Burp/ZAP. It's mainly intended for pentesters and "bug hunters" who deal with scopes that are large. See [blog post](https://root4loot.com/post/introducing_rescope/) for context/background.
+rescope is a tool (Go) that lets you quickly define scopes in Burp/ZAP - mainly intended for "bug hunters" and pentesters who deal with large scopes. See [blog post](https://root4loot.com/post/introducing_rescope/) for context/background.
 
 Simply provide a scope (file containing target identifiers) and rescope parses this to a format which can be imported from Burp/ZAP.
 
