@@ -93,7 +93,7 @@ test.example.com
 
 ## Example
 
-rescope will __do its best__ to identify targets from the scopes you provide. This enables you to quickly copy/paste the scope section from various places to a file and serve this directly to rescope without having to do much edits in prior. It doesn’t matter what comes before and after the target-identifiers, as long as they’re there.
+rescope will try to identify targets identifiers from the scope(s) you provide. This enables you to quickly copy/paste the scope section from various places to a file and serve this directly to rescope without having to do much edits in prior. It doesn’t matter what comes before and after the target-identifiers, as long as they’re there. 
 
 Consider the following scope having both **in-scope** and **out-of-scope** targets:
 ```
@@ -151,7 +151,7 @@ $ rescope burp --infile scope.txt --outfile burp.json
 
 rescope highlights Includes in Green and Excludes in Red, unless `--silent (-s)`
 
-Important: rescope may not always parse or identify targets accurately. Therefore it's crucial that you go over the results and make sure it got what you wanted.
+Important: rescope may not always parse or identify targets accurately. Therefore you should probably go over the results and make sure it got what you wanted.
 
 
 #### Parsed results
