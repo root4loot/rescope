@@ -2,7 +2,7 @@
 
 rescope is a tool (Go) that lets you quickly define scopes in Burp/ZAP - mainly intended for "bug hunters" and pentesters who deal with large scopes. See [blog post](https://root4loot.com/post/introducing_rescope/) for context/background.
 
-Simply provide a scope (file containing target identifiers) and rescope parses this to a format which can be imported from Burp/ZAP.
+Simply provide a scope (file containing target identifiers) and rescope parses this to a file format that can be imported from Burp/ZAP directly.
 
 <img src="https://root4loot.com/img/gif/rescope_min.gif" width="653" height="418">
 
@@ -12,8 +12,6 @@ Simply provide a scope (file containing target identifiers) and rescope parses t
 - Set excludes (aside from includes)
 - Parse multiple scope-files at once
 - Supports parsing IP-ranges/CIDR (aside from domains/hosts)
-
-Disclaimer: This is my first project in Go (and I'm not really a programmer) so bear that in mind as far as the code goes. 
 
 ## Installation
 
@@ -71,8 +69,9 @@ rescope zap -i scope1.txt -i scope2.txt -o zap.context --name CoolScope  --silen
 
 ### Setting Excludes
 
-rescope treats identified targets as Includes by default.
-To set Excludes, specify an **!EXCLUDE** tag anywhere in the document, followed by the targets you wish to exclude. Alternatively, you can set a custom tag via the `--extag (-e)` parameter.
+rescope treats identified targets as Includes by default.  
+To set Excludes, specify an **!EXCLUDE** tag anywhere in the document, followed by the targets you wish to exclude.  
+If this tag does not work for you, then a custom one can be set from the `--extag (-e)` parameter.
 
 
 Example:
@@ -82,9 +81,9 @@ Example:
 prod.example.com
 admin.example.com
 
+// exclude this
 !EXCLUDE
 
-// exclude this
 dev.example.com
 test.example.com
 ```
@@ -93,7 +92,7 @@ test.example.com
 
 ## Example
 
-rescope will try to identify targets identifiers from the scope(s) you provide. This enables you to quickly copy/paste the scope section from various places to a file and serve this directly to rescope without having to do much edits in prior. It doesn’t matter what comes before and after the target-identifiers, as long as they’re there. 
+rescope will attempt to identify target-identifiers from the scope(s) you provide. This enables you to quickly copy/paste the scope section from various places to a file and serve this directly to rescope without having to do much edits in prior. It doesn’t matter what comes before and after the identifiers, as long as they’re there. 
 
 Consider the following scope having both **in-scope** and **out-of-scope** targets:
 ```
@@ -110,8 +109,8 @@ bgp.example.com:179
 192.168.10.9
 ```
 
-As you probably noticed, most identifiers have leading text/whitespace and so on but this shouldn't be a problem.
-The only thing we need to do in this case is to specify a **!EXCLUDE** tag before the "out-of-scope" list.
+As you probably noticed, most of these identifiers have leading text/whitespace and so on, but that's totally fine.  
+The only thing we need to do in this case is to specify an **!EXCLUDE** tag _before_ the "Out of Scope" identifiers.
 
 ```diff
 In Scope:
@@ -151,11 +150,7 @@ $ rescope burp --infile scope.txt --outfile burp.json
 
 rescope highlights Includes in Green and Excludes in Red, unless `--silent (-s)`
 
-Important: rescope may not always parse or identify targets accurately. Therefore you should probably go over the results and make sure it got what you wanted.
-
-
 #### Parsed results
-
 See [Importing to Burp](#to-burp-suite)
 
 ```
@@ -238,10 +233,10 @@ $ cat burp.json
 ### Parsing to OWASP ZAP XML
 
 Parsing scope to ZAP XML is just as easy as with Burp.
-However, there are a few things to note:
+However, there are a couple of things to note:
 
 * ZAP requires all scopes (contexts) to have unique names. Names can be set with the `--name` or `-n` parameter. If no name is given, then rescope will ask for one.
-* Although not required, it is advised to use `.context` as the file extension for the outfile to avoid taking unnecessary steps when importing it later.
+* The default file extension for importing/exporting scopes in ZAP is **.context**. Although not required, it is advised to use this exension for the outfile, to avoid having to take unnecessary steps when importing it later. 
 
 ```diff
 $ rescope zap --name CoolScope --infile example.txt --outfile zap.context
@@ -262,7 +257,7 @@ $ rescope zap --name CoolScope --infile example.txt --outfile zap.context
 #### Parsed results
 See [Importing to ZAP](#to-owasp-zap)
 
-Nope: rescope uses the default ZAP context as a template for creating new scopes, meaning it'll include the standard "technologies" as well. This can be easily removed within the application once the scope/context is set.
+rescope uses the default ZAP context as a template for creating new ones, meaning it'll include the default "technologies" as well. This can be easily removed from the application once the scope/context has been set.
 
 ```
 $ cat zap.context 
@@ -355,6 +350,11 @@ $ cat zap.context
 **File** -> **Import Context** -> Select outputted XML file from rescope
 
 Note: If you set `-o` filename ext to anything other than `.context` then you'll have to set 'File Format:' to 'All' (in file select).
+
+## Disclaimer
+- This is my first project in Go (and I don't consider myself a developer) so bear that in mind as far as the code goes.
+- rescope may (without my knowledge) identify or parse scope-identifiers inaccurately. Therefore you should probably go over the results yourself and make sure it got what you wanted. If not then please [submit an issue](https://github.com/root4loot/rescope/issues). Alternatively you can always find me on [Twitter](https://twitter.com/root4loot).
+
 
 ## Author
 
