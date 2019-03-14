@@ -8,7 +8,7 @@ Unreleased changes will go in the below heading.
 ## [0.2] - 2019-03-14
 ### Changed
 - How Burp/ZAP is specified from the cli. Now using flags instead.
-- How identified targets is printed. rescope will now include a leading +/- for each target to better indicate which are includes and excludes. Perhaps that'll make things clearer for those who are color blind.
+- Printing of identified targets. rescope will now include a leading +/- for each target to better indicate which are includes and excludes. Perhaps that'll make things clearer for those who are color blind.
 - rescope will now handle !EXCLUDE tag having leading/preceding text on the same line.
 
 ### Fixed
