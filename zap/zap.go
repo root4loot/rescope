@@ -9,6 +9,9 @@ package zap
 
 import (
 	"bufio"
+	"path"
+	"path/filepath"
+	"runtime"
 	"strings"
 
 	io "github.com/root4loot/rescope/io"
@@ -21,12 +24,22 @@ var excludes []string
 // compatible XML (Context)
 // Returns xml data as bytes
 func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
-
 	var oldxml []string
 	var newxml []string
 
+	// runtime caller
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		panic("No caller information")
+	}
+
+	// paths
+	programPath := path.Dir(filename)
+	projectPath := filepath.Dir(programPath)
+	defaultContextPath := projectPath + "/configs/default.context"
+
 	// read Zap default xml template
-	fo, _ := io.OpenFile("configs/default.context")
+	fo, _ := io.OpenFile(defaultContextPath)
 	fr, _ := io.ReadFile(fo)
 
 	// loop template and append each line to var
@@ -41,6 +54,7 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 		protocol := submatch[1]
 		port := submatch[4]
 		target := parse(match, protocol, port) // [0] fullmatch
+
 		if !isExclude(Excludes, submatch[0]) {
 			item := "<incregexes>" + target + "</incregexes>"
 			includes = append(includes, item)
@@ -97,21 +111,23 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 	return xml
 }
 
-// parse host, url, etc to valid regex
+// parse host, url, etc to regex
 func parse(target, protocol, port string) string {
 	line := target
 
-	// if no protocol, no port was specified
+	// if no protocol &  no port // example.com
 	if len(protocol) == 0 && len(port) == 0 {
 		// scope only http/https
 		line = `http(s)?://` + line
 
-		// if port was specified but no protocol
-	} else if len(protocol) == 0 && len(port) > 0 {
+		// if port, but no protocol // example.com:8080
+	} else if len(protocol) == 0 && len(port) != 0 {
 		// scope any protocol
 		line = `\w+://` + line
-	} else {
 
+		// if protocol != http(s) // ftp://example.com
+	} else if len(protocol) != 0 && protocol != "http://" && protocol != "https://" {
+		line = protocol + `://` + line
 	}
 
 	// escape '.'
@@ -126,18 +142,11 @@ func parse(target, protocol, port string) string {
 	return line
 }
 
-// add to includes
-func add(item string) {
-	item = "<incregexes>" + item + "</incregexes>"
-	includes = append(includes, item)
-}
-
 // isExclude takes a 2d slice and a string
 // checks whether string was found in list
 // returns bool
 func isExclude(Excludes []string, target string) bool {
 	for _, exclude := range Excludes {
-		//fmt.Println(target, exclude)
 		if target == exclude {
 			return true
 		}
