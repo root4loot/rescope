@@ -349,16 +349,17 @@ $ cat zap.context | head -n 45
 ## Importing
 
 ### To Burp Suite
-1. Select **Target** pane
-2. Select **Scope** pane
-3. Click the gear (⚙︎) icon 
-4. Select **Load options**
-5. Select outputted JSON file from rescope
+1. Go to **Target** pane
+2. Go to **Scope** pane
+3. Tick the **Use advanced scope control** checkbox
+4. Click the gear (⚙︎) icon 
+5. Select **Load options**
+6. Select outputted JSON file from rescope
 
 ### To OWASP ZAP
 **File** -> **Import Context** -> Select outputted XML file from rescope
 
-Note: If you set `-o` filename ext to anything other than `.context` then you'll have to set 'File Format:' to 'All' (in file select).
+Note: If you set `-o` filename extension to anything other than `.context` then you'll have to set 'File Format:' to 'All' in file select.
 
 
 ## Disclaimer
