@@ -43,27 +43,6 @@ go get -u github.com/root4loot/rescope
 ```
 If you run into merge conflicts, then delete the repo and install once again. Sorry for the inconvenience.
 
-Unix:
-```
-// If $GOPATH is set
-rm -rf $GOPATH/src/github.com/root4loot/rescope
-
-// If $GOPATH is not set, try
-rm -rf ~/go/src/github.com/root4loot.com/rescope
-```
-Windows:
-```
-// If %GOPATH% is set
-rd /s /q "%GOPATH%\src\github.com\root4loot\rescope"
-
-// If %GOPATH% is not set, try
-rd /s /q "%USERPROFILE%\go\src\github.com\root4loot\rescope"
-```
-Then install:
-```
-go get github.com/root4loot/rescope
-```
-
 ## Usage
 ```
 usage: rescope [[-z|--zap | [-b]--burp] [-i|--infile "<filepath>" ...]] [-o|--outfile "<filepath>"]]] [-n|--name "<value>"] [-e|--extag "<value>"] [-s|--silent] [-h|--help] [--version]]
@@ -89,14 +68,12 @@ usage: rescope [[-z|--zap | [-b]--burp] [-i|--infile "<filepath>" ...]] [-o|--ou
 
 Parse scope to Burp Suite compatible JSON:
 ```
-rescope --burp --infile scope.txt --outfile burp.json
-rescope -b -i scope.txt -o burp.json
+rescope --burp -i scope.txt -o burp.json
 ```
 
 Parse scope to ZAP compatible XML:
 ```
-rescope --zap --infile scope.txt --outfile zap.context
-rescope -z -i scope.txt -o zap.context
+rescope --zap -i scope.txt -o zap.context
 ```
 
 Parse multiple scopes to ZAP XML, set context name, silence output:
@@ -113,7 +90,6 @@ If this tag does not work for you, then a custom one can be set from the `--exta
 
 
 Example:
-
 ```
 // include these
 prod.example.com
@@ -124,7 +100,6 @@ admin.example.com
 dev.example.com
 test.example.com
 ```
-
 
 ## Example
 
