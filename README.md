@@ -17,7 +17,6 @@ Simply provide a scope (file containing target identifiers) and rescope parses t
 ## Installation
 
 Requires [Go](https://golang.org/doc/install#install) (tested on 1.11.4).  
-Make sure $GOPATH is set first ([instructions](https://github.com/golang/go/wiki/SettingGOPATH))
 ```
 go get github.com/root4loot/rescope
 ```
