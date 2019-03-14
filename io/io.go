@@ -35,7 +35,7 @@ func ReadFile(file *os.File) ([]byte, error) {
 	return data, err
 }
 
-// CreateFile returns returns created file, error
+// CreateFile returns created file, error
 func CreateFile(fn string) (*os.File, error) {
 	f, err := os.Create(fn)
 	return f, err
