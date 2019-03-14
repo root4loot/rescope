@@ -4,14 +4,15 @@ rescope is a tool (Go) that lets you quickly define scopes in Burp/ZAP - mainly 
 
 Simply provide a scope (file containing target identifiers) and rescope parses this to a file format that can be imported from Burp/ZAP directly.
 
-<img src="https://root4loot.com/img/gif/rescope_min.gif" width="653" height="418">
+> The latest version (0.2) resolves some important bugfixes that should not be ignored. See [CHANGELOG](changelog.md) for details and instructions on how to upgrade below.
 
-**Features**
+## Features 
 
 - Identifies targets from scope (give it any structure/format)
-- Set excludes (aside from includes)
-- Parse multiple scope-files at once
-- Supports parsing IP-ranges/CIDR (aside from domains/hosts)
+- Set excludes in addition to includes
+- Parse multiple scope-files at once (combine scopes)
+- Takes care of wildcards, files, protocols, ports (saves you from messing with regex)
+- Supports parsing IP ranges/CIDR (aside from domains/hosts)
 
 ## Installation
 
@@ -21,17 +22,30 @@ Requires [Go](https://golang.org/doc/install#install) (tested on 1.11.4)
 go get github.com/root4loot/rescope
 ```
 
-Compiling:
+## Compiling and running
+Compiling is easy with Go.
 ```
 go install github.com/root4loot/rescope
 ```
-Compiled binaries are saved to `$GOPATH/bin/` by default.
+By default, Go saves binaries to $GOPATH/bin/ (make sure $GOPATH is set).  
+With this you can can simply create a soft link from a desired location. E.g on Linux:
+```
+ln -s ~/go/bin/rescope /usr/local/bin/rescope
+```
+Running:
+```
+rescope --version
+```
 
-## Usage
-
+## Upgrading
 
 ```
-usage: rescope [[burp|zap] [-i|--infile "<value>" ...]] [-o|--outfile "<value>"]] [-n|--name "<value>"] [-e|--extag "<value>"] [-s|--silent] | [-h|--help] [--version]
+go get -u github.com/root4loot/rescope
+```
+
+## Usage
+```
+usage: rescope [[-z|--zap | [-b]--burp] [-i|--infile "<filepath>" ...]] [-o|--outfile "<filepath>"]]] [-n|--name "<value>"] [-e|--extag "<value>"] [-s|--silent] [-h|--help] [--version]]
 ```
 
 ### Arguments
@@ -39,6 +53,8 @@ usage: rescope [[burp|zap] [-i|--infile "<value>" ...]] [-o|--outfile "<value>"]
 | Short | Long | Description   | 
 | :------------- |:-------------| :-----  | 
 | -h | --help     | Print help information |
+| -b | --burp     | Parse to Burp Suite JSON (required option) |
+| -z | --zap      | Parse to OWASP ZAP XML (required option) |
 | -i | --infile   | File (scope) to be parsed (required) | 
 | -o | --outfile  | File to write parsed results (required) |
 | -s | --silent   | Do not print identified targets |
@@ -50,21 +66,22 @@ usage: rescope [[burp|zap] [-i|--infile "<value>" ...]] [-o|--outfile "<value>"]
 
 ### Example Usage
 
-Parse scope to Burp Suite compatible JSON
+Parse scope to Burp Suite compatible JSON;
 ```
-rescope burp -i scope.txt -o burp.json
+rescope --burp --infile scope.txt --outfile burp.json
+rescope -b -i scope.txt -o burp.json
 ```
 
-Parse scope to ZAP compatible XML
+Parse scope to ZAP compatible XML:
 ```
-rescope zap -i scope.txt -o zap.context
+rescope --zap --infile scope.txt --outfile zap.context
+rescope -z -i scope.txt -o zap.context
 ```
 
 Parse multiple scopes to ZAP XML, set context name, silence output
 ```
-rescope zap -i scope1.txt -i scope2.txt -o zap.context --name CoolScope  --silent
+rescope --zap -i scope1.txt -i scope2.txt -o zap.context -n CoolScopeName --silent
 ```
-
 
 
 ### Setting Excludes
@@ -77,17 +94,15 @@ If this tag does not work for you, then a custom one can be set from the `--exta
 Example:
 
 ```
-// include this
+// include these
 prod.example.com
 admin.example.com
 
-// exclude this
 !EXCLUDE
-
+// exclude these
 dev.example.com
 test.example.com
 ```
-
 
 
 ## Example
@@ -98,60 +113,60 @@ Consider the following scope having both **in-scope** and **out-of-scope** targe
 ```
 $ cat scope.txt
 In Scope:
-Critical admin.example.com/login.aspx
-Critical https://example.com/upload:8080
+Critical http://admin.example.com/login.aspx
+Critical https://example.com:8080/upload/*
 Critical *.dev.example.com and *.prod.example.com
-High 192.168.0.1-2 (internal testing)
+High     10.10.10.1-2 (testing)
 
 Out of Scope:
 bgp.example.com:179
-*.vendor.example.com
-192.168.10.9
+*.vendor.example.com/assets/
+ftp://10.10.10.1:21
 ```
 
-As you probably noticed, most of these identifiers have leading text/whitespace and so on, but that's totally fine.  
-The only thing we need to do in this case is to specify an **!EXCLUDE** tag _before_ the "Out of Scope" identifiers.
+As you can see, most of these identifiers have leading text/whitespace and so on. But that's totally fine!  
+The only thing we have to do in this case, is to specify an **!EXCLUDE** tag _before_ the "Out of Scope" identifiers.
 
 ```diff
 In Scope:
-Critical admin.example.com/login.aspx
-Critical https://example.com/upload:8080
+Critical http://admin.example.com/login.aspx
+Critical https://example.com:8080/upload/*
 Critical *.dev.example.com and *.prod.example.com
-High 192.168.0.1-2 (internal testing)
+High     10.10.10.1-2 (testing)
 
 + !EXCLUDE
 Out of Scope:
 bgp.example.com:179
-*.vendor.example.com
-192.168.10.9
+*.vendor.example.com/assets/
+ftp://10.10.10.1:21
 ```
-
 Having saved this, we're ready to parse and import results to either Burp Suite or ZAP.
+
 
 ### Parsing to Burp Suite JSON
 
 Parsing scope to Burp JSON is easy.
 
 ```diff
-$ rescope burp --infile scope.txt --outfile burp.json
+$ rescope --burp -i scope.txt -o burp.json
 [-] Grabbing targets from [scope.txt]
-+ admin.example.com/login.aspx
-+ https://example.com/upload:8080
-+ *.dev.example.com
-+ *.prod.example.com
-+ 192.168.0.1-2
-- bgp.example.com:179
-- *.vendor.example.com
-- 192.168.10.9
+ + http://admin.example.com/login.aspx
+ + https://example.com:8080/upload/*
+ + *.dev.example.com
+ + *.prod.example.com
+ + 10.10.10.1-2
+ - bgp.example.com:179
+ - *.vendor.example.com/assets/
+ - ftp://10.10.10.1:21
 [-] Parsing to JSON (Burp Suite)
 [✓] Done
-[✓] Wrote 1696 bytes to burp.json
+[✓] Wrote 1732 bytes to burp.json
 ```
-
-rescope highlights Includes in Green and Excludes in Red, unless `--silent (-s)`
+rescope will highlight Includes in Green and Excludes in Red, unless `--silent (-s)` was set.
 
 #### Parsed results
-See [Importing to Burp](#to-burp-suite)
+
+See [importing to Burp](#to-burp-suite)
 
 ```
 $ cat burp.json 
@@ -164,11 +179,12 @@ $ cat burp.json
           "enabled": true,
           "file": "^[\\S]*$",
           "host": "^bgp\\.example\\.com$",
+          "port": "^179$",
           "protocol": "Any"
         },
         {
           "enabled": true,
-          "file": "^[\\S]*$",
+          "file": "^/assets/[\\S]*$",
           "host": "^[\\S]*\\.vendor\\.example\\.com$",
           "port": "",
           "protocol": "Any"
@@ -176,24 +192,24 @@ $ cat burp.json
         {
           "enabled": true,
           "file": "^[\\S]*$",
-          "host": "^192\\.168\\.10\\.9$",
-          "port": "",
+          "host": "^10\\.10\\.10\\.1$",
+          "port": "^21$",
           "protocol": "Any"
         }
       ],
       "include": [
         {
           "enabled": true,
-          "file": "^/login\\.aspx\\/?[\\S]*$",
+          "file": "^/login\\.aspx$",
           "host": "^admin\\.example\\.com$",
-          "port": "",
-          "protocol": "Any"
+          "port": "^80$",
+          "protocol": "http"
         },
         {
           "enabled": true,
-          "file": "^/upload:8080\\/?[\\S]*$",
+          "file": "^/upload/[\\S]*$",
           "host": "^example\\.com$",
-          "port": "443",
+          "port": "^(8080|443)$",
           "protocol": "https"
         },
         {
@@ -212,15 +228,15 @@ $ cat burp.json
         },
         {
           "enabled": true,
-          "file": "",
-          "host": "192.168.0.1",
+          "file": "^[\\S]*$",
+          "host": "^10\\.10\\.10\\.1$",
           "port": "",
           "protocol": "Any"
         },
         {
           "enabled": true,
-          "file": "",
-          "host": "192.168.0.2",
+          "file": "^[\\S]*$",
+          "host": "^10\\.10\\.10\\.2$",
           "port": "",
           "protocol": "Any"
         }
@@ -239,43 +255,44 @@ However, there are a couple of things to note:
 * The default file extension for importing/exporting scopes in ZAP is **.context**. Although not required, it is advised to use this exension for the outfile, to avoid having to take unnecessary steps when importing it later. 
 
 ```diff
-$ rescope zap --name CoolScope --infile example.txt --outfile zap.context
-[-] Grabbing targets from [example.txt]
-+ admin.example.com/login.aspx
-+ https://example.com/upload:8080
-+ *.dev.example.com
-+ *.prod.example.com
-+ 192.168.0.1-2
-- bgp.example.com:179
-- *.vendor.example.com
-- 192.168.10.9
+$ rescope --zap -i scope.txt -o zap.context -n CoolScopeName
+[-] Grabbing targets from [scope.txt]
+ + http://admin.example.com/login.aspx
+ + https://example.com:8080/upload/*
+ + *.dev.example.com
+ + *.prod.example.com
+ + 10.10.10.1-2
+ - bgp.example.com:179
+ - *.vendor.example.com/assets/
+ - ftp://10.10.10.1:21
 [-] Parsing to XML (OWASP ZAP)
 [✓] Done
-[✓] Wrote 2130 bytes to zap.context
+[✓] Wrote 2154 bytes to zap.context
 ```
 
 #### Parsed results
-See [Importing to ZAP](#to-owasp-zap)
+
+See [importing to ZAP](#to-owasp-zap)
 
 rescope uses the default ZAP context as a template for creating new ones, meaning it'll include the default "technologies" as well. This can be easily removed from the application once the scope/context has been set.
 
 ```
-$ cat zap.context 
+$ cat zap.context | head -n 45
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration>
 <context>
-<name>MyScope</name>
+<name>CoolScopeName</name>
 <desc/>
 <inscope>true</inscope>
-<incregexes>^http(s)?:\/\/admin\.example\.com\/login\.aspx[\S]*$</incregexes>
-<incregexes>^https:\/\/example\.com\/upload:8080[\S]*$</incregexes>
+<incregexes>^http:\/\/admin\.example\.com\/login\.aspx[\S]*$</incregexes>
+<incregexes>^https:\/\/example\.com:8080\/upload\/[\S]*[\S]*$</incregexes>
 <incregexes>^http(s)?:\/\/[\S]*\.dev\.example\.com[\S]*$</incregexes>
 <incregexes>^http(s)?:\/\/[\S]*\.prod\.example\.com[\S]*$</incregexes>
-<incregexes>^http(s)?:\/\/192\.168\.0\.1[\S]*$</incregexes>
-<incregexes>^http(s)?:\/\/192\.168\.0\.2[\S]*$</incregexes>
+<incregexes>^http(s)?:\/\/10\.10\.10\.1[\S]*$</incregexes>
+<incregexes>^http(s)?:\/\/10\.10\.10\.2[\S]*$</incregexes>
 <excregexes>^http(s)?:\/\/bgp\.example\.com:179[\S]*$</excregexes>
-<excregexes>^http(s)?:\/\/[\S]*\.vendor\.example\.com[\S]*$</excregexes>
-<excregexes>^http(s)?:\/\/192\.168\.10\.9[\S]*$</excregexes>
+<excregexes>^http(s)?:\/\/[\S]*\.vendor\.example\.com\/assets\/[\S]*$</excregexes>
+<excregexes>^http(s)?:\/\/ftp:\/\/10\.10\.10\.1:21[\S]*$</excregexes>
 <tech>
 <include>Db</include>
 <include>Db.Firebird</include>
@@ -306,39 +323,11 @@ $ cat zap.context
 <include>WS.IIS</include>
 <include>WS.Tomcat</include>
 </tech>
-<urlparser>
-<class>org.zaproxy.zap.model.StandardParameterParser</class>
-<config>{"kvps":"&amp;","kvs":"=","struct":[]}</config>
-</urlparser>
-<postparser>
-<class>org.zaproxy.zap.model.StandardParameterParser</class>
-<config>{"kvps":"&amp;","kvs":"=","struct":[]}</config>
-</postparser>
-<authentication>
-<type>0</type>
-</authentication>
-<forceduser>-1</forceduser>
-<session>
-<type>0</type>
-</session>
-<authorization>
-<type>0</type>
-<basic>
-<header/>
-<body/>
-<logic>AND</logic>
-<code>-1</code>
-</basic>
-</authorization>
-</context>
-</configuration>
 ```
-
 
 ## Importing
 
 ### To Burp Suite
-
 1. Select **Target** pane
 2. Select **Scope** pane
 3. Click the gear (⚙︎) icon 
@@ -346,10 +335,10 @@ $ cat zap.context
 5. Select outputted JSON file from rescope
 
 ### To OWASP ZAP
-
 **File** -> **Import Context** -> Select outputted XML file from rescope
 
 Note: If you set `-o` filename ext to anything other than `.context` then you'll have to set 'File Format:' to 'All' (in file select).
+
 
 ## Disclaimer
 - This is my first project in Go (and I don't consider myself a developer) so bear that in mind as far as the code goes.
@@ -357,9 +346,7 @@ Note: If you set `-o` filename ext to anything other than `.context` then you'll
 
 
 ## Author
-
 * Daniel Antonsen (root4loot)
 
 ## License
-
 Licensed under MIT (see file **LICENSE**)
