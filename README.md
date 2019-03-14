@@ -38,9 +38,30 @@ rescope --version
 ```
 
 ## Upgrading
-
 ```
 go get -u github.com/root4loot/rescope
+```
+If you run into merge conflicts, then delete the repo and install once again. Sorry for the inconvenience.
+
+Unix:
+```
+// If $GOPATH is set
+rm -rf $GOPATH/src/github.com/root4loot/rescope
+
+// If $GOPATH is not set, try
+rm -rf ~/go/src/github.com/root4loot.com/rescope
+```
+Windows:
+```
+// If %GOPATH% is set
+rd /s /q "%GOPATH%\src\github.com\root4loot\rescope"
+
+// If %GOPATH% is not set, try
+rd /s /q "%USERPROFILE%\go\src\github.com\root4loot\rescope"
+```
+Then install:
+```
+go get github.com/root4loot/rescope
 ```
 
 ## Usage
@@ -150,14 +171,14 @@ Parsing scope to Burp JSON is easy.
 ```diff
 $ rescope --burp -i scope.txt -o burp.json
 [-] Grabbing targets from [scope.txt]
- + http://admin.example.com/login.aspx
- + https://example.com:8080/upload/*
- + *.dev.example.com
- + *.prod.example.com
- + 10.10.10.1-2
- - bgp.example.com:179
- - *.vendor.example.com/assets/
- - ftp://10.10.10.1:21
++ http://admin.example.com/login.aspx
++ https://example.com:8080/upload/*
++ *.dev.example.com
++ *.prod.example.com
++ 10.10.10.1-2
+- bgp.example.com:179
+- *.vendor.example.com/assets/
+- ftp://10.10.10.1:21
 [-] Parsing to JSON (Burp Suite)
 [✓] Done
 [✓] Wrote 1732 bytes to burp.json
@@ -257,14 +278,14 @@ However, there are a couple of things to note:
 ```diff
 $ rescope --zap -i scope.txt -o zap.context -n CoolScopeName
 [-] Grabbing targets from [scope.txt]
- + http://admin.example.com/login.aspx
- + https://example.com:8080/upload/*
- + *.dev.example.com
- + *.prod.example.com
- + 10.10.10.1-2
- - bgp.example.com:179
- - *.vendor.example.com/assets/
- - ftp://10.10.10.1:21
++ http://admin.example.com/login.aspx
++ https://example.com:8080/upload/*
++ *.dev.example.com
++ *.prod.example.com
++ 10.10.10.1-2
+- bgp.example.com:179
+- *.vendor.example.com/assets/
+- ftp://10.10.10.1:21
 [-] Parsing to XML (OWASP ZAP)
 [✓] Done
 [✓] Wrote 2154 bytes to zap.context
