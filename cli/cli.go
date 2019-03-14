@@ -23,6 +23,8 @@ type CLI struct {
 	Command   string
 	Infiles   []string
 	Outfile   string
+	Burp      bool
+	Zap       bool
 	Silent    bool
 	Scopename string
 	verbose   string
@@ -33,45 +35,53 @@ type CLI struct {
 // Parse cli arguments
 func Parse() CLI {
 	banner := `
-	 _ __ ___  ___  ___ ___  _ __   ___ 
-	| '__/ _ \/ __|/ __/ _ \| '_ \ / _ \
-	| | |  __/\__ \ (_| (_) | |_) |  __/
-	|_|  \___||___/\___\___/| .__/ \___|
-	 ~ r o o t 4 l o o t    |_|
+  _ __ ___  ___  ___ ___  _ __   ___ 
+ | '__/ _ \/ __|/ __/ _ \| '_ \ / _ \
+ | | |  __/\__ \ (_| (_) | |_) |  __/
+ |_|  \___||___/\___\___/| .__/ \___|
+  ~ r o o t 4 l o o t    |_|    v.0.2
 	
-	
-	Setting Excludes (optional):
-	  specify !EXCLUDE in -i <file>, followed by targets you wish to exclude. Anything succeeding this tag will be explicity excluded from scope.
-	
-	
-	Example usage: 
-	 rescope burp -i scope.txt -o burp.json
-	 rescope zap  -i scope1.txt -i scope2.txt -o zap.context --name CoolScope
-	 `
-	version := 0.1
-	parser := argparse.NewParser("rescope [burp|zap]", banner)
+Setting Excludes (optional):
+  specify !EXCLUDE in -i <file> prior to targets you wish to exclude.         
+
+Example Usage: 
+  rescope --burp -i scope.txt -o burp.json
+  rescope --zap  -i scope1.txt -i scope2.txt -o zap.context --name CoolScope              
+
+Upgrading:
+  go get -u github.com/root4loot/rescope 
+
+Documentation:
+  https://github.com/root4loot/rescope
+`
+	version := "0.2"
+	parser := argparse.NewParser("rescope", banner)
+	red := color.New(color.FgRed).SprintFunc()
 	//usage := parser.Usage
 	c := CLI{}
-
-	i := parser.List("i", "infile", &argparse.Options{Help: "File (scope) to be parsed (required)\n\t\t Can be set multiple times"})
+	b := parser.Flag("b", "burp", &argparse.Options{Help: "Parse to Burp Suite JSON (required option)"})
+	z := parser.Flag("z", "zap", &argparse.Options{Help: "Parse to OWASP ZAP XML (required option)"})
+	i := parser.List("i", "infile", &argparse.Options{Help: "File (scope) to be parsed (required)\n\t\t Infile can be set multiple times"})
 	o := parser.String("o", "outfile", &argparse.Options{Help: "File to write parsed results (required)"})
-	s := parser.Flag("s", "silent", &argparse.Options{Help: "Do not print identified targets"})
 	n := parser.String("n", "name", &argparse.Options{Help: "Name of ZAP context"})
 	e := parser.String("e", "extag", &argparse.Options{Help: "Custom exclude tag (default: !EXCLUDE)"})
+	s := parser.Flag("s", "silent", &argparse.Options{Help: "Do not print identified targets"})
 	v := parser.Flag("", "version", &argparse.Options{Help: "Print version"})
+
 	_ = n
 	_ = s
 	_ = v
 
 	_ = parser.Parse(os.Args)
 
+	c.Burp = *b
+	c.Zap = *z
 	c.Infiles = *i
 	c.Outfile = *o
 	c.Scopename = *n
 	c.Silent = *s
 	c.ExTag = *e
-
-	red := color.New(color.FgRed).SprintFunc()
+	c.version = *v
 
 	// remove timestamp from exits
 	log.SetFlags(0)
@@ -79,18 +89,15 @@ func Parse() CLI {
 	// slice of error strings
 	var argErr []string
 
-	// set CLI values
-	for _, arg := range os.Args {
-		if strings.ToLower(arg) == "burp" {
-			c.Command = "burp"
-		} else if strings.ToLower(arg) == "zap" {
-			c.Command = "zap"
-		}
+	// print version
+	if c.version {
+		fmt.Println("rescope version " + version)
+		os.Exit(0)
 	}
 
 	// check for args and add to list
-	if !isVar(c.Command) {
-		argErr = append(argErr, "Missing command argument (burp|zap)")
+	if !c.Burp && !c.Zap {
+		argErr = append(argErr, "Missing program identifier [-b|--burp] [-z|--zap]")
 	}
 	if !isList(c.Infiles) {
 		argErr = append(argErr, "Missing infile (-i <file>)")
@@ -105,12 +112,6 @@ func Parse() CLI {
 			fmt.Printf("%s %s\n", red("[!]"), argErr[i-1])
 		}
 		os.Exit(1)
-	}
-
-	// Version
-	if c.version {
-		fmt.Println("rescope", version)
-		os.Exit(0)
 	}
 
 	// check/set scopename
@@ -136,21 +137,6 @@ func setScopeName() string {
 // GetScopeName for Zap Context
 func GetScopeName(c CLI) string {
 	return c.Scopename
-}
-
-// GetCommand (valid "commands" [burp, zap])
-// returns command string
-func GetCommand(c CLI) string {
-	return c.Command
-}
-
-// IsCommand compare command name
-// returns bool
-func IsCommand(c CLI, command string) bool {
-	if c.Command == command {
-		return true
-	}
-	return false
 }
 
 // isVar check if var is empty or not
