@@ -89,9 +89,9 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 	for _, ipsets := range L2 {
 		for _, ip := range ipsets {
 			isexclude := isExclude(Excludes, ip)
-			host := ip
+			host := parseHost(ip)
 			protocol = "Any"
-			add(protocol, host, "", "", isexclude)
+			add(protocol, host, "", file, isexclude)
 		}
 	}
 
@@ -99,9 +99,9 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 	for _, ipsets := range L3 {
 		for _, ip := range ipsets {
 			isexclude := isExclude(Excludes, ip)
-			host := ip
+			host := parseHost(ip)
 			protocol = "Any"
-			add(protocol, host, "", "", isexclude)
+			add(protocol, host, "", file, isexclude)
 		}
 	}
 
@@ -149,6 +149,8 @@ func parseProtocol(protocol string) (string, string) {
 			port = "80"
 		} else if protocol == "https" {
 			port = "443"
+		} else {
+			protocol = "Any" // burp does not like anything but http(s)
 		}
 	} else {
 		protocol = "Any"
@@ -172,9 +174,16 @@ func parseHost(host string) string {
 func parsePort(port string, wport string) string {
 	if isVar(port) {
 		port = strings.TrimPrefix(port, ":")
+	}
+
+	if isVar(port) && isVar(wport) {
+		port = "^(" + port + "|" + wport + ")$"
+	} else if isVar(port) {
 		port = "^" + port + "$"
+	} else if isVar(wport) {
+		port = "^" + wport + "$"
 	} else {
-		port = wport
+		port = ""
 	}
 	return port
 }
@@ -188,13 +197,10 @@ func parseFile(file string) string {
 		file = strings.Replace(file, ".", `\.`, -1)
 		// add wildcard after dir suffix
 		// note: the following statement is not really needed as blank files/dirs are
-		// wildcarded by Burp. The reason for leaving this in is to "keep it regex"
-		// and avoid being reliant
+		// wildcarded by Burp. The reason for leaving this in is to
+		// avoid being reliant on that fact.
 		if strings.HasSuffix(file, "/") {
 			file = file + `[\S]*`
-			// quantify "/*" when no dir suffix
-		} else {
-			file = file + `\/?[\S]*`
 		}
 		file = "^" + file + "$"
 	} else {
