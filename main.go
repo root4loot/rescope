@@ -51,7 +51,7 @@ func main() {
 		fds = append(fds, fd)
 
 		if err, ok := err.(*os.PathError); ok {
-			fmt.Printf("\n%s Failed to read file at location %s. Bad permissions?", red("[!]"), f)
+			fmt.Printf("\n%s Failed to read %s.", red("[!]"), f)
 			log.Fatal(err)
 		}
 	}
@@ -63,7 +63,7 @@ func main() {
 	for _, fd := range fds {
 		data, err := io.ReadFile(fd)
 		if err != nil {
-			fmt.Printf("\n%s Failed to read contents of file %s", red("[!]"), fd.Name())
+			fmt.Printf("\n%s Failed to read contents of %s", red("[!]"), fd.Name())
 			log.Fatal(err)
 		}
 		// append to scopes
@@ -75,11 +75,11 @@ func main() {
 	m = scope.Parse(m, scopes, c.Command, c.Infiles, c.Silent, c.ExTag)
 
 	// parse to burp/zap
-	if cli.IsCommand(c, "burp") {
+	if c.Burp {
 		fmt.Printf("%s Parsing to JSON (Burp Suite)", grey("[-]"))
 		buf = burp.Parse(m.L1, m.L2, m.L3, m.Excludes)
 		fmt.Printf("\n%s Done", green("[✓]"))
-	} else if cli.IsCommand(c, "zap") {
+	} else if c.Zap {
 		fmt.Printf("%s Parsing to XML (OWASP ZAP)", grey("[-]"))
 		buf = zap.Parse(m.L1, m.L2, m.L3, m.Excludes, c.Scopename)
 		fmt.Printf("\n%s Done", green("[✓]"))
@@ -88,7 +88,7 @@ func main() {
 	// attempt to create outfile
 	outfile, err := io.CreateFile(c.Outfile)
 	if err != nil {
-		fmt.Printf("\n%s Failed to create file at location %s. Bad permisisons?", red("[!]"), outfile.Name())
+		fmt.Printf("\n%s Failed to create file at %s. Bad permisisons?", red("[!]"), outfile.Name())
 		log.Fatal(err)
 	}
 
@@ -96,9 +96,9 @@ func main() {
 	// file was created
 	meta, err := io.WriteFile(outfile, buf)
 
-	if cli.IsCommand(c, "burp") {
+	if c.Burp {
 		fmt.Printf("\n%s Wrote %v bytes to %s\n\n", green("[✓]"), meta, outfile.Name())
-	} else if cli.IsCommand(c, "zap") {
+	} else if c.Zap {
 		fmt.Printf("\n%s Wrote %v bytes to %s\n\n", green("[✓]"), meta, outfile.Name())
 	}
 }
