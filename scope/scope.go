@@ -69,7 +69,7 @@ func Parse(m Match, scopes []string, command string, files []string, silent bool
 			m3 := r3.FindAllString(scanner.Text(), -1)
 
 			// Check exclude
-			if scanner.Text() == exTag {
+			if strings.Contains(scanner.Text(), exTag) {
 				exclude = true
 			}
 
@@ -147,11 +147,11 @@ func Parse(m Match, scopes []string, command string, files []string, silent bool
 func printFound(item string, exclude bool, silent bool) {
 	if exclude == true {
 		if !silent {
-			color.Red("    " + item)
+			color.Red(" - " + item)
 		}
 	} else {
 		if !silent {
-			color.Green("    " + item)
+			color.Green(" + " + item)
 		}
 	}
 }
