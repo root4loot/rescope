@@ -4,7 +4,7 @@ rescope is a tool (Go) that lets you quickly define scopes in Burp/ZAP - mainly 
 
 Simply provide a scope (file containing target identifiers) and rescope parses this to a file format that can be imported from Burp/ZAP directly.
 
-> The latest version (0.2) resolves some important bugfixes that should not be ignored. See [CHANGELOG](changelog.md) for details and instructions on how to upgrade below.
+> The latest version (0.2) takes care of several issues and introduces some welcomed changes. See [CHANGELOG](CHANGELOG.md) for details. Upgrade instructions below.
 
 ## Features 
 
@@ -16,8 +16,8 @@ Simply provide a scope (file containing target identifiers) and rescope parses t
 
 ## Installation
 
-Requires [Go](https://golang.org/doc/install#install) (tested on 1.11.4)
-
+Requires [Go](https://golang.org/doc/install#install) (tested on 1.11.4).  
+Make sure $GOPATH is set first ([instructions](https://github.com/golang/go/wiki/SettingGOPATH))
 ```
 go get github.com/root4loot/rescope
 ```
@@ -27,8 +27,9 @@ Compiling is easy with Go.
 ```
 go install github.com/root4loot/rescope
 ```
-By default, Go saves binaries to $GOPATH/bin/ (make sure $GOPATH is set).  
-With this you can can simply create a soft link from a desired location. E.g on Linux:
+By default, Go saves binaries to `$GOPATH/bin/` which is typically `~/go/bin/` for Unix or `%USERPROFILE%\go` on Windows, unless changed.
+
+Once compiled, you can simply create a soft link from a desired location. E.g. Unix:
 ```
 ln -s ~/go/bin/rescope /usr/local/bin/rescope
 ```
@@ -66,7 +67,7 @@ usage: rescope [[-z|--zap | [-b]--burp] [-i|--infile "<filepath>" ...]] [-o|--ou
 
 ### Example Usage
 
-Parse scope to Burp Suite compatible JSON;
+Parse scope to Burp Suite compatible JSON:
 ```
 rescope --burp --infile scope.txt --outfile burp.json
 rescope -b -i scope.txt -o burp.json
@@ -78,7 +79,7 @@ rescope --zap --infile scope.txt --outfile zap.context
 rescope -z -i scope.txt -o zap.context
 ```
 
-Parse multiple scopes to ZAP XML, set context name, silence output
+Parse multiple scopes to ZAP XML, set context name, silence output:
 ```
 rescope --zap -i scope1.txt -i scope2.txt -o zap.context -n CoolScopeName --silent
 ```
