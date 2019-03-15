@@ -28,9 +28,7 @@ Compiling is easy with Go.
 ```
 go install github.com/root4loot/rescope
 ```
-By default, Go saves binaries to `$GOPATH/bin/` which is typically `~/go/bin/` for Unix or `%USERPROFILE%\go` on Windows, unless changed.
-
-Once compiled, you can simply create a soft link from a desired location. E.g. Unix:
+By default, Go saves binaries to `$GOPATH/bin/` which is typically `~/go/bin/` on Unix and `%USERPROFILE%\go` on Windows ( unless changed). Once compiled, simply create a soft link from a desired location. E.g. on Unix:
 ```
 ln -s ~/go/bin/rescope /usr/local/bin/rescope
 ```
