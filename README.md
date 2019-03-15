@@ -23,7 +23,7 @@ Requires [Go](https://golang.org/doc/install#install) (tested on 1.11.4).
 go get github.com/root4loot/rescope
 ```
 
-## Compiling and running
+### Compiling and running
 Compiling is easy with Go.
 ```
 go install github.com/root4loot/rescope
@@ -39,7 +39,7 @@ Running:
 rescope --version
 ```
 
-## Upgrading
+### Upgrading
 ```
 go get -u github.com/root4loot/rescope
 ```
