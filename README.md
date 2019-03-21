@@ -1,4 +1,9 @@
+
+
 # rescope
+![GitHub](https://img.shields.io/github/license/root4loot/rescope.svg)
+![GitHub release](https://img.shields.io/github/release/root4loot/rescope.svg)
+![Twitter Follow](https://img.shields.io/twitter/follow/root4loot.svg?style=social)
 
 rescope is a tool (Go) that lets you quickly define scopes in Burp/ZAP - mainly intended for "bug hunters" and pentesters who deal with large scopes. See [blog post](https://root4loot.com/post/introducing_rescope/) for context/background.
 
