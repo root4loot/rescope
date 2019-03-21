@@ -85,21 +85,8 @@ rescope --zap -i scope1.txt -i scope2.txt -o zap.context -n CoolScopeName --sile
 ### Setting Excludes
 
 rescope treats identified targets as Includes by default.  
-To set Excludes, specify an **!EXCLUDE** tag anywhere in the document, followed by the targets you wish to exclude.  
+To set Excludes, specify an **!EXCLUDE** tag anywhere in your scope file, followed by the targets you wish to exclude. 
 If this tag does not work for you, then a custom one can be set from the `--extag (-e)` parameter.
-
-
-Example:
-```
-// include these
-prod.example.com
-admin.example.com
-
-!EXCLUDE
-// exclude these
-dev.example.com
-test.example.com
-```
 
 ## Example
 
