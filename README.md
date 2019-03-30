@@ -173,7 +173,7 @@ $ cat burp.json
           "enabled": true,
           "file": "^/assets/[\\S]*$",
           "host": "^[\\S]*\\.vendor\\.example\\.com$",
-          "port": "",
+          "port": "^(80|443)$",
           "protocol": "Any"
         },
         {
@@ -203,28 +203,28 @@ $ cat burp.json
           "enabled": true,
           "file": "^[\\S]*$",
           "host": "^[\\S]*\\.dev\\.example\\.com$",
-          "port": "",
+          "port": "^(80|443)$",
           "protocol": "Any"
         },
         {
           "enabled": true,
           "file": "^[\\S]*$",
           "host": "^[\\S]*\\.prod\\.example\\.com$",
-          "port": "",
+          "port": "^(80|443)$",
           "protocol": "Any"
         },
         {
           "enabled": true,
           "file": "^[\\S]*$",
           "host": "^10\\.10\\.10\\.1$",
-          "port": "",
+          "port": "^(80|443)$",
           "protocol": "Any"
         },
         {
           "enabled": true,
           "file": "^[\\S]*$",
           "host": "^10\\.10\\.10\\.2$",
-          "port": "",
+          "port": "^(80|443)$",
           "protocol": "Any"
         }
       ]
