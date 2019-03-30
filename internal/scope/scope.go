@@ -197,13 +197,3 @@ func inc(ip net.IP) {
 	}
 }
 
-// isExclude takes a 2d slice and a string
-// returns bool depending on whether the string was found in slice
-func isExclude(Excludes [][]string, item string) bool {
-	for _, exclude := range Excludes {
-		if item == exclude[0] {
-			return true
-		}
-	}
-	return false
-}
