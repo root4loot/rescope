@@ -39,7 +39,7 @@ func Parse() CLI {
  | '__/ _ \/ __|/ __/ _ \| '_ \ / _ \
  | | |  __/\__ \ (_| (_) | |_) |  __/
  |_|  \___||___/\___\___/| .__/ \___|
-  ~ r o o t 4 l o o t    |_|     v0.2
+  ~ r o o t 4 l o o t    |_|     v0.3
 	
 Setting Excludes (optional):
   specify !EXCLUDE in -i <file> prior to targets you wish to exclude.         
@@ -54,7 +54,7 @@ Upgrading:
 Documentation:
   https://github.com/root4loot/rescope
 `
-	version := "0.2"
+	version := "0.3"
 	parser := argparse.NewParser("rescope", banner)
 	red := color.New(color.FgRed).SprintFunc()
 	//usage := parser.Usage
@@ -91,7 +91,7 @@ Documentation:
 
 	// print version
 	if c.version {
-		fmt.Println("rescope version " + version)
+		fmt.Println("rescope v" + version)
 		os.Exit(0)
 	}
 
