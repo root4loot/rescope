@@ -33,12 +33,12 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 		panic("No caller information")
 	}
 
-	// paths
+	// path to default ZAP context
 	programPath := path.Dir(filename)
-	projectPath := filepath.Dir(programPath)
-	defaultContextPath := projectPath + "/configs/default.context"
+	projectPath := strings.TrimRight(filepath.Dir(programPath), "internal")
+	defaultContextPath := projectPath + "configs/default.context"
 
-	// read Zap default xml template
+	// read default ZAP xml template
 	fo, _ := io.OpenFile(defaultContextPath)
 	fr, _ := io.ReadFile(fo)
 
