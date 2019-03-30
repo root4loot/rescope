@@ -16,9 +16,9 @@ import (
 
 	burp "github.com/root4loot/rescope/internal/burp"
 	cli "github.com/root4loot/rescope/internal/cli"
+	io "github.com/root4loot/rescope/internal/io"
 	scope "github.com/root4loot/rescope/internal/scope"
 	zap "github.com/root4loot/rescope/internal/zap"
-	io "github.com/root4loot/rescope/pkg/io"
 )
 
 func main() {
