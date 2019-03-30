@@ -12,7 +12,7 @@ Unreleased changes will go in the below heading.
 ### Added
 - File `configs/services` which lists a bunch of service names and ports. With this, rescope is able to identify ports for targets that has schemes but no port specified. For now this is used when parsing to Burp. Example:
      - `ftps://example.com` => `port: 990`
-     - `https://example.com:21 => `port: 443,21`
+     - `https://example.com:21 => `port: `443,21`
 
 - Port 80,443 to Burp scope when identifier has no scheme and no port. This'll prevent people from touching ports that're otherwise (not clearly defined) out of bounds. Example:
      - `example.com` => `port: 80,443`
