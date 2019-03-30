@@ -108,7 +108,7 @@ High     10.10.10.1-2 (testing)
 Out of Scope:
 bgp.example.com:179
 *.vendor.example.com/assets/
-ftp://10.10.10.1:21
+ftp://10.10.10.1
 ```
 
 As you can see, most of these identifiers have leading text/whitespace and so on. But that's totally fine!  
@@ -125,7 +125,7 @@ High     10.10.10.1-2 (testing)
 Out of Scope:
 bgp.example.com:179
 *.vendor.example.com/assets/
-ftp://10.10.10.1:21
+ftp://10.10.10.1
 ```
 Having saved this, we're ready to parse and import results to either Burp Suite or ZAP.
 
@@ -144,7 +144,7 @@ $ rescope --burp -i scope.txt -o burp.json
 + 10.10.10.1-2
 - bgp.example.com:179
 - *.vendor.example.com/assets/
-- ftp://10.10.10.1:21
+- ftp://10.10.10.1
 [-] Parsing to JSON (Burp Suite)
 [✓] Done
 [✓] Wrote 1732 bytes to burp.json
@@ -196,7 +196,7 @@ $ cat burp.json
           "enabled": true,
           "file": "^/upload/[\\S]*$",
           "host": "^example\\.com$",
-          "port": "^(8080|443)$",
+          "port": "^(443|8080)$",
           "protocol": "https"
         },
         {
@@ -251,7 +251,7 @@ $ rescope --zap -i scope.txt -o zap.context -n CoolScopeName
 + 10.10.10.1-2
 - bgp.example.com:179
 - *.vendor.example.com/assets/
-- ftp://10.10.10.1:21
+- ftp://10.10.10.1
 [-] Parsing to XML (OWASP ZAP)
 [✓] Done
 [✓] Wrote 2154 bytes to zap.context
@@ -279,7 +279,7 @@ $ cat zap.context | head -n 45
 <incregexes>^http(s)?:\/\/10\.10\.10\.2[\S]*$</incregexes>
 <excregexes>^http(s)?:\/\/bgp\.example\.com:179[\S]*$</excregexes>
 <excregexes>^http(s)?:\/\/[\S]*\.vendor\.example\.com\/assets\/[\S]*$</excregexes>
-<excregexes>^http(s)?:\/\/ftp:\/\/10\.10\.10\.1:21[\S]*$</excregexes>
+<excregexes>^http(s)?:\/\/ftp:\/\/10\.10\.10\.1[\S]*$</excregexes>
 <tech>
 <include>Db</include>
 <include>Db.Firebird</include>
