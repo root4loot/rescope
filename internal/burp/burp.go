@@ -10,9 +10,13 @@
 package burp
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strings"
+
+	io "github.com/root4loot/rescope/internal/io"
 )
 
 // Scope is the JSON structure that burp wants
@@ -61,22 +65,24 @@ var incslice IncludeSlice
 var exslice ExcludeSlice
 
 // Parse takes slices containing regex matches and turns them into Burp
-// compatible JSON. Regex matches are split into groups.
+// compatible JSON. Regex matches are split into groups. See Scope package.
 // Returns JSON data as byte
 func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
-	var host, protocol, port, file, wport string
+	var host, protocol, port, file string
+	fr := io.ReadFileFromProjectRoot("configs/services", "internal")
 
-	// L1 all matches except IP-range and IP/CIDR
+	// L1 (all matches except IP-range and IP/CIDR)
 	for _, submatch := range L1 {
-		protocol = submatch[1]
+		protocol = strings.TrimRight(submatch[1], "://")
+		port = strings.TrimLeft(submatch[4], ":")
 		host = submatch[2]
-		port = submatch[4]
 		file = submatch[5]
 
+		protocol, port = parseProtocolAndPort(fr, protocol, port)
+
 		// parse regex for each group
-		protocol, wport = parseProtocol(protocol)
 		host = parseHost(host)
-		port = parsePort(port, wport)
+		//port = parsePort(port, wport, protocol)
 		file = parseFile(file)
 
 		// check exclude
@@ -85,7 +91,7 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 		add(protocol, host, port, file, isexclude)
 	}
 
-	// L2 IP-range match
+	// L2 (IP-range match)
 	for _, ipsets := range L2 {
 		for _, ip := range ipsets {
 			isexclude := isExclude(Excludes, ip)
@@ -95,7 +101,7 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 		}
 	}
 
-	// L3 IP/CIDR match
+	// L3 (IP/CIDR match)
 	for _, ipsets := range L3 {
 		for _, ip := range ipsets {
 			isexclude := isExclude(Excludes, ip)
@@ -140,25 +146,50 @@ func isExclude(Excludes []string, item string) bool {
 	return false
 }
 
-// parseProtocol sets port depending on the protocol
-func parseProtocol(protocol string) (string, string) {
-	var port string
-	protocol = strings.Replace(protocol, "://", "", -1)
-	if isVar(protocol) {
-		if protocol == "http" {
-			port = "80"
-		} else if protocol == "https" {
-			port = "443"
-		} else {
-			protocol = "Any" // burp does not like anything but http(s)
+// parseProtocolAndPort sets protocol and ports accordingly
+// parseHost parse/set protocol & ports accordingly
+// returns protocol, port (string) expressions
+func parseProtocolAndPort(services []byte, protocol, port string) (string, string) {
+	re := regexp.MustCompile(`([a-zA-Z0-9-]+)\s+(\d+)`) // for configs/services
+	// re groups:     0. full match   - (ftp 21)
+	//                1. service      - (ftp) 21
+	//                2. port         - ftp (21)
+
+	if isVar(protocol) && !isVar(port) {
+		// set corresponding port from configs/services
+		scanner := bufio.NewScanner(strings.NewReader(string(services[:])))
+		for scanner.Scan() {
+			match := re.FindStringSubmatch(scanner.Text())
+			if protocol == match[1] {
+				port = "^" + match[2] + "$"
+			}
 		}
-	} else {
+	} else if !isVar(protocol) && !isVar(port) {
+		// set port to 80, 443
+		port = "^(80|443)$"
+	} else if isVar(protocol) && isVar(port) {
+		// set whatever port + service port
+		if protocol == "http" {
+			port = "^(80|" + port + ")$"
+		} else if protocol == "https" {
+			port = "^(443|" + port + ")$"
+		} else {
+			port = "^" + port + "$"
+		}
+	} else if isVar(port) {
+		port = "^" + port + "$"
+	}
+
+	// set "Any" when not http(s)
+	if protocol != "http" && protocol != "https" {
 		protocol = "Any"
 	}
+
 	return protocol, port
 }
 
-// parseHost to regex
+// parseHost parse host portion
+// returns host (string) expression
 func parseHost(host string) string {
 	if isVar(host) {
 		if strings.Contains(host, "*") {
@@ -170,25 +201,8 @@ func parseHost(host string) string {
 	return host
 }
 
-// parsePort to regex
-func parsePort(port string, wport string) string {
-	if isVar(port) {
-		port = strings.TrimPrefix(port, ":")
-	}
-
-	if isVar(port) && isVar(wport) {
-		port = "^(" + port + "|" + wport + ")$"
-	} else if isVar(port) {
-		port = "^" + port + "$"
-	} else if isVar(wport) {
-		port = "^" + wport + "$"
-	} else {
-		port = "^(80|443)$"
-	}
-	return port
-}
-
-// parseFile to regex
+// parseFile parse file portion
+// returns file (string) expression
 func parseFile(file string) string {
 	if isVar(file) {
 		// replace wildcard
@@ -196,9 +210,8 @@ func parseFile(file string) string {
 		// escape '.'
 		file = strings.Replace(file, ".", `\.`, -1)
 		// add wildcard after dir suffix
-		// note: the following statement is not really needed as blank files/dirs are
-		// wildcarded by Burp. The reason for leaving this in is to
-		// avoid being reliant on that fact.
+		// note: this is not really needed as
+		// burp will treat blank files as wildcards
 		if strings.HasSuffix(file, "/") {
 			file = file + `[\S]*`
 		}
