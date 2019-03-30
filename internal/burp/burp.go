@@ -91,7 +91,7 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 			isexclude := isExclude(Excludes, ip)
 			host := parseHost(ip)
 			protocol = "Any"
-			add(protocol, host, "", file, isexclude)
+			add(protocol, host, "^(80|443)$", file, isexclude)
 		}
 	}
 
@@ -101,7 +101,7 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 			isexclude := isExclude(Excludes, ip)
 			host := parseHost(ip)
 			protocol = "Any"
-			add(protocol, host, "", file, isexclude)
+			add(protocol, host, "^(80|443)$", file, isexclude)
 		}
 	}
 
@@ -183,7 +183,7 @@ func parsePort(port string, wport string) string {
 	} else if isVar(wport) {
 		port = "^" + wport + "$"
 	} else {
-		port = ""
+		port = "^(80|443)$"
 	}
 	return port
 }
