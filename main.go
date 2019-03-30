@@ -92,8 +92,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// write to outfile assuming we have permissions as
-	// file was created
+	// write to outfile assuming we have permissions
 	meta, err := io.WriteFile(outfile, buf)
 
 	if c.Burp {
