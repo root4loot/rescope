@@ -9,12 +9,9 @@ package zap
 
 import (
 	"bufio"
-	"path"
-	"path/filepath"
-	"runtime"
 	"strings"
 
-	io "github.com/root4loot/rescope/pkg/io"
+	io "github.com/root4loot/rescope/internal/io"
 )
 
 var includes []string
@@ -27,20 +24,7 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 	var oldxml []string
 	var newxml []string
 
-	// runtime caller
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		panic("No caller information")
-	}
-
-	// path to default ZAP context
-	programPath := path.Dir(filename)
-	projectPath := strings.TrimRight(filepath.Dir(programPath), "internal")
-	defaultContextPath := projectPath + "configs/default.context"
-
-	// read default ZAP xml template
-	fo, _ := io.OpenFile(defaultContextPath)
-	fr, _ := io.ReadFile(fo)
+	fr := io.ReadFileFromProjectRoot("configs/default.context", "internal")
 
 	// loop template and append each line to var
 	scanner := bufio.NewScanner(strings.NewReader(string(fr[:])))
