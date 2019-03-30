@@ -14,11 +14,11 @@ import (
 
 	"github.com/fatih/color"
 
-	burp "github.com/root4loot/rescope/burp"
-	cli "github.com/root4loot/rescope/cli"
-	io "github.com/root4loot/rescope/io"
-	scope "github.com/root4loot/rescope/scope"
-	zap "github.com/root4loot/rescope/zap"
+	burp "github.com/root4loot/rescope/internal/burp"
+	cli "github.com/root4loot/rescope/internal/cli"
+	scope "github.com/root4loot/rescope/internal/scope"
+	zap "github.com/root4loot/rescope/internal/zap"
+	io "github.com/root4loot/rescope/pkg/io"
 )
 
 func main() {

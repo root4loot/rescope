@@ -14,7 +14,7 @@ import (
 	"runtime"
 	"strings"
 
-	io "github.com/root4loot/rescope/io"
+	io "github.com/root4loot/rescope/pkg/io"
 )
 
 var includes []string
