@@ -9,7 +9,7 @@ rescope is a tool (Go) that lets you quickly define scopes in Burp/ZAP - mainly 
 
 Simply provide a scope (file containing target identifiers) and rescope parses this to a file format that can be imported from Burp/ZAP directly.
 
-<img src="http://root4loot.com/post/introducing_rescope/assets/rescope02.gif" width="679">
+<img src="http://root4loot.com/post/introducing_rescope/assets/rescope03.gif" width="650">
 
 > The latest version (0.2) takes care of several issues and introduces some welcomed changes. See [CHANGELOG](CHANGELOG.md) for details. Upgrade instructions below.
 
