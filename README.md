@@ -11,8 +11,6 @@ Simply provide a scope (file containing target identifiers) and rescope parses t
 
 <img src="http://root4loot.com/post/introducing_rescope/assets/rescope03.gif" width="650">
 
-> The latest version (0.2) takes care of several issues and introduces some welcomed changes. See [CHANGELOG](CHANGELOG.md) for details. Upgrade instructions below.
-
 ## Features 
 
 - Identifies targets from scope (give it any structure/format)
