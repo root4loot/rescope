@@ -15,7 +15,7 @@ import (
 	"strings"
 
 	"github.com/akamensky/argparse"
-	"github.com/fatih/color"
+	"github.com/gookit/color"
 )
 
 // Args flags
@@ -114,7 +114,7 @@ Documentation:
 	// print arg errors from list
 	if len(argErr) > 0 {
 		for i := 1; i <= len(argErr); i++ {
-			fmt.Printf("%s %s\n", red("[!]"), argErr[i-1])
+			fmt.Printf("%s %s\n", color.FgRed.Text("[!]"), argErr[i-1])
 		}
 		os.Exit(1)
 	}
@@ -131,9 +131,8 @@ Documentation:
 // setScopeName for Zap Context
 // returns scopename
 func setScopeName() string {
-	c := color.New(color.Faint).SprintFunc()
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Printf("%s Enter name of Scope (required for Zap): ", c("[>]"))
+	fmt.Printf("%s Enter name of Scope (required for ZAP): ", color.FgGray.Text("[>]"))
 	name, _ := reader.ReadString('\n')
 	name = strings.TrimSuffix(name, "\n")
 	return name
