@@ -16,7 +16,6 @@ import (
 
 	burp "github.com/root4loot/rescope/internal/burp"
 	cli "github.com/root4loot/rescope/internal/cli"
-	io "github.com/root4loot/rescope/internal/io"
 	scope "github.com/root4loot/rescope/internal/scope"
 	url "github.com/root4loot/rescope/internal/url"
 	zap "github.com/root4loot/rescope/internal/zap"
@@ -42,18 +41,18 @@ func main() {
 		for _, f := range a.Infiles {
 			if file.IsExist(f) != true {
 				log.Fatalf("\n%s File %s not found", color.FgRed.Text("[!]"), f)
+			}
 		}
-	}
 
-	// attempt to open infiles
+		// attempt to open infiles
 		for _, f := range a.Infiles {
 			fd, err := file.Open(f)
 
 			// check err
-		if err, ok := err.(*os.PathError); ok {
+			if err, ok := err.(*os.PathError); ok {
 				fmt.Println("\n%s Unable to read %s.", color.FgRed.Text("[!]"), f)
-			log.Fatal(err)
-		}
+				log.Fatal(err)
+			}
 
 			// close
 			defer fd.Close()
@@ -64,15 +63,15 @@ func main() {
 		}
 
 		// get infile(s) contents
-	for _, fd := range fds {
+		for _, fd := range fds {
 			data, err := file.Read(fd)
-		if err != nil {
+			if err != nil {
 				fmt.Println("\n%s Unable to read contents of %s", color.FgRed.Text("[!]"), fd.Name())
-			log.Fatal(err)
-		}
+				log.Fatal(err)
+			}
 
 			// add to lists
-		scopes = append(scopes, string(data[:]))
+			scopes = append(scopes, string(data[:]))
 			source = append(source, fd.Name())
 		}
 	}
