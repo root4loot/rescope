@@ -73,10 +73,10 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 
 	// L1 (all matches except IP-range and IP/CIDR)
 	for _, submatch := range L1 {
-		protocol = strings.TrimRight(submatch[1], "://")
-		port = strings.TrimLeft(submatch[4], ":")
-		host = submatch[2]
-		file = submatch[5]
+		scheme = strings.TrimRight(submatch[1], "://")
+		host = submatch[3]
+		port = strings.TrimLeft(submatch[5], ":")
+		path = submatch[6]
 
 		protocol, port = parseProtocolAndPort(fr, protocol, port)
 
