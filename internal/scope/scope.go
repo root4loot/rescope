@@ -34,8 +34,6 @@ type Match struct {
 // Returns a Match object containing all lists
 func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, bbaas bool) Match {
 	var exclude bool
-	grey := color.New(color.Faint).SprintFunc()
-	red := color.New(color.FgRed).SprintFunc()
 
 	// Set Tag used to indicate beginning of Includes
 	if len(incTag) == 0 {
@@ -57,19 +55,20 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 
 	r2 := regexp.MustCompile(`(\d+\.\d+\.\d+\.)(\d+)-(\d+)`)
 	// Matches IP-Range
-	// Groups: 1.  (192.168.0).1-255    // IP minus last host portion
-	//         2.   192.168.0.(1)-255   // start
-	//         3.   192.168.0.1-(255)   // end
+	// Groups: 1.  [192.168.0].1-255    // IP minus last host portion
+	//         2.   192.168.0.[1]-255   // start
+	//         3.   192.168.0.1-[255]   // end
 
-	r3 := regexp.MustCompile(`[\d\.]+\/\d{2}`)
+	r3 := regexp.MustCompile(`[\d\.]+\/\d{2}`) 
 	// Matches IP/CIDR
 
 	for i, scope := range scopes {
-		counter := 0
 		scanner := bufio.NewScanner(strings.NewReader(scope))
 		exclude = false // reset flag on each run
 
 		fmt.Printf("%s Grabbing targets from %s \n", color.FgGray.Text("[-]"), source[i])
+
+		// Scan each line in scope, identify and add target URI's to struct
 		for scanner.Scan() {
 			m1 := r1.FindAllStringSubmatch(scanner.Text(), -1)
 			m2 := r2.FindAllStringSubmatch(scanner.Text(), -1)
@@ -82,7 +81,8 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 				exclude = false
 			}
 
-			if m3 != nil { // m3 ip/CIDR
+			// IP/CIDR
+			if m3 != nil {
 				for _, arr := range m3 {
 					// not interested in those ending with '.'
 					if strings.HasSuffix(arr, ".") {
@@ -93,7 +93,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 						log.Fatalf("\n%s Failed to parse IP/CIDR: %s", color.FgRed.Text("[!]"), m3)
 					} else {
 						m.L3 = append(m.L3, hosts)
-						counter++
+						m.Counter++
 						printFound(arr, exclude, silent)
 					}
 					if exclude == true {
@@ -103,7 +103,8 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 					}
 				}
 
-			} else if m2 != nil { // m2 ip-range
+				// IP-Range
+			} else if m2 != nil {
 				for _, arr := range m2 {
 					// not interested in those ending with '.'
 					if strings.HasSuffix(arr[0], ".") {
@@ -125,7 +126,8 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 					}
 				}
 
-			} else if m1 != nil { // m1 all others
+				// anything but IP/Range/CIDR
+			} else if m1 != nil {
 				// not interested in those ending with '.'
 				for _, arr := range m1 {
 					if strings.HasSuffix(arr[0], ".") {
@@ -139,7 +141,6 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 					}
 
 				}
-
 			}
 		}
 
@@ -167,7 +168,7 @@ func printFound(item string, exclude bool, silent bool) {
 // hostsFromRange takes a m2 slice containing IP-range substrings
 // converts range to a list of hosts and returns this
 func hostsFromRange(m []string) ([]string, error) {
-	ip := m[1] // (192.168.)0.1-255
+	ip := m[1] // [192.168.]0.1-255
 
 	start, err := strconv.Atoi(m[2]) // 192.168.0.(1)-255
 	end, err := strconv.Atoi(m[3])   // 192.168.(0).(1)-(255)
@@ -196,6 +197,7 @@ func hostsFromCIDR(cidr string) ([]string, error) {
 	return ips[1 : len(ips)-1], nil
 }
 
+// inc increments host in IP range
 func inc(ip net.IP) {
 	for j := len(ip) - 1; j >= 0; j-- {
 		ip[j]++
@@ -204,4 +206,3 @@ func inc(ip net.IP) {
 		}
 	}
 }
-
