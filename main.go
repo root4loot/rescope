@@ -88,8 +88,8 @@ func main() {
 		log.Fatalf("\n%s Failed to create file at %s. Bad permisisons?", color.FgRed.Text("[!]"), outfile.Name())
 	}
 
-	// write to outfile assuming we have permissions
-	meta, err := io.WriteFile(outfile, buf)
+	// Write to outfile assuming we have permissions
+	meta, err := file.Write(outfile, buf)
 
 	if a.Burp {
 		fmt.Printf("\n%s Done. Wrote %v bytes to %s\n", color.FgGreen.Text("[✓]"), meta, outfile.Name())
