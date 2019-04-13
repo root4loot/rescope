@@ -110,4 +110,5 @@ func main() {
 	} else if a.Zap {
 		fmt.Printf("\n%s Done. Wrote %v bytes to %s\n", color.FgGreen.Text("[✓]"), meta, outfile.Name())
 	}
+	fmt.Println("")
 }
