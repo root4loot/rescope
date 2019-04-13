@@ -36,6 +36,11 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 	grey := color.New(color.Faint).SprintFunc()
 	red := color.New(color.FgRed).SprintFunc()
 
+	// Set Tag used to indicate beginning of Includes
+	if len(incTag) == 0 {
+		incTag = "!INCLUDE"
+	}
+
 	// Set Tag used to indicate beginning of Excludes
 	if len(exTag) == 0 {
 		exTag = "!EXCLUDE"
@@ -69,9 +74,11 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 			m2 := r2.FindAllStringSubmatch(scanner.Text(), -1)
 			m3 := r3.FindAllString(scanner.Text(), -1)
 
-			// Check exclude
+			// check exclude
 			if strings.Contains(scanner.Text(), exTag) {
 				exclude = true
+			} else if strings.Contains(scanner.Text(), incTag) {
+				exclude = false
 			}
 
 			if m3 != nil { // m3 ip/CIDR
