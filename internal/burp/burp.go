@@ -33,19 +33,19 @@ type Scope struct {
 // Include host details
 type Include struct {
 	Enabled  bool   `json:"enabled"`
-	File     string `json:"file"`
+	File     string `json:"path"`
 	Host     string `json:"host"`
 	Port     string `json:"port"`
-	Protocol string `json:"protocol"`
+	Protocol string `json:"scheme"`
 }
 
 // Exclude host details
 type Exclude struct {
 	Enabled  bool   `json:"enabled"`
-	File     string `json:"file"`
+	File     string `json:"path"`
 	Host     string `json:"host"`
 	Port     string `json:"port"`
-	Protocol string `json:"protocol"`
+	Protocol string `json:"scheme"`
 }
 
 // IncludeSlice contains Include structs
@@ -65,9 +65,10 @@ var incslice IncludeSlice
 var exslice ExcludeSlice
 
 // Parse takes slices containing regex matches and turns them into Burp
-// compatible JSON. Regex matches are split into groups. See Scope package.
+// compatible JSON. Regex matches are split into groups. See internal scope package.
 // Returns JSON data as byte
 func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
+	var host, scheme, port, path string
 	fr, err := File.ReadFromRoot("configs/services", "internal")
 
 	// L1 (all matches except IP-range and IP/CIDR)
@@ -77,17 +78,17 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 		port = strings.TrimLeft(submatch[5], ":")
 		path = submatch[6]
 
-		protocol, port = parseProtocolAndPort(fr, protocol, port)
+		//fmt.Println("S:" + scheme + "H:" + host + "PO:" + port + "PA:" + path)
+		scheme, port = parseSchemeAndPort(fr, scheme, port)
 
 		// parse regex for each group
 		host = parseHost(host)
-		//port = parsePort(port, wport, protocol)
-		file = parseFile(file)
+		path = parseFile(path)
 
 		// check exclude
 		isexclude := isExclude(Excludes, submatch[0])
 		// add to list
-		add(protocol, host, port, file, isexclude)
+		add(scheme, host, port, path, isexclude)
 	}
 
 	// L2 (IP-range match)
@@ -95,8 +96,8 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 		for _, ip := range ipsets {
 			isexclude := isExclude(Excludes, ip)
 			host := parseHost(ip)
-			protocol = "Any"
-			add(protocol, host, "^(80|443)$", file, isexclude)
+			scheme = "Any"
+			add(scheme, host, "^(80|443)$", path, isexclude)
 		}
 	}
 
@@ -105,8 +106,8 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 		for _, ip := range ipsets {
 			isexclude := isExclude(Excludes, ip)
 			host := parseHost(ip)
-			protocol = "Any"
-			add(protocol, host, "^(80|443)$", file, isexclude)
+			scheme = "Any"
+			add(scheme, host, "^(80|443)$", path, isexclude)
 		}
 	}
 
@@ -126,11 +127,11 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 }
 
 // add match to appropriate list
-func add(protocol, host, port, file string, exclude bool) {
+func add(scheme, host, port, path string, exclude bool) {
 	if !exclude {
-		incslice.Include = append(incslice.Include, Include{Enabled: true, File: file, Host: host, Port: port, Protocol: protocol})
+		incslice.Include = append(incslice.Include, Include{Enabled: true, File: path, Host: host, Port: port, Protocol: scheme})
 	} else {
-		exslice.Exclude = append(exslice.Exclude, Exclude{Enabled: true, File: file, Host: host, Port: port, Protocol: protocol})
+		exslice.Exclude = append(exslice.Exclude, Exclude{Enabled: true, File: path, Host: host, Port: port, Protocol: scheme})
 	}
 }
 
@@ -145,32 +146,32 @@ func isExclude(Excludes []string, item string) bool {
 	return false
 }
 
-// parseProtocolAndPort sets protocol and ports accordingly
-// parseHost parse/set protocol & ports accordingly
-// returns protocol, port (string) expressions
-func parseProtocolAndPort(services []byte, protocol, port string) (string, string) {
+// parseSchemeAndPort sets scheme and ports accordingly
+// parseHost parse/set scheme & ports accordingly
+// returns scheme, port (string) expressions
+func parseSchemeAndPort(services []byte, scheme, port string) (string, string) {
 	re := regexp.MustCompile(`([a-zA-Z0-9-]+)\s+(\d+)`) // for configs/services
-	// re groups:     0. full match   - (ftp 21)
-	//                1. service      - (ftp) 21
-	//                2. port         - ftp (21)
+	// re groups:     0. full match   -   [ftp 21]
+	//                1. service      -   [ftp] 21
+	//                2. port         -   ftp [21]
 
-	if isVar(protocol) && !isVar(port) {
+	if isVar(scheme) && !isVar(port) {
 		// set corresponding port from configs/services
 		scanner := bufio.NewScanner(strings.NewReader(string(services[:])))
 		for scanner.Scan() {
 			match := re.FindStringSubmatch(scanner.Text())
-			if protocol == match[1] {
+			if scheme == match[1] {
 				port = "^" + match[2] + "$"
 			}
 		}
-	} else if !isVar(protocol) && !isVar(port) {
+	} else if !isVar(scheme) && !isVar(port) {
 		// set port to 80, 443
 		port = "^(80|443)$"
-	} else if isVar(protocol) && isVar(port) {
+	} else if isVar(scheme) && isVar(port) {
 		// set whatever port + service port
-		if protocol == "http" {
+		if scheme == "http" {
 			port = "^(80|" + port + ")$"
-		} else if protocol == "https" {
+		} else if scheme == "https" {
 			port = "^(443|" + port + ")$"
 		} else {
 			port = "^" + port + "$"
@@ -180,11 +181,11 @@ func parseProtocolAndPort(services []byte, protocol, port string) (string, strin
 	}
 
 	// set "Any" when not http(s)
-	if protocol != "http" && protocol != "https" {
-		protocol = "Any"
+	if scheme != "http" && scheme != "https" {
+		scheme = "Any"
 	}
 
-	return protocol, port
+	return scheme, port
 }
 
 // parseHost parse host portion
@@ -200,25 +201,25 @@ func parseHost(host string) string {
 	return host
 }
 
-// parseFile parse file portion
-// returns file (string) expression
-func parseFile(file string) string {
-	if isVar(file) {
+// parseFile parse path portion
+// returns path (string) expression
+func parseFile(path string) string {
+	if isVar(path) {
 		// replace wildcard
-		file = strings.Replace(file, "*", `[\S]*`, -1)
+		path = strings.Replace(path, "*", `[\S]*`, -1)
 		// escape '.'
-		file = strings.Replace(file, ".", `\.`, -1)
+		path = strings.Replace(path, ".", `\.`, -1)
 		// add wildcard after dir suffix
 		// note: this is not really needed as
 		// burp will treat blank files as wildcards
-		if strings.HasSuffix(file, "/") {
-			file = file + `[\S]*`
+		if strings.HasSuffix(path, "/") {
+			path = path + `[\S]*`
 		}
-		file = "^" + file + "$"
+		path = "^" + path + "$"
 	} else {
-		file = `^[\S]*$`
+		path = `^[\S]*$`
 	}
-	return file
+	return path
 }
 
 // isVar returns bool depening on len of var
