@@ -11,7 +11,7 @@ import (
 	"bufio"
 	"strings"
 
-	io "github.com/root4loot/rescope/internal/io"
+	file "github.com/root4loot/rescope/pkg/file"
 )
 
 var includes []string
@@ -24,7 +24,8 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 	var oldxml []string
 	var newxml []string
 
-	fr := io.ReadFileFromProjectRoot("configs/default.context", "internal")
+	// read default scope template
+	fr, err := file.ReadFromRoot("configs/default.context", "pkg")
 
 	// loop template and append each line to var
 	scanner := bufio.NewScanner(strings.NewReader(string(fr[:])))
