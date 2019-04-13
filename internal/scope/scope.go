@@ -25,6 +25,7 @@ type Match struct {
 	L2       [][]string // ip-range
 	L3       [][]string // ip/CIDR
 	Excludes []string   // to be excluded
+	Counter  int
 }
 
 // Parse function takes a slice containing scope file data and
@@ -113,7 +114,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 					if err != nil {
 						log.Fatalf("\n%s Failed to parse IP-range: %s", color.FgRed.Text("[!]"), m2[0])
 					} else {
-						counter++
+						m.Counter++
 						m.L2 = append(m.L2, hosts)
 						printFound(arr[0], exclude, silent)
 						if exclude == true {
@@ -131,7 +132,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 						continue
 					}
 					m.L1 = append(m.L1, arr)
-					counter++
+					m.Counter++
 					printFound(arr[0], exclude, silent)
 					if exclude == true {
 						m.Excludes = append(m.Excludes, arr[0])
