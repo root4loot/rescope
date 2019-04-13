@@ -16,7 +16,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/fatih/color"
+	"github.com/gookit/color"
 )
 
 // Match contains lists of regex matches
@@ -63,7 +63,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 		scanner := bufio.NewScanner(strings.NewReader(scope))
 		exclude = false // reset flag on each run
 
-		fmt.Printf("%s Grabbing targets from [%s]\n", grey("[-]"), files[i])
+		fmt.Printf("%s Grabbing targets from %s \n", color.FgGray.Text("[-]"), source[i])
 		for scanner.Scan() {
 			m1 := r1.FindAllStringSubmatch(scanner.Text(), -1)
 			m2 := r2.FindAllStringSubmatch(scanner.Text(), -1)
@@ -82,8 +82,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 					}
 					hosts, err := hostsFromCIDR(arr)
 					if err != nil {
-						fmt.Printf("\n%s Failed to parse IP/CIDR: %s", red("[!]"), m3)
-						log.Fatal(err)
+						log.Fatalf("\n%s Failed to parse IP/CIDR: %s", color.FgRed.Text("[!]"), m3)
 					} else {
 						m.L3 = append(m.L3, hosts)
 						counter++
@@ -105,8 +104,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 
 					hosts, err := hostsFromRange(arr)
 					if err != nil {
-						fmt.Printf("\n%s Failed to parse IP-range: %s", red("[!]"), m2[0])
-						log.Fatal(err)
+						log.Fatalf("\n%s Failed to parse IP-range: %s", color.FgRed.Text("[!]"), m2[0])
 					} else {
 						counter++
 						m.L2 = append(m.L2, hosts)
@@ -137,8 +135,9 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 			}
 		}
 
-		if counter == 0 {
-			fmt.Printf("%s No targets found in %s. Wrong file?", red("[!]"), files[i])
+		if m.Counter == 0 && bbaas {
+		} else if m.Counter == 0 && !bbaas {
+			fmt.Printf("%s No targets found in %s\n", color.FgRed.Text("[!]"), source[i])
 		}
 	}
 	return m
@@ -148,11 +147,11 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 func printFound(item string, exclude bool, silent bool) {
 	if exclude == true {
 		if !silent {
-			color.Red(" - " + item)
+			fmt.Println(color.FgRed.Text(" -  " + item))
 		}
 	} else {
 		if !silent {
-			color.Green(" + " + item)
+			fmt.Println(color.FgGreen.Text(" +  " + item))
 		}
 	}
 }
