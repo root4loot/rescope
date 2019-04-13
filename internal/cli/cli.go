@@ -18,10 +18,11 @@ import (
 	"github.com/fatih/color"
 )
 
-// CLI contains arguments
-type CLI struct {
+// Args flags
+type Args struct {
 	Command   string
 	Infiles   []string
+	URLs      []string
 	Outfile   string
 	Burp      bool
 	Zap       bool
@@ -29,11 +30,12 @@ type CLI struct {
 	Scopename string
 	verbose   string
 	version   bool
+	IncTag    string
 	ExTag     string
 }
 
-// Parse cli arguments
-func Parse() CLI {
+// ArgParse and check arguments etc
+func ArgParse() Args {
 	banner := `
   _ __ ___  ___  ___ ___  _ __   ___ 
  | '__/ _ \/ __|/ __/ _ \| '_ \ / _ \
@@ -56,32 +58,32 @@ Documentation:
 `
 	version := "0.3"
 	parser := argparse.NewParser("rescope", banner)
-	red := color.New(color.FgRed).SprintFunc()
+
 	//usage := parser.Usage
-	c := CLI{}
-	b := parser.Flag("b", "burp", &argparse.Options{Help: "Parse to Burp Suite JSON (required option)"})
-	z := parser.Flag("z", "zap", &argparse.Options{Help: "Parse to OWASP ZAP XML (required option)"})
-	i := parser.List("i", "infile", &argparse.Options{Help: "File (scope) to be parsed (required)\n\t\t Infile can be set multiple times"})
+	a := Args{}
+	b := parser.Flag("b", "burp", &argparse.Options{Help: "Parse to Burp Suite JSON (required option A)"})
+	z := parser.Flag("z", "zap", &argparse.Options{Help: "Parse to OWASP ZAP XML (required option A)"})
+	u := parser.List("u", "url", &argparse.Options{Help: "Public bug bounty program URL (required option B)\n\t\t URL can be set multiple times"})
+	i := parser.List("i", "infile", &argparse.Options{Help: "File (scope) to be parsed (required option B)\n\t\t Infile can be set multiple times"})
 	o := parser.String("o", "outfile", &argparse.Options{Help: "File to write parsed results (required)"})
 	n := parser.String("n", "name", &argparse.Options{Help: "Name of ZAP context"})
-	e := parser.String("e", "extag", &argparse.Options{Help: "Custom exclude tag (default: !EXCLUDE)"})
+	ex := parser.String("", "itag", &argparse.Options{Help: "Custom include tag (default: !INCLUDE)"})
+	in := parser.String("", "etag", &argparse.Options{Help: "Custom exclude tag (default: !EXCLUDE)"})
 	s := parser.Flag("s", "silent", &argparse.Options{Help: "Do not print identified targets"})
-	v := parser.Flag("", "version", &argparse.Options{Help: "Print version"})
-
-	_ = n
-	_ = s
-	_ = v
+	ver := parser.Flag("", "version", &argparse.Options{Help: "Display version"})
 
 	_ = parser.Parse(os.Args)
 
-	c.Burp = *b
-	c.Zap = *z
-	c.Infiles = *i
-	c.Outfile = *o
-	c.Scopename = *n
-	c.Silent = *s
-	c.ExTag = *e
-	c.version = *v
+	a.Burp = *b
+	a.Zap = *z
+	a.Infiles = *i
+	a.URLs = *u
+	a.Outfile = *o
+	a.Scopename = *n
+	a.Silent = *s
+	a.IncTag = *in
+	a.ExTag = *ex
+	a.version = *ver
 
 	// remove timestamp from exits
 	log.SetFlags(0)
@@ -90,20 +92,23 @@ Documentation:
 	var argErr []string
 
 	// print version
-	if c.version {
+	if a.version {
 		fmt.Println("rescope v" + version)
 		os.Exit(0)
 	}
 
 	// check for args and add to list
-	if !c.Burp && !c.Zap {
-		argErr = append(argErr, "Missing program identifier [-b|--burp] [-z|--zap]")
+	if !a.Burp && !a.Zap {
+		argErr = append(argErr, "Missing program identifier: (-b|--burp) | (-z|--zap)")
 	}
-	if !isList(c.Infiles) {
-		argErr = append(argErr, "Missing infile (-i <file>)")
+	if !isList(a.Infiles) && !isList(a.URLs) {
+		argErr = append(argErr, "Missing infile/URL: (-i|--infile <file>) | (-u|--url <url>)")
 	}
-	if !isVar(c.Outfile) {
-		argErr = append(argErr, "Missing outfile (-o <file>)")
+	if !isVar(a.Outfile) {
+		argErr = append(argErr, "Missing outfile [-o|--outfile <file>]")
+	}
+	if len(strings.Split(a.Outfile, ".")) < 2 {
+		argErr = append(argErr, "Outfile must have an extension (-o filename.ext)")
 	}
 
 	// print arg errors from list
@@ -115,12 +120,12 @@ Documentation:
 	}
 
 	// check/set scopename
-	if c.Command == "zap" {
-		if !isVar(c.Scopename) {
-			c.Scopename = setScopeName()
+	if a.Command == "zap" {
+		if !isVar(a.Scopename) {
+			a.Scopename = setScopeName()
 		}
 	}
-	return c
+	return a
 }
 
 // setScopeName for Zap Context
@@ -135,8 +140,8 @@ func setScopeName() string {
 }
 
 // GetScopeName for Zap Context
-func GetScopeName(c CLI) string {
-	return c.Scopename
+func GetScopeName(a Args) string {
+	return a.Scopename
 }
 
 // isVar check if var is empty or not

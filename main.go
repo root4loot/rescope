@@ -22,33 +22,30 @@ import (
 )
 
 func main() {
+	// file descriptors
+	var fds []*os.File
 	// data to be written to outfile
 	var buf []byte
+	// slice containing scope definitions
+	var source []string
+	// slice containing scope origins (filename or bugbounty url)
+	var scopes []string
+	// indicates whether BBaaS url was found
+	var bbaas bool
 	// struct containing various args
-	c := cli.Parse()
+	a := cli.ArgParse()
 
-	// fancy colors
-	grey := color.New(color.Faint).SprintFunc()
-	green := color.New(color.FgGreen).SprintFunc()
-	red := color.New(color.FgRed).SprintFunc()
-
-	// determine if infiles exists
-	for _, f := range c.Infiles {
-		if io.IsFileExist(f) != true {
-			fmt.Printf("\n%s Couldn't find file %s. Does it exist?", red("[!]"), f)
+	// Read infiles and add contents to scope list
+	if a.Infiles != nil {
+		for _, f := range a.Infiles {
+			if file.IsExist(f) != true {
+				log.Fatalf("\n%s File %s not found", color.FgRed.Text("[!]"), f)
 		}
 	}
 
-	// file descriptors
-	var fds []*os.File
-
 	// attempt to open infiles
-	for _, f := range c.Infiles {
-		fd, err := io.OpenFile(f)
-		// remember to close file
-		defer fd.Close()
-		// add to fds
-		fds = append(fds, fd)
+		for _, f := range a.Infiles {
+			fd, err := file.Open(f)
 
 		if err, ok := err.(*os.PathError); ok {
 			fmt.Printf("\n%s Failed to read %s.", red("[!]"), f)
@@ -70,9 +67,9 @@ func main() {
 		scopes = append(scopes, string(data[:]))
 	}
 
-	// apply regex matching to scopes
+	// Identify scope targets
 	m := scope.Match{}
-	m = scope.Parse(m, scopes, c.Command, c.Infiles, c.Silent, c.ExTag)
+	m = scope.Parse(m, scopes, source, a.Silent, a.IncTag, a.ExTag, bbaas)
 
 	// parse to burp/zap
 	if c.Burp {

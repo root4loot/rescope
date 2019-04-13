@@ -31,7 +31,7 @@ type Match struct {
 // applies regex to each line in order to extract targets from scope-
 // matched targets are split into groups varying on type (host, url, iprange, etc)
 // Returns a Match object containing all lists
-func Parse(m Match, scopes []string, command string, files []string, silent bool, exTag string) Match {
+func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, bbaas bool) Match {
 	var exclude bool
 	grey := color.New(color.Faint).SprintFunc()
 	red := color.New(color.FgRed).SprintFunc()
