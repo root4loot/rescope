@@ -18,7 +18,9 @@ import (
 	cli "github.com/root4loot/rescope/internal/cli"
 	io "github.com/root4loot/rescope/internal/io"
 	scope "github.com/root4loot/rescope/internal/scope"
+	url "github.com/root4loot/rescope/internal/url"
 	zap "github.com/root4loot/rescope/internal/zap"
+	file "github.com/root4loot/rescope/pkg/file"
 )
 
 func main() {
