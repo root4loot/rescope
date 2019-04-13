@@ -18,8 +18,7 @@ import (
 var includes []string
 var excludes []string
 
-// Parse takes slices containing regex matches and turns them into Zap
-// compatible XML (Context)
+// Parse takes slices containing regex matches and turns them into Zap compatible XML (Context)
 // Returns xml data as bytes
 func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 	var oldxml []string
@@ -32,15 +31,18 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Loop template and append each line to var
 	scanner := bufio.NewScanner(strings.NewReader(string(fr[:])))
 	for scanner.Scan() {
 		oldxml = append(oldxml, scanner.Text())
 	}
 
-	// L1 all matches except IP-range & IP/CIDR
+	// L1 (all matches except IP-range & IP/CIDR)
 	for _, submatch := range L1 {
 		match := submatch[0]
 		scheme := submatch[1]
+		port := submatch[5]
 		target := parse(match, scheme, port) // [0] fullmatch
 
 		if !isExclude(Excludes, submatch[0]) {
@@ -49,7 +51,7 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 		}
 	}
 
-	// L2 ip-range
+	// L2 (IP-Range)
 	for _, ipsets := range L2 {
 		for _, set := range ipsets {
 			ip := parse(set, "", "")
@@ -60,7 +62,7 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 		}
 	}
 
-	// l3 ip/CIDR
+	// l3 (IP/CIDR)
 	for _, ipsets := range L3 {
 		for _, set := range ipsets {
 			ip := parse(set, "", "")
@@ -71,7 +73,7 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 		}
 	}
 
-	// add to excludes
+	// Add to excludes
 	for _, item := range Excludes {
 		item := parse(item, "", "")
 		item = "<excregexes>" + item + "</excregexes>"
@@ -81,7 +83,7 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 	// replace line 3 in template with scope name
 	oldxml[3] = "<name>" + scopeName + "</name>"
 
-	// append each line of template (oldxml) to newxml.
+	// Append each line of template (oldxml) to newxml.
 	// at line 5, begin appending []includes and []excludes
 	for i, v := range oldxml {
 		newxml = append(newxml, v)
@@ -94,7 +96,8 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 			}
 		}
 	}
-	// convert string to byte, separated with newline
+
+	// Convert string to byte, separated with newline
 	xml := []byte(strings.Join(newxml, "\n"))
 	return xml
 }
@@ -103,12 +106,14 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 func parse(target, scheme, port string) string {
 	line := target
 
+	// if no scheme, no port // example.com
 	if len(scheme) == 0 && len(port) == 0 {
 		// scope only http/https
 		line = `http(s)?://` + line
 
 		// if port, but no scheme // example.com:8080
 	} else if len(scheme) == 0 && len(port) != 0 {
+		line = `[a-z]+://` + line + port
 
 		// if port and scheme
 	} else if len(scheme) != 0 && len(port) != 0 {
@@ -123,7 +128,7 @@ func parse(target, scheme, port string) string {
 	line = strings.Replace(line, ".", `\.`, -1)
 	// escape '/'
 	line = strings.Replace(line, "/", `\/`, -1)
-	// replace wildcard
+	// replace wildcards
 	line = strings.Replace(line, "*", `[\S]*`, -1)
 	// Zap needs this to scope URL params
 	line = `^` + line + `[\S]*$`
