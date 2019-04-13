@@ -16,7 +16,7 @@ import (
 	"regexp"
 	"strings"
 
-	io "github.com/root4loot/rescope/internal/io"
+	File "github.com/root4loot/rescope/pkg/file"
 )
 
 // Scope is the JSON structure that burp wants
@@ -68,8 +68,7 @@ var exslice ExcludeSlice
 // compatible JSON. Regex matches are split into groups. See Scope package.
 // Returns JSON data as byte
 func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
-	var host, protocol, port, file string
-	fr := io.ReadFileFromProjectRoot("configs/services", "internal")
+	fr, err := File.ReadFromRoot("configs/services", "internal")
 
 	// L1 (all matches except IP-range and IP/CIDR)
 	for _, submatch := range L1 {
