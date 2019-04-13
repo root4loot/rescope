@@ -55,8 +55,13 @@ func main() {
 			log.Fatal(err)
 		}
 
-	// file data
-	var scopes []string
+			// close
+			defer fd.Close()
+
+			// add to list of files
+			fds = append(fds, fd)
+
+		}
 
 		// get infile(s) contents
 	for _, fd := range fds {
@@ -65,8 +70,11 @@ func main() {
 				fmt.Println("\n%s Unable to read contents of %s", color.FgRed.Text("[!]"), fd.Name())
 			log.Fatal(err)
 		}
-		// append to scopes
+
+			// add to lists
 		scopes = append(scopes, string(data[:]))
+			source = append(source, fd.Name())
+		}
 	}
 
 	// Identify scope targets
