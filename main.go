@@ -72,6 +72,9 @@ func main() {
 	// Identify scope targets
 	m := scope.Match{}
 	m = scope.Parse(m, scopes, source, a.Silent, a.IncTag, a.ExTag, bbaas)
+	if m.Counter == 0 {
+		log.Fatalf("%s Nothing to do here ¯\\_(ツ)_/¯", color.FgRed.Text("[!]"))
+	}
 
 	// Parse to burp/zap
 	if a.Burp {
