@@ -12,7 +12,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/fatih/color"
+	"github.com/gookit/color"
 
 	burp "github.com/root4loot/rescope/internal/burp"
 	cli "github.com/root4loot/rescope/internal/cli"
@@ -47,20 +47,20 @@ func main() {
 		for _, f := range a.Infiles {
 			fd, err := file.Open(f)
 
+			// check err
 		if err, ok := err.(*os.PathError); ok {
-			fmt.Printf("\n%s Failed to read %s.", red("[!]"), f)
+				fmt.Println("\n%s Unable to read %s.", color.FgRed.Text("[!]"), f)
 			log.Fatal(err)
 		}
-	}
 
 	// file data
 	var scopes []string
 
-	// attempt to read infiles contents
+		// get infile(s) contents
 	for _, fd := range fds {
-		data, err := io.ReadFile(fd)
+			data, err := file.Read(fd)
 		if err != nil {
-			fmt.Printf("\n%s Failed to read contents of %s", red("[!]"), fd.Name())
+				fmt.Println("\n%s Unable to read contents of %s", color.FgRed.Text("[!]"), fd.Name())
 			log.Fatal(err)
 		}
 		// append to scopes
@@ -71,30 +71,27 @@ func main() {
 	m := scope.Match{}
 	m = scope.Parse(m, scopes, source, a.Silent, a.IncTag, a.ExTag, bbaas)
 
-	// parse to burp/zap
-	if c.Burp {
-		fmt.Printf("%s Parsing to JSON (Burp Suite)", grey("[-]"))
+	// Parse to burp/zap
+	if a.Burp {
+		fmt.Printf("%s Parsing to JSON (Burp Suite)", color.FgGray.Text("[-]"))
 		buf = burp.Parse(m.L1, m.L2, m.L3, m.Excludes)
-		fmt.Printf("\n%s Done", green("[✓]"))
-	} else if c.Zap {
-		fmt.Printf("%s Parsing to XML (OWASP ZAP)", grey("[-]"))
-		buf = zap.Parse(m.L1, m.L2, m.L3, m.Excludes, c.Scopename)
-		fmt.Printf("\n%s Done", green("[✓]"))
+	} else if a.Zap {
+		fmt.Printf("%s Parsing to XML (OWASP ZAP)", color.FgGray.Text("[-]"))
+		buf = zap.Parse(m.L1, m.L2, m.L3, m.Excludes, a.Scopename)
 	}
 
-	// attempt to create outfile
-	outfile, err := io.CreateFile(c.Outfile)
+	// Attempt to create outfile
+	outfile, err := file.Create(a.Outfile)
 	if err != nil {
-		fmt.Printf("\n%s Failed to create file at %s. Bad permisisons?", red("[!]"), outfile.Name())
-		log.Fatal(err)
+		log.Fatalf("\n%s Failed to create file at %s. Bad permisisons?", color.FgRed.Text("[!]"), outfile.Name())
 	}
 
 	// write to outfile assuming we have permissions
 	meta, err := io.WriteFile(outfile, buf)
 
-	if c.Burp {
-		fmt.Printf("\n%s Wrote %v bytes to %s\n\n", green("[✓]"), meta, outfile.Name())
-	} else if c.Zap {
-		fmt.Printf("\n%s Wrote %v bytes to %s\n\n", green("[✓]"), meta, outfile.Name())
+	if a.Burp {
+		fmt.Printf("\n%s Done. Wrote %v bytes to %s\n", color.FgGreen.Text("[✓]"), meta, outfile.Name())
+	} else if a.Zap {
+		fmt.Printf("\n%s Done. Wrote %v bytes to %s\n", color.FgGreen.Text("[✓]"), meta, outfile.Name())
 	}
 }
