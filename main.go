@@ -77,6 +77,9 @@ func main() {
 		}
 	}
 
+	// Deal with -u|--url
+	scopes, source, bbaas = url.BBaas(a.URLs, scopes, source)
+
 	// Identify scope targets
 	m := scope.Match{}
 	m = scope.Parse(m, scopes, source, a.Silent, a.IncTag, a.ExTag, bbaas)
