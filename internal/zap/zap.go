@@ -40,9 +40,8 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 	// L1 all matches except IP-range & IP/CIDR
 	for _, submatch := range L1 {
 		match := submatch[0]
-		protocol := submatch[1]
-		port := submatch[4]
-		target := parse(match, protocol, port) // [0] fullmatch
+		scheme := submatch[1]
+		target := parse(match, scheme, port) // [0] fullmatch
 
 		if !isExclude(Excludes, submatch[0]) {
 			item := "<incregexes>" + target + "</incregexes>"
@@ -101,22 +100,23 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 }
 
 // parse host, url, etc to regex
-func parse(target, protocol, port string) string {
+func parse(target, scheme, port string) string {
 	line := target
 
-	// if no protocol &  no port // example.com
-	if len(protocol) == 0 && len(port) == 0 {
+	if len(scheme) == 0 && len(port) == 0 {
 		// scope only http/https
 		line = `http(s)?://` + line
 
-		// if port, but no protocol // example.com:8080
-	} else if len(protocol) == 0 && len(port) != 0 {
-		// scope any protocol
-		line = `\w+://` + line
+		// if port, but no scheme // example.com:8080
+	} else if len(scheme) == 0 && len(port) != 0 {
 
-		// if protocol != http(s) // ftp://example.com
-	} else if len(protocol) != 0 && protocol != "http://" && protocol != "https://" {
-		line = protocol + `://` + line
+		// if port and scheme
+	} else if len(scheme) != 0 && len(port) != 0 {
+		line = scheme + `://` + line + port
+
+		// if scheme != http(s) // ftp://example.com
+	} else if len(scheme) != 0 && scheme != "http://" && scheme != "https://" {
+		line = scheme + `://` + line
 	}
 
 	// escape '.'
