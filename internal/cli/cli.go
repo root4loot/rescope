@@ -43,12 +43,13 @@ func ArgParse() Args {
  |_|  \___||___/\___\___/| .__/ \___|
   ~ r o o t 4 l o o t    |_|     v0.3
 	
-Setting Excludes (optional):
-  specify !EXCLUDE in -i <file> prior to targets you wish to exclude.         
+Example Usage:
+  rescope --burp -u hackerone.com/security -o burpscope.json  
+  rescope --zap  -u hackerone.com/security -o zapscope.context 
+  rescope --zap  -i scope.txt -o zap.context --name CoolScope
 
-Example Usage: 
-  rescope --burp -i scope.txt -o burp.json
-  rescope --zap  -i scope1.txt -i scope2.txt -o zap.context --name CoolScope              
+Exclude targets from infile:
+  specify !EXCLUDE in -i <file> prior to targets you wish to exclude.         
 
 Upgrading:
   go get -u github.com/root4loot/rescope 
