@@ -33,19 +33,19 @@ type Scope struct {
 // Include host details
 type Include struct {
 	Enabled  bool   `json:"enabled"`
-	File     string `json:"path"`
+	File     string `json:"file"`
 	Host     string `json:"host"`
 	Port     string `json:"port"`
-	Protocol string `json:"scheme"`
+	Protocol string `json:"protocol"`
 }
 
 // Exclude host details
 type Exclude struct {
 	Enabled  bool   `json:"enabled"`
-	File     string `json:"path"`
+	File     string `json:"file"`
 	Host     string `json:"host"`
 	Port     string `json:"port"`
-	Protocol string `json:"scheme"`
+	Protocol string `json:"protocol"`
 }
 
 // IncludeSlice contains Include structs
