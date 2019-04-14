@@ -45,7 +45,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 		exTag = "!EXCLUDE"
 	}
 
-	r1 := regexp.MustCompile(`([a-z]+:\/\/)?(\*\.)?([a-z0-9-.]+(\.[a-z]+))(:\d+)?([A-Za-z0-9-._~:/?#@!$&'*+,;=]+)?`)
+	r1 := regexp.MustCompile(`([a-z]+:\/\/)?(\*\.)?(\*?[a-z0-9-.]+(\.[a-z]+))(:\d+)?([A-Za-z0-9-._~:/?#@!$&'*+,;=]+)?`)
 	// Groups: 1.  [ftp]://sub.example.com:25/d/foo.bar    // scheme
 	//         2.   ftp://[*.]example.com:25/d/foo.bar     // wildcarded subdomain
 	//	       3.   ftp://[sub.example.com]:25/d/foo.bar   // host
@@ -59,7 +59,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 	//         2.   192.168.0.[1]-255   // start
 	//         3.   192.168.0.1-[255]   // end
 
-	r3 := regexp.MustCompile(`[\d\.]+\/\d{2}`) 
+	r3 := regexp.MustCompile(`[\d\.]+\/\d{2}`)
 	// Matches IP/CIDR
 
 	for i, scope := range scopes {
