@@ -118,10 +118,6 @@ func parse(target, scheme, port string) string {
 		// if port and scheme
 	} else if len(scheme) != 0 && len(port) != 0 {
 		line = scheme + `://` + line + port
-
-		// if scheme != http(s) // ftp://example.com
-	} else if len(scheme) != 0 && scheme != "http://" && scheme != "https://" {
-		line = scheme + `://` + line
 	}
 
 	// escape '.'
