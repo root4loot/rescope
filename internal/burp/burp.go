@@ -209,6 +209,8 @@ func parseFile(path string) string {
 		path = strings.Replace(path, "*", `[\S]*`, -1)
 		// escape '.'
 		path = strings.Replace(path, ".", `\.`, -1)
+		// escape '/'
+		path = strings.Replace(path, "/", `\/`, -1)
 		// add wildcard after dir suffix
 		// note: this is not really needed as
 		// burp will treat blank files as wildcards
