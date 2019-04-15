@@ -68,7 +68,7 @@ func ReadFromRoot(file, trim string) ([]byte, error) {
 		panic("No caller information")
 	}
 
-	// path to caller (project/dir/package/package.go)
+	// path to caller (project/dir/file)
 	caller = path.Dir(caller)
 	// path to caller parent dir (project/dir)
 	callerDir := filepath.Dir(caller)
