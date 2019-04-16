@@ -30,7 +30,7 @@ That's it! No more pulling your hair dealing with regular expressions and endles
 - [Importing to Burp/ZAP](#importing-to-burpzap)
 
 
-# Installation
+## Installation
 
 Requires [Go](<https://golang.org/>) and git
 
@@ -42,7 +42,7 @@ Make sure go/bin is added to PATH: `export PATH=$PATH:$GOPATH/bin`
 
 If you run into merge issues from v0.1 then delete the repo and install once again (sorry for the inconvenience.)
 
-# Features
+## Features
 
 * **New:** Define public scope(s) directly from any supported BBaaS (**Bug-Bounty-as-a-Service**) platform.
 * Define private scopes by copy/pasting target definitions from pretty much anywhere.
@@ -52,7 +52,7 @@ If you run into merge issues from v0.1 then delete the repo and install once aga
 * Supports IP-ranges & CIDR.
 * Outputs results that is compatible with Burp Suite and Zaproxy for direct import.
 
-## Supported Bug-Bounty Services (BBaaS)
+### Supported Bug-Bounty Services (BBaaS)
 
 - [bugcrowd.com](https://bugcrowd.com)
 - [hackerone.com](https://hackerone.com)
@@ -61,12 +61,12 @@ If you run into merge issues from v0.1 then delete the repo and install once aga
 - [openbugbounty.com](https://www.openbugbounty.org)
 - [yeswehack.com](https://yeswehack.com)
 
-# Usage
+## Usage
 ```
 usage: rescope [arguments]
 ```
 
-## Arguments
+### Arguments
 
 | Short | Long       | Description                   | Required     |
 | :----: |:---------:| :---------------------------  | :--------    |
@@ -82,8 +82,20 @@ usage: rescope [arguments]
 |       | --etag    | Custom exclude tag (default: !EXCLUDE) | Optional |
 |       | --version  | Print version                 | Optional     |
 
+### Example Usage
+Parse scopes from public bugbounty program to Burp (JSON)  
+`rescope --burp -u hackerone.com/security -o burpscope.json`  
 
-# Public Scopes
+Parse scopes from public bugbounty programs to ZAP (XML)  
+`rescope --zap --name CoolScope -u hackerone.com/security -o zapscope.context`
+
+Parse scope from infile having target definitions to Burp (JSON)  
+`rescope --burp -i scope.txt -o burpscope.json`
+
+### Example Result
+<img src="assets/example_result.png" width="730">
+
+## Public Scopes
 
 Defining scopes as a bugbounty researcher has never been this easy.  
 (For private bugbounty scopes, see [Private Scopes](#private-scopes))
@@ -120,7 +132,7 @@ The outputted results are ready to be [imported](#importing-to-burpzap) to eithe
 
 Note: You are not required to remove http(s):// from the program URL prior to running.  
 
-## Defining multiple scopes
+### Defining multiple scopes
 Defining multiple scopes at once (to the same result) is only a matter of setting `-u` <url> several times.
 ```
 rescope --zap -u hackerone.com/security -u bugcrowd.com/bugcrowd -u intigriti.com/intigriti/intigriti --name CoolScope -o zapscope.context
@@ -142,7 +154,7 @@ rescope --burp -i combined.txt -o burpscope.json
 There are no restrictions here so technically you could include every public program out there in existence to create one gigantic scope but needless to say, this is not a good idea. Always read through the entire policy for a given program before proceeding to import.
 
 
-# Private Scopes
+## Private Scopes
 
 rescope is not limited to public BBaaS scopes.  
 If your scope is private then list targets in a text file and pass it to `-i|—infile`.
@@ -192,7 +204,7 @@ $ rescope --burp -i scope.txt -o burpscope.json
 [✓] Done. Wrote 46555 bytes to burpscope.json
 ```
 
-## Setting Excludes
+### Setting Excludes
 
 Out-of-scope targets are set by specifying **!EXCLUDE** in the document, followed by the targets you want to exclude. Any target succeeding this tag is excluded (exclusively) from the scope. A custom exclude tag can be set with the optional `--etag` argument.
 
@@ -227,7 +239,7 @@ target2.example.com
 target3.example.com
 ```
 
-# Combining Public and Private Scopes
+## Combining Public and Private Scopes
 
 Rescope is flexible in that you can define both public and private scopes to the same result.  
 This is accomplished by simply combining `-u` <url> and `-i` <infile> as seen below.
@@ -265,9 +277,9 @@ $ rescope --zap --name CoolScope -i scope.txt -o zapscope.context --silent
 ```
 
 
-# Importing to Burp/ZAP
+## Importing to Burp/ZAP
 
-## Burp Suite
+### Burp Suite
 1. Head to **Target** 
 2. Head to **Scope** 
 3. Tick the **Use advanced scope control** checkbox
@@ -275,18 +287,18 @@ $ rescope --zap --name CoolScope -i scope.txt -o zapscope.context --silent
 5. Select **Load options**
 6. Choose JSON file
 
-## OWASP ZAP
+### OWASP ZAP
 Choose **File** -> **Import Context** and select XML file.
 
 **Note:**
 If you set `-o` filename extension to anything other than `.context` then you'll have to choose "All Format" in file select.
 
-# Caveats
+## Caveats
 
 rescope cannot guarantee accurate results all the time. For instance, a bugbounty program may decide to list targets in a non-conventional way that is not accounted for. Therefore, always verify the results yourself before importing.
 
-# Author
+## Author
 * Daniel Antonsen ([root4loot](https://twitter.com/root4loot))
 
-# License
+## License
 Licensed under MIT (see license file)
