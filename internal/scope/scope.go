@@ -111,8 +111,8 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 						continue
 					}
 
-					hosts, err := hostsFromRange(arr)
-					if err != nil {
+					hosts, err1, err2 := hostsFromRange(arr)
+					if err1 != nil || err2 != nil {
 						log.Fatalf("\n%s Failed to parse IP-range: %s", color.FgRed.Text("[!]"), m2[0])
 					} else {
 						m.Counter++
@@ -167,11 +167,11 @@ func printFound(item string, exclude bool, silent bool) {
 
 // hostsFromRange takes a m2 slice containing IP-range substrings
 // converts range to a list of hosts and returns this
-func hostsFromRange(m []string) ([]string, error) {
+func hostsFromRange(m []string) ([]string, error, error) {
 	ip := m[1] // [192.168.]0.1-255
 
-	start, err := strconv.Atoi(m[2]) // 192.168.0.(1)-255
-	end, err := strconv.Atoi(m[3])   // 192.168.(0).(1)-(255)
+	start, err1 := strconv.Atoi(m[2]) // 192.168.0.(1)-255
+	end, err2 := strconv.Atoi(m[3])   // 192.168.(0).(1)-(255)
 	var ips []string
 
 	// loop range and append to list
@@ -179,7 +179,7 @@ func hostsFromRange(m []string) ([]string, error) {
 		ip := ip + strconv.Itoa(i)
 		ips = append(ips, ip)
 	}
-	return ips, err
+	return ips, err1, err2
 }
 
 // hostsFromCIDR takes a m3 slice containing IP/CIDR substrings
