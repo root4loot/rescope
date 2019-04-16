@@ -9,7 +9,6 @@ package zap
 
 import (
 	"bufio"
-	"log"
 	"strings"
 
 	file "github.com/root4loot/rescope/pkg/file"
@@ -25,12 +24,7 @@ func Parse(L1, L2, L3 [][]string, Excludes []string, scopeName string) []byte {
 	var newxml []string
 
 	// read default scope template
-	fr, err := file.ReadFromRoot("configs/default.context", "pkg")
-
-	// check err
-	if err != nil {
-		log.Fatal(err)
-	}
+	fr := file.ReadFromRoot("configs/default.context", "pkg")
 
 	// Loop template and append each line to var
 	scanner := bufio.NewScanner(strings.NewReader(string(fr[:])))

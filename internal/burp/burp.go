@@ -69,7 +69,7 @@ var exslice ExcludeSlice
 // Returns JSON data as byte
 func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 	var host, scheme, port, path string
-	fr, err := File.ReadFromRoot("configs/services", "pkg")
+	fr := File.ReadFromRoot("configs/services", "pkg")
 
 	// L1 (all matches except IP-range and IP/CIDR)
 	for _, submatch := range L1 {

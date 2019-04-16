@@ -10,6 +10,7 @@ package files
 import (
 	"bufio"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -61,7 +62,7 @@ func Write(f *os.File, data []byte) (int, error) {
 // Example: caller is 'project/pkg/files' and you want to read 'project/dir/somefile.xml'
 // ReadFromRoot("configs/somefile.xml", "pkg")
 // returns file data and error, if any
-func ReadFromRoot(file, trim string) ([]byte, error) {
+func ReadFromRoot(file, trim string) []byte {
 	// runtime caller
 	_, caller, _, ok := runtime.Caller(0)
 	if !ok {
@@ -79,9 +80,15 @@ func ReadFromRoot(file, trim string) ([]byte, error) {
 
 	// open and read
 	fo, err := Open(file)
+	if err != nil {
+		log.Fatal(err)
+	}
 	fr, err := Read(fo)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// close
 	defer fo.Close()
 
-	return fr, err
+	return fr
 }
