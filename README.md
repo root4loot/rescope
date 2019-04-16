@@ -1,6 +1,6 @@
 
 ![](assets/logo.png)
-![GitHub release](https://img.shields.io/github/release/root4loot/rescope.svg)
+![GitHub release](https://img.shields.io/github/release-pre/root4loot/rescope.svg)
 ![GitHub](https://img.shields.io/github/license/root4loot/rescope.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/root4loot/rescope)](https://goreportcard.com/report/github.com/root4loot/rescope)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/root4loot/rescope/issues)
