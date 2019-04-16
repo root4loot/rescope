@@ -1,338 +1,293 @@
 
-
-# rescope
-![GitHub](https://img.shields.io/github/license/root4loot/rescope.svg)
+![](assets/logo.png)
 ![GitHub release](https://img.shields.io/github/release/root4loot/rescope.svg)
+![GitHub](https://img.shields.io/github/license/root4loot/rescope.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/root4loot/rescope)](https://goreportcard.com/report/github.com/root4loot/rescope)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/root4loot/rescope/issues)
 ![Twitter Follow](https://img.shields.io/twitter/follow/root4loot.svg?style=social)
 
-rescope is a tool (Go) that lets you quickly define scopes in Burp/ZAP - mainly intended for "bug hunters" and pentesters who deal with large scopes. See [blog post](https://root4loot.com/post/introducing_rescope/) for context/background.
+**NEW: Define scopes directly from nearly any public "bugbounty-service" program.**     
+**Blog post:** http://root4loot.com/post/announcing_rescope_v1.0
 
-Simply provide a scope (file containing target identifiers) and rescope parses this to a file format that can be imported from Burp/ZAP directly.
+Rescope is a cli-tool (written in Go) that aims to make life easier when defining scopes in Burp Suite and OWASP ZAP, by eliminating the many hoops one has to go through with current workflows - geared towards pentesters and bug-bounty researchers.
 
-<img src="http://root4loot.com/post/introducing_rescope/assets/rescope03.gif" width="650">
+- [Installation](#installation)
+- [Features](#features)
+- [Supported bugbounty platforms](#supported-bug-bounty-services-bbaas)
+- [Usage](#usage)
+- [Arguments](#arguments)
+- [Public scopes](#public-scopes)
+- [Private scopes](#private-scopes)
+- [Combining Public and Private Scopes](#combining-public-and-private-scopes)
+- [Importing to Burp/ZAP](#importing-to-burpzap)
 
-## Features 
+#   
+  
+### How it works
+1. Provide any public or private scope.
+2. rescope takes care of the rest and spits out a (JSON/XML) file that is compatible with Burp/Zap.
+3. Import results from Burp/Zap.
 
-- Identifies targets from scope (give it any structure/format)
-- Set excludes in addition to includes
-- Parse multiple scope-files at once (combine scopes)
-- Takes care of wildcards, files, protocols, ports (saves you from messing with regex)
-- Supports parsing IP ranges/CIDR (aside from domains/hosts)
+That's it! No more pulling your hair dealing with regular expressions and endlessly adding targets from the sitemap. Your scope should be ready and you are good to go.
 
-## Installation
 
-Requires [Go](https://golang.org/doc/install#install) (tested on 1.11.4).  
-```
-go get github.com/root4loot/rescope
-```
+# Installation
 
-### Compiling and running
-Compiling is easy with Go.
-```
-go install github.com/root4loot/rescope
-```
-By default, Go saves binaries to `$GOPATH/bin/` which is typically `~/go/bin/` on Unix and `%USERPROFILE%\go` on Windows. Once compiled, simply create a soft link from a desired location.
-```
-ln -s ~/go/bin/rescope /usr/local/bin/rescope
-```
-```
-rescope --version
-```
+Requires [Go](<https://golang.org/>) and git
 
-### Upgrading
 ```
 go get -u github.com/root4loot/rescope
 ```
-If you run into merge conflicts, then delete the repo and install once again. Sorry for the inconvenience.
 
-## Usage
+Make sure go/bin is added to PATH: `export PATH=$PATH:$GOPATH/bin`
+
+If you run into merge issues from v0.1 then delete the repo and install once again (sorry for the inconvenience.)
+
+# Features
+
+* **New:** Define public scope(s) directly from any supported BBaaS (**Bug-Bounty-as-a-Service**) platform.
+* Define private scopes by copy/pasting target definitions from pretty much anywhere.
+* Combine private and public scopes.
+* Easily separate excludes from includes.
+* Parse multiple scopes to the same result.
+* Supports IP-ranges & CIDR.
+* Outputs results that is compatible with Burp Suite and Zaproxy for direct import.
+
+## Supported Bug-Bounty Services (BBaaS)
+
+- [bugcrowd.com](https://bugcrowd.com)
+- [hackerone.com](https://hackerone.com)
+- [hackenproof.com](https://hackenproof.com)
+- [intigriti.com](https://www.intigriti.com/public)
+- [openbugbounty.com](https://www.openbugbounty.org)
+- [yeswehack.com](https://yeswehack.com)
+
+# Usage
 ```
-usage: rescope [[-z|--zap | [-b]--burp] [-i|--infile "<filepath>" ...]] [-o|--outfile "<filepath>"]]] [-n|--name "<value>"] [-e|--extag "<value>"] [-s|--silent] [-h|--help] [--version]]
-```
-
-### Arguments
-
-| Short | Long | Description   | 
-| :------------- |:-------------| :-----  | 
-| -h | --help     | Print help information |
-| -b | --burp     | Parse to Burp Suite JSON (required option) |
-| -z | --zap      | Parse to OWASP ZAP XML (required option) |
-| -i | --infile   | File (scope) to be parsed (required) | 
-| -o | --outfile  | File to write parsed results (required) |
-| -s | --silent   | Do not print identified targets |
-| -n | --name     | Name of ZAP context |
-| -e | --extag    | Custom exclude tag (default: !EXCLUDE) |
-|    | --version  | Print version |
-
------
-
-### Example Usage
-
-Parse scope to Burp Suite compatible JSON:
-```
-rescope --burp -i scope.txt -o burp.json
-```
-
-Parse scope to ZAP compatible XML:
-```
-rescope --zap -i scope.txt -o zap.context
+usage: rescope [arguments]
 ```
 
-Parse multiple scopes to ZAP XML, set context name, silence output:
+## Arguments
+
+| Short | Long       | Description                   | Required     |
+| :----: |:---------:| :---------------------------  | :--------    |
+| -h    | --help     | Print help information        | Optional     |
+| -b    | --burp     | Parse to Burp Suite JSON      | Required     |
+| -z    | --zap      | Parse to OWASP ZAP XML        | Required     |
+| -u    | --url      | Public bug bounty program URL | Required     |
+| -i    | --infile   | File (scope) to be parsed     | Required     |
+| -o    | --outfile  | File to write parsed results  | Required     |
+| -s    | --silent   | Do not print identified targets | Optional   |
+| -n    | --name     | Name of ZAP context           | Optional     |
+|       | --itag    | Custom include tag (default: !INCLUDE) | Optional |
+|       | --etag    | Custom exclude tag (default: !EXCLUDE) | Optional |
+|       | --version  | Print version                 | Optional     |
+
+
+# Public Scopes
+
+Defining scopes as a bugbounty researcher has never been this easy.  
+(For private bugbounty scopes, see [Private Scopes](#private-scopes))
+
 ```
-rescope --zap -i scope1.txt -i scope2.txt -o zap.context -n CoolScopeName --silent
+rescope --burp -u hackerone.com/security -o burpscope.json
+```
+rescope will print out a list of identified targets as seen below. Use this list to verify that it got what you wanted.  
+Includes (+) are highlighted in Green, and Excludes (-) in Red.
+
+```diff
+$ rescope --burp -u hackerone.com/security -o burpscope.json
+[-] Grabbing targets from hackerone.com/security 
++  https://hackerone.com
++  https://api.hackerone.com
++  *.vpn.hackerone.net
++  https://hackerone-us-west-2-production-attachments.s3-us-west-2.amazonaws.com/
++  https://www.hackerone.com
++  https://errors.hackerone.net
++  https://*.hackerone-ext-content.com
++  https://ctf.hacker101.com
++  https://*.hackerone-user-content.com/
++  66.232.20.0/23
++  206.166.248.0/23
+-  https://support.hackerone.com
+-  https://ma.hacker.one
+-  https://www.hackeronestatus.com/
+-  https://info.hacker.one/
+-  https://go.hacker.one
+[-] Parsing to JSON (Burp Suite)
+[✓] Done. Wrote 185786 bytes to burpscope.json
+```
+The outputted results are ready to be [imported](#importing-to-burpzap) to either Burp or Zap- depending on your choice. But before you do, make sure that you've read (and understood) the program policy ;)
+
+Note: You are not required to remove http(s):// from the program URL prior to running.  
+
+## Defining multiple scopes
+Defining multiple scopes at once (to the same result) is only a matter of setting `-u` <url> several times.
+```
+rescope --zap -u hackerone.com/security -u bugcrowd.com/bugcrowd -u intigriti.com/intigriti/intigriti --name CoolScope -o zapscope.context
 ```
 
+Alternatively, list them in an infile as so.
+```
+$ cat combined.txt
+hackerone.com/security
+bugcrowd.com/bugcrowd
+intigriti.com/intigriti/intigriti
+```
+And pass this as an infile.
 
-### Setting Excludes
+```
+rescope --burp -i combined.txt -o burpscope.json
+```
 
-rescope treats identified targets as Includes by default.  
-To set Excludes, specify an **!EXCLUDE** tag anywhere in your scope file, followed by the targets you wish to exclude. 
-If this tag does not work for you, then a custom one can be set from the `--extag (-e)` parameter.
+There are no restrictions here so technically you could include every public program out there in existence to create one gigantic scope but needless to say, this is not a good idea. Always read through the entire policy for a given program before proceeding to import.
 
-## Example
 
-rescope will attempt to identify target-identifiers from the scope(s) you provide. This enables you to quickly copy/paste the scope section from various places to a file and serve this directly to rescope without having to do much edits in prior. It doesn’t matter what comes before and after the identifiers, as long as they’re there. 
+# Private Scopes
 
-Consider the following scope having both **in-scope** and **out-of-scope** targets:
+rescope is not limited to public BBaaS scopes.  
+If your scope is private then list targets in a text file and pass it to `-i|—infile`.
+
+Example scope:
+
 ```
 $ cat scope.txt
-In Scope:
-Critical http://admin.example.com/login.aspx
-Critical https://example.com:8080/upload/*
-Critical *.dev.example.com and *.prod.example.com
-High     10.10.10.1-2 (testing)
-
-Out of Scope:
-bgp.example.com:179
-*.vendor.example.com/assets/
-ftp://10.10.10.1
+target1.example.com
+target2.example.com
+target3.example.com
+192.168.0.1/24
+10.10.10.1-3
 ```
 
-As you can see, most of these identifiers have leading text/whitespace and so on. But that's totally fine!  
-The only thing we have to do in this case, is to specify an **!EXCLUDE** tag _before_ the "Out of Scope" identifiers.
-
-```diff
-In Scope:
-Critical http://admin.example.com/login.aspx
-Critical https://example.com:8080/upload/*
-Critical *.dev.example.com and *.prod.example.com
-High     10.10.10.1-2 (testing)
-
-+ !EXCLUDE
-Out of Scope:
-bgp.example.com:179
-*.vendor.example.com/assets/
-ftp://10.10.10.1
 ```
-Having saved this, we're ready to parse and import results to either Burp Suite or ZAP.
+rescope --burp -i scope.txt -o burpscope.json
+```
+Defining multiple scopes at once (to the same result) is only a matter of setting `-i` <infile> several times.
+```
+rescope --zap -i scope1.txt -i scope2.txt --name CoolScope -o zapscope.context
+```
 
+One of the "cool" things about rescope is that it'll "automagically" detect the targets from the scope you provide- meaning they don't have to be in a specific structure/format. This allows you to simply copy/paste the scope from pretty much anywhere and provide it to rescope without the need of having to filter it out in advance.
 
-### Parsing to Burp Suite JSON
+I.e., the same scope as above, but with some leading/ending text and multiple targets on the same line.
 
-Parsing scope to Burp JSON is easy.
+```sh
+$ cat scope.txt
+High priority: target1.example.com
+Medium: target2.example.com and target3.example.com
+Internal: 192.168.0.1/24 (department A)
+          10.10.10.1-3
+```
+
+As seen below, rescope was able to identify the targets, despite having leading text or multiple hosts on the same line. Includes (+) are highlighted in Green, and Excludes (-) in Red. Use this list to verify that it got what you wanted.
 
 ```diff
-$ rescope --burp -i scope.txt -o burp.json
-[-] Grabbing targets from [scope.txt]
-+ http://admin.example.com/login.aspx
-+ https://example.com:8080/upload/*
-+ *.dev.example.com
-+ *.prod.example.com
-+ 10.10.10.1-2
-- bgp.example.com:179
-- *.vendor.example.com/assets/
-- ftp://10.10.10.1
+$ rescope --burp -i scope.txt -o burpscope.json
+[-] Grabbing targets from scope.txt
++  target1.example.com
++  target2.example.com
++  target3.example.com
++  192.168.0.1/24
++  10.10.10.1-3
 [-] Parsing to JSON (Burp Suite)
-[✓] Done
-[✓] Wrote 1732 bytes to burp.json
-```
-rescope will highlight Includes in Green and Excludes in Red, unless `--silent (-s)` was set.
-
-#### Parsed results
-
-See [importing to Burp](#to-burp-suite)
-
-```
-$ cat burp.json 
-{
-  "target": {
-    "scope": {
-      "advanced_mode": true,
-      "exclude": [
-        {
-          "enabled": true,
-          "file": "^[\\S]*$",
-          "host": "^bgp\\.example\\.com$",
-          "port": "^179$",
-          "protocol": "Any"
-        },
-        {
-          "enabled": true,
-          "file": "^/assets/[\\S]*$",
-          "host": "^[\\S]*\\.vendor\\.example\\.com$",
-          "port": "^(80|443)$",
-          "protocol": "Any"
-        },
-        {
-          "enabled": true,
-          "file": "^[\\S]*$",
-          "host": "^10\\.10\\.10\\.1$",
-          "port": "^21$",
-          "protocol": "Any"
-        }
-      ],
-      "include": [
-        {
-          "enabled": true,
-          "file": "^/login\\.aspx$",
-          "host": "^admin\\.example\\.com$",
-          "port": "^80$",
-          "protocol": "http"
-        },
-        {
-          "enabled": true,
-          "file": "^/upload/[\\S]*$",
-          "host": "^example\\.com$",
-          "port": "^(443|8080)$",
-          "protocol": "https"
-        },
-        {
-          "enabled": true,
-          "file": "^[\\S]*$",
-          "host": "^[\\S]*\\.dev\\.example\\.com$",
-          "port": "^(80|443)$",
-          "protocol": "Any"
-        },
-        {
-          "enabled": true,
-          "file": "^[\\S]*$",
-          "host": "^[\\S]*\\.prod\\.example\\.com$",
-          "port": "^(80|443)$",
-          "protocol": "Any"
-        },
-        {
-          "enabled": true,
-          "file": "^[\\S]*$",
-          "host": "^10\\.10\\.10\\.1$",
-          "port": "^(80|443)$",
-          "protocol": "Any"
-        },
-        {
-          "enabled": true,
-          "file": "^[\\S]*$",
-          "host": "^10\\.10\\.10\\.2$",
-          "port": "^(80|443)$",
-          "protocol": "Any"
-        }
-      ]
-    }
-  }
-}
+[✓] Done. Wrote 46555 bytes to burpscope.json
 ```
 
-### Parsing to OWASP ZAP XML
+## Setting Excludes
 
-Parsing scope to ZAP XML is just as easy as with Burp.
-However, there are a couple of things to note:
+Out-of-scope targets are set by specifying **!EXCLUDE** in the document, followed by the targets you want to exclude. Any target succeeding this tag is excluded (exclusively) from the scope. A custom exclude tag can be set with the optional `--etag` argument.
 
-* ZAP requires all scopes (contexts) to have unique names. Names can be set with the `--name` or `-n` parameter. If no name is given, then rescope will ask for one.
-* The default file extension for importing/exporting scopes in ZAP is **.context**. Although not required, it is advised to use this exension for the outfile, to avoid having to take unnecessary steps when importing it later. 
+Example (scope.txt):
 
-```diff
-$ rescope --zap -i scope.txt -o zap.context -n CoolScopeName
-[-] Grabbing targets from [scope.txt]
-+ http://admin.example.com/login.aspx
-+ https://example.com:8080/upload/*
-+ *.dev.example.com
-+ *.prod.example.com
-+ 10.10.10.1-2
-- bgp.example.com:179
-- *.vendor.example.com/assets/
-- ftp://10.10.10.1
+```
+In-Scope:
+target1.example.com
+target2.example.com
+target3.example.com
+
+!EXCLUDE
+Out-of-Scope:
+target4.example.com
+target5.example.com
+```
+
+If the "out-of-scope" targets happen to come _before_ the list of includes, then you must either move out-of-scope section _after_ the list of includes, or provide an **!INCLUDE** tag before the list of in-scope targets. A custom include tag can be set with the optional `--itag` argument.
+
+Example (scope.txt):
+
+```
+!EXCLUDE
+Out-of-Scope:
+target4.example.com
+target5.example.com
+
+!INCLUDE  <-- required when excludes come first
+In-Scope:
+target1.example.com
+target2.example.com
+target3.example.com
+```
+
+# Combining Public and Private Scopes
+
+Rescope is flexible in that you can define both public and private scopes to the same result.  
+This is accomplished by simply combining `-u` <url> and `-i` <infile> as seen below.
+
+```sh
+rescope --burp -i scope.txt -u bugcrowd.com/bugcrowd -o burpscope.json
+```
+
+Alternatively, you can include BBaaS URL's in an infile, along with your private identifiers.  
+The position at which you place these URL's does not matter.
+
+```
+$ cat scope.txt
+bugcrowd.com/bugcrowd
+hackerone.com/security  
+intigriti.com/intigriti/intigriti  
+!INCLUDE
+target1.example.com
+target2.example.com
+!EXCLUDE
+target3.example.com
+```
+
+```
+$ rescope --zap --name CoolScope -i scope.txt -o zapscope.context --silent
+[-] Identified BBaaS program (bugcrowd.com/bugcrowd) in scope.txt
+[-] Identified BBaaS program (hackerone.com/security) in scope.txt
+[-] Identified BBaaS program (intigriti.com/intigriti/intigriti) in scope.txt
+[-] Grabbing targets from scope.txt
+[-] Grabbing targets from bugcrowd.com/bugcrowd
+[-] Grabbing targets from hackerone.com/security
+[-] Grabbing targets from intigriti.com/intigriti/intigriti
 [-] Parsing to XML (OWASP ZAP)
-[✓] Done
-[✓] Wrote 2154 bytes to zap.context
+[✓] Done. Wrote 68994 bytes to zapscope.context
 ```
 
-#### Parsed results
 
-See [importing to ZAP](#to-owasp-zap)
+# Importing to Burp/ZAP
 
-rescope uses the default ZAP context as a template for creating new ones, meaning it'll include the default "technologies" as well. This can be easily removed from the application once the scope/context has been set.
-
-```
-$ cat zap.context | head -n 45
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<configuration>
-<context>
-<name>CoolScopeName</name>
-<desc/>
-<inscope>true</inscope>
-<incregexes>^http:\/\/admin\.example\.com\/login\.aspx[\S]*$</incregexes>
-<incregexes>^https:\/\/example\.com:8080\/upload\/[\S]*[\S]*$</incregexes>
-<incregexes>^http(s)?:\/\/[\S]*\.dev\.example\.com[\S]*$</incregexes>
-<incregexes>^http(s)?:\/\/[\S]*\.prod\.example\.com[\S]*$</incregexes>
-<incregexes>^http(s)?:\/\/10\.10\.10\.1[\S]*$</incregexes>
-<incregexes>^http(s)?:\/\/10\.10\.10\.2[\S]*$</incregexes>
-<excregexes>^http(s)?:\/\/bgp\.example\.com:179[\S]*$</excregexes>
-<excregexes>^http(s)?:\/\/[\S]*\.vendor\.example\.com\/assets\/[\S]*$</excregexes>
-<excregexes>^http(s)?:\/\/ftp:\/\/10\.10\.10\.1[\S]*$</excregexes>
-<tech>
-<include>Db</include>
-<include>Db.Firebird</include>
-<include>Db.HypersonicSQL</include>
-<include>Db.IBM DB2</include>
-<include>Db.Microsoft Access</include>
-<include>Db.Microsoft SQL Server</include>
-<include>Db.MySQL</include>
-<include>Db.Oracle</include>
-<include>Db.PostgreSQL</include>
-<include>Db.SAP MaxDB</include>
-<include>Db.SQLite</include>
-<include>Db.Sybase</include>
-<include>Language</include>
-<include>Language.ASP</include>
-<include>Language.C</include>
-<include>Language.PHP</include>
-<include>Language.XML</include>
-<include>OS</include>
-<include>OS.Linux</include>
-<include>OS.MacOS</include>
-<include>OS.Windows</include>
-<include>SCM</include>
-<include>SCM.Git</include>
-<include>SCM.SVN</include>
-<include>WS</include>
-<include>WS.Apache</include>
-<include>WS.IIS</include>
-<include>WS.Tomcat</include>
-</tech>
-```
-
-## Importing
-
-### To Burp Suite
-1. Go to **Target** pane
-2. Go to **Scope** pane
+## Burp Suite
+1. Head to **Target** 
+2. Head to **Scope** 
 3. Tick the **Use advanced scope control** checkbox
-4. Click the gear (⚙︎) icon 
+4. Click the ⚙︎ icon 
 5. Select **Load options**
-6. Select outputted JSON file from rescope
+6. Choose JSON file
 
-### To OWASP ZAP
-**File** -> **Import Context** -> Select outputted XML file from rescope
+## OWASP ZAP
+Choose **File** -> **Import Context** and select XML file.
 
-Note: If you set `-o` filename extension to anything other than `.context` then you'll have to set 'File Format:' to 'All' in file select.
+**Note:**
+If you set `-o` filename extension to anything other than `.context` then you'll have to choose "All Format" in file select.
 
+# Caveats
 
-## Disclaimer
-- This is my first project in Go (and I don't consider myself a developer) so bear that in mind as far as the code goes.
-- rescope may (without my knowledge) identify or parse scope-identifiers inaccurately. Therefore you should probably go over the results yourself and make sure it got what you wanted. If not then please [submit an issue](https://github.com/root4loot/rescope/issues). Alternatively you can always find me on [Twitter](https://twitter.com/root4loot).
+rescope cannot guarantee accurate results all the time. For instance, a bugbounty program may decide to list targets in a non-conventional way that is not accounted for. Therefore, always verify the results yourself before importing.
 
+# Author
+* Daniel Antonsen ([root4loot](https://twitter.com/root4loot))
 
-## Author
-* Daniel Antonsen (root4loot)
-
-## License
-Licensed under MIT (see file **LICENSE**)
+# License
+Licensed under MIT (see license file)
