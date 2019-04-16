@@ -42,7 +42,7 @@ func GET(url string) string {
 func POST(url string, data []byte) []byte {
 
 	// request
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Connection", "close")
 	client := &http.Client{}
