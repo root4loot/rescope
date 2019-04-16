@@ -11,6 +11,14 @@
 
 Rescope is a cli-tool (written in Go) that aims to make life easier when defining scopes in Burp Suite and OWASP ZAP, by eliminating the many hoops one has to go through with current workflows - geared towards pentesters and bug-bounty researchers.
 
+### How it works
+1. Provide any public or private scope.
+2. rescope takes care of the rest and spits out a (JSON/XML) file that is compatible with Burp/Zap.
+3. Import results from Burp/Zap.
+
+That's it! No more pulling your hair dealing with regular expressions and endlessly adding targets from the sitemap. Your scope should be ready and you are good to go.
+
+
 - [Installation](#installation)
 - [Features](#features)
 - [Supported bugbounty platforms](#supported-bug-bounty-services-bbaas)
@@ -20,15 +28,6 @@ Rescope is a cli-tool (written in Go) that aims to make life easier when definin
 - [Private scopes](#private-scopes)
 - [Combining Public and Private Scopes](#combining-public-and-private-scopes)
 - [Importing to Burp/ZAP](#importing-to-burpzap)
-
-#   
-  
-### How it works
-1. Provide any public or private scope.
-2. rescope takes care of the rest and spits out a (JSON/XML) file that is compatible with Burp/Zap.
-3. Import results from Burp/Zap.
-
-That's it! No more pulling your hair dealing with regular expressions and endlessly adding targets from the sitemap. Your scope should be ready and you are good to go.
 
 
 # Installation
