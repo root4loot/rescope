@@ -100,13 +100,13 @@ Documentation:
 
 	// check for args and add to list
 	if !a.Burp && !a.Zap {
-		argErr = append(argErr, "Missing program identifier: (-b|--burp) | (-z|--zap)")
+		argErr = append(argErr, "Missing Burp (--burp) or ZAP (--zap)")
 	}
 	if !isList(a.Infiles) && !isList(a.URLs) {
-		argErr = append(argErr, "Missing infile/URL: (-i|--infile <file>) | (-u|--url <url>)")
+		argErr = append(argErr, "Missing (-i <file>) or bugbounty (-u <url>)")
 	}
 	if !isVar(a.Outfile) {
-		argErr = append(argErr, "Missing outfile [-o|--outfile <file>]")
+		argErr = append(argErr, "Missing (-o <outfile>)")
 	}
 	if len(strings.Split(a.Outfile, ".")) < 2 {
 		argErr = append(argErr, "Outfile must have an extension (-o filename.ext)")
