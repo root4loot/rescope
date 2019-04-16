@@ -27,7 +27,7 @@ That's it! No more pulling your hair dealing with regular expressions and endles
 - [Public scopes](#public-scopes)
 - [Private scopes](#private-scopes)
 - [Combining Public and Private Scopes](#combining-public-and-private-scopes)
-- [Importing to Burp/ZAP](#importing-to-burpzap)
+- [Importing to Burp/ZAP](#importing-results)
 
 
 ## Installation
@@ -277,7 +277,7 @@ $ rescope --zap --name CoolScope -i scope.txt -o zapscope.context --silent
 ```
 
 
-## Importing to Burp/ZAP
+## Importing results
 
 ### Burp Suite
 1. Head to **Target** 
