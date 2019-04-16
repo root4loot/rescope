@@ -98,7 +98,7 @@ func main() {
 	// Attempt to create outfile
 	outfile, err := file.Create(a.Outfile)
 	if err != nil {
-		log.Fatalf("\n%s Failed to create file at %s. Bad permisisons?", color.FgRed.Text("[!]"), outfile.Name())
+		log.Fatalf("\n%s Failed to create file at %s. Bad permissions?", color.FgRed.Text("[!]"), outfile.Name())
 	}
 
 	// Write to outfile assuming we have permissions
