@@ -67,7 +67,7 @@ Documentation:
 	u := parser.List("u", "url", &argparse.Options{Help: "Public bug bounty program URL (required)\n\t\t URL can be set multiple times"})
 	i := parser.List("i", "infile", &argparse.Options{Help: "File (scope) to be parsed (required)\n\t\t Infile can be set multiple times"})
 	o := parser.String("o", "outfile", &argparse.Options{Help: "File to write parsed results (required)"})
-	n := parser.String("n", "name", &argparse.Options{Help: "Name of ZAP context"})
+	n := parser.String("n", "name", &argparse.Options{Help: "Name of ZAP context (optional)"})
 	ex := parser.String("", "itag", &argparse.Options{Help: "Custom include tag (default: !INCLUDE)"})
 	in := parser.String("", "etag", &argparse.Options{Help: "Custom exclude tag (default: !EXCLUDE)"})
 	s := parser.Flag("s", "silent", &argparse.Options{Help: "Do not print identified targets"})
