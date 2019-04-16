@@ -102,7 +102,7 @@ func main() {
 	}
 
 	// Write to outfile assuming we have permissions
-	meta, err := file.Write(outfile, buf)
+	meta, _ := file.Write(outfile, buf)
 
 	if a.Burp {
 		fmt.Printf("\n%s Done. Wrote %v bytes to %s\n", color.FgGreen.Text("[✓]"), meta, outfile.Name())
