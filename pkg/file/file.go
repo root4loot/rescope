@@ -49,7 +49,7 @@ func Read(file *os.File) ([]byte, error) {
 	return data, err
 }
 
-// Write attemps to write given data to an already opened file
+// Write attempts to write given data to an already opened file
 func Write(f *os.File, data []byte) (int, error) {
 	w, err := f.Write(data)
 	return w, err
