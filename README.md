@@ -128,7 +128,7 @@ $ rescope --burp -u hackerone.com/security -o burpscope.json
 [-] Parsing to JSON (Burp Suite)
 [✓] Done. Wrote 185786 bytes to burpscope.json
 ```
-The outputted results are ready to be [imported](#importing-to-burpzap) to either Burp or Zap- depending on your choice. But before you do, make sure that you've read (and understood) the program policy ;)
+The outputted results are ready to be [imported](#importing-results) to either Burp or Zap- depending on your choice. But before you do, make sure that you've read (and understood) the program policy ;)
 
 Note: You are not required to remove http(s):// from the program URL prior to running.  
 
