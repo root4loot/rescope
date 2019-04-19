@@ -53,14 +53,16 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 	//         5.   ftp://sub.example.com[:25]/d/foo.bar   // port
 	//         6.   ftp://sub.example.com:25[/d/foo.bar]   // path
 
-	r2 := regexp.MustCompile(`(\d+\.\d+\.\d+\.)(\d+)-(\d+)`)
+	r2 := regexp.MustCompile(`((\d+\.\d+\.\d+\.)(\d+)-(\d+))`)
 	// Matches IP-Range
-	// Groups: 1.  [192.168.0].1-255    // IP minus last host portion
-	//         2.   192.168.0.[1]-255   // start
-	//         3.   192.168.0.1-[255]   // end
+	// Groups: 1.  [192.168.0].1-255
+	//         2.   192.168.0.[1]-255
+	//         3.   192.168.0.1-[255]
 
-	r3 := regexp.MustCompile(`[\d\.]+\/\d{2}`)
+	r3 := regexp.MustCompile(`([0-9]+[\.0-9]+)\/([0-9]{0,2})`)
 	// Matches IP/CIDR
+	// Groups: 1.  [d.d.d.d]/dd
+	//         2.   d.d.d.d/[dd]
 
 	for i, scope := range scopes {
 		scanner := bufio.NewScanner(strings.NewReader(scope))
