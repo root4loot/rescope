@@ -69,7 +69,6 @@ func parseMap(aMap map[string]interface{}) {
 			}
 			if key == "outScope" {
 				scope = append(scope, "!EXCLUDE")
-				scope = append(scope, fmt.Sprint(concreteVal))
 				parseArray(val.([]interface{}))
 			}
 		default:
