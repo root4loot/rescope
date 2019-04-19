@@ -45,7 +45,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 		exTag = "!EXCLUDE"
 	}
 
-	r1 := regexp.MustCompile(`([a-z]+:\/\/)?(\*\.)?(\*?[a-z0-9-.]+(\.[a-z]+))(:\d+)?([A-Za-z0-9-._~:/?#@!$&'*+=]+)?`)
+	r1 := regexp.MustCompile(`([a-z3]+:\/\/)?(\*\.)?(\*?[a-z0-9-.]+(\.[a-z]+))(:\d+)?([A-Za-z0-9-._~:/?#@!$&'*+=]+)?`)
 	// Groups: 1.  [ftp]://sub.example.com:25/d/foo.bar    // scheme
 	//         2.   ftp://[*.]example.com:25/d/foo.bar     // wildcarded subdomain
 	//	       3.   ftp://[sub.example.com]:25/d/foo.bar   // host
