@@ -59,7 +59,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 	//         2.   192.168.0.[1]-255
 	//         3.   192.168.0.1-[255]
 
-	r3 := regexp.MustCompile(`([0-9]+[\.0-9]+)\/([0-9]{0,2})`)
+	r3 := regexp.MustCompile(`([0-9]+[\.0-9]+\/)([0-9]{1,2})`)
 	// Matches IP/CIDR
 	// Groups: 1.  [d.d.d.d]/dd
 	//         2.   d.d.d.d/[dd]
