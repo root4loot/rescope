@@ -4,6 +4,8 @@ All notable changes to rescope will be documented here.
 Unreleased changes will go in the below heading.
 
 ## [Unreleased]
+### Fixed
+- #2: Bug that caused duplicate scope definitions after parsing more than one program from one of the same affected services; hackerone, intigriti, yeswehack.
 
 ## [1.0] - 2019-04-16
 
@@ -14,12 +16,12 @@ Unreleased changes will go in the below heading.
 - New flag (--itag) related to the above.
 - Gopkg files for dep management.
 
-## Fixed
+### Fixed
 - Minor bug that caused certain number formats in string to match as valid targets.
 - Bug that prevented targets with ports from being set in Zap context.
 - Bug that prevented targets with leading wildcard and no immediate dot from being fully matched.
 
-## Changed
+### Changed
 - Replaced the previous vendor package 'github.com/fatih/color' with 'github.com/gookit/color' for adding colors support as the former project was no longer maintained.
 - General commenting and code impovements.
 - Changed --extag to -etag and removed the short version.
