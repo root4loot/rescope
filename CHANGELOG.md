@@ -5,6 +5,8 @@ Unreleased changes will go in the below heading.
 
 ## [Unreleased]
 
+### Added
+- Support for matching targets with s3 schema
 
 ### Fixed
 - [#5](https://github.com/root4loot/rescope/issues/5) Targets separated by comma should now be grabbed correctly.  
