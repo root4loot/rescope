@@ -5,6 +5,7 @@ Unreleased changes will go in the below heading.
 
 ## [Unreleased]
 ### Fixed
+- #3: Bug that caused fatal exit upon providing full intigriti program URL
 - #2: Bug that caused duplicate scope definitions after parsing more than one program from one of the same affected services; hackerone, intigriti, yeswehack.
 
 ## [1.0] - 2019-04-16
