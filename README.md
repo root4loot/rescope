@@ -151,13 +151,13 @@ And pass this as an infile.
 rescope --burp -i combined.txt -o burpscope.json
 ```
 
-There are no restrictions here so technically you could include every public program out there in existence to create one gigantic scope but needless to say, this is not a good idea. Always read through the entire policy for a given program before proceeding to import.
+There are no restrictions here so technically you could include every public program out there in existence to create one gigantic scope but needless to say, this is not a good idea. Always read through the entire policy for a given program before proceeding to import. 
 
 
 ## Private Scopes
 
 rescope is not limited to public BBaaS scopes.  
-If your scope is private then list targets in a text file and pass it to `-i|—infile`.
+If your scope is private then list targets in a text file and pass it to `--infile` (`-i`).
 
 Example scope:
 
