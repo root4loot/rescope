@@ -4,7 +4,10 @@ All notable changes to rescope will be documented here.
 Unreleased changes will go in the below heading.
 
 ## [Unreleased]
+
+
 ### Fixed
+- [#5](https://github.com/root4loot/rescope/issues/5) Targets separated by comma should now be grabbed correctly.  
 - [#4](https://github.com/root4loot/rescope/issues/4) Intigriti programs should no longer parse with duplicate exclude definitions
 - [#3](https://github.com/root4loot/rescope/issues/3) Bug that caused fatal exit upon providing full intigriti program URL
 - [#2](https://github.com/root4loot/rescope/issues/2) Bug that caused duplicate scope definitions after parsing more than one program from one of the same affected services; hackerone, intigriti, yeswehack.
