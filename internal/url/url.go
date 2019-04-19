@@ -21,7 +21,7 @@ func BBaas(urls, scopes, source []string) ([]string, []string, bool) {
 	var bbaas bool
 	// Move bounty URLs from infile to a.URLs
 	for i, scope := range scopes {
-		re := regexp.MustCompile(`((https?:\/\/)?(www\.)?(hackerone\.com|bugcrowd\.com|hackenproof\.com|intigriti\.com|openbugbounty.org|yeswehack.com)(\/[\w-_]+)?\/[\w-_]+)\/?`)
+		re := regexp.MustCompile(`((https?:\/\/)?(www\.)?(hackerone\.com|bugcrowd\.com|hackenproof\.com|intigriti\.com\/([\w-_\/]+)|openbugbounty.org|yeswehack.com)(\/[\w-_]+)?\/[\w-_]+)\/?`)
 
 		// get all bb URLs from scope
 		bountyuris := re.FindAllString(scope, -1)
@@ -39,7 +39,7 @@ func BBaas(urls, scopes, source []string) ([]string, []string, bool) {
 
 	// Get scope from bugbounty URL(s)
 	if urls != nil {
-		re := regexp.MustCompile(`^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.[a-z]+)\/([a-zA-Z0-9-_]+)(\/[a-zA-Z0-9-_]+)?`)
+		re := regexp.MustCompile(`^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.[a-z]+)\/([a-zA-Z0-9-_]+)(\/[a-zA-Z0-9-_\/]+)?`)
 		// relevant groups
 		// 1. [www.example.com/biz/program]
 		// 4. [www.[example.com]/biz/program]
