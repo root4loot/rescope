@@ -28,6 +28,9 @@ func Scrape(url string) string {
 
 	var resp []byte
 
+	// clear global slice
+	scope = nil
+
 	// JSON POST data
 	var data = []byte(`{  
 		"query":"query Team_assets($first_0:Int!) {query {id,...F0}} fragment F0 on Query {_teamAgUhl:team(handle:\"` + program + `\") {handle,_structured_scope_versions2ZWKHQ:structured_scope_versions(archived:false) {max_updated_at},_structured_scopeszxYtW:structured_scopes(first:$first_0,archived:false,eligible_for_submission:true) {edges {node {asset_identifier}},pageInfo {hasNextPage,hasPreviousPage}},_structured_scopes3FF98f:structured_scopes(first:$first_0,archived:false,eligible_for_submission:false) {edges {node {asset_identifier,},},},},}",
@@ -77,7 +80,7 @@ func parseMap(aMap map[string]interface{}) {
 			// fmt.Println(key)
 			parseArray(val.([]interface{}))
 		default:
-			// fmt.Println(key, ":", concreteVal)
+			//fmt.Println(key, ":", concreteVal)
 			scope = append(scope, fmt.Sprint(concreteVal))
 		}
 	}

@@ -27,6 +27,9 @@ func Scrape(url string) string {
 	program := match[2]
 	endpoint := "https://api-public.intigriti.com/api/project/" + business + "/" + program
 
+	// clear global slice
+	scope = nil
+
 	// GET request to endpoint
 	respJSON := req.GET(endpoint)
 

@@ -26,6 +26,9 @@ func Scrape(url string) string {
 	program := match[2]
 	endpoint := "https://api.yeswehack.com/programs/" + program
 
+	// clear global slice
+	scope = nil
+
 	// GET request to endpoint
 	resp := req.GET(endpoint)
 
