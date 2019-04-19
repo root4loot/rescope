@@ -13,6 +13,7 @@ Unreleased changes will go in the below heading.
 - [#4](https://github.com/root4loot/rescope/issues/4) Intigriti programs should no longer parse with duplicate exclude definitions
 - [#3](https://github.com/root4loot/rescope/issues/3) Bug that caused fatal exit upon providing full intigriti program URL
 - [#2](https://github.com/root4loot/rescope/issues/2) Bug that caused duplicate scope definitions after parsing more than one program from one of the same affected services; hackerone, intigriti, yeswehack.
+- Improper regex matching leading to strings having numbers and slashes to be matched as CIDR
 
 ## [1.0] - 2019-04-16
 
