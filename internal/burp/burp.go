@@ -74,7 +74,7 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 	// L1 (all matches except IP-range and IP/CIDR)
 	for _, submatch := range L1 {
 		scheme = strings.TrimRight(submatch[1], "://")
-		host = submatch[3]
+		host = submatch[2] + submatch[3]
 		port = strings.TrimLeft(submatch[5], ":")
 		path = submatch[6]
 
