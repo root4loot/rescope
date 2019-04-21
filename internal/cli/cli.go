@@ -41,7 +41,7 @@ func ArgParse() Args {
  | '__/ _ \/ __|/ __/ _ \| '_ \ / _ \
  | | |  __/\__ \ (_| (_) | |_) |  __/
  |_|  \___||___/\___\___/| .__/ \___|
-  @ r o o t 4 l o o t    |_|     v1.0
+  @ r o o t 4 l o o t    |_|     v1.1
      
 Example Usage:
   rescope --burp -u hackerone.com/security -o burpscope.json  
@@ -57,7 +57,7 @@ Upgrading:
 Documentation:
   https://github.com/root4loot/rescope
 `
-	version := "1.0"
+	version := "1.1"
 	parser := argparse.NewParser("rescope", banner)
 
 	//usage := parser.Usage

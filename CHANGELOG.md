@@ -5,6 +5,8 @@ Unreleased changes will go in the below heading.
 
 ## [Unreleased]
 
+## [1.1] - 2019-04-22
+
 ### Added
 - Support for matching targets with s3 schema
 
