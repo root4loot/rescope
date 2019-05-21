@@ -62,6 +62,9 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 	// Groups: 1.  [d.d.d.d]/dd
 	//         2.   d.d.d.d/[dd]
 
+	r4 := regexp.MustCompile(`\d+\.\d+\.\d+\.\d+$`)
+	// Matches single IP
+
 	for i, scope := range scopes {
 		scanner := bufio.NewScanner(strings.NewReader(scope))
 		exclude = false // reset flag on each run
@@ -73,12 +76,24 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 			m1 := r1.FindAllStringSubmatch(scanner.Text(), -1)
 			m2 := r2.FindAllStringSubmatch(scanner.Text(), -1)
 			m3 := r3.FindAllString(scanner.Text(), -1)
+			m4 := r4.FindAllString(scanner.Text(), -1)
 
 			// check exclude
 			if strings.Contains(scanner.Text(), exTag) {
 				exclude = true
 			} else if strings.Contains(scanner.Text(), incTag) {
 				exclude = false
+			}
+
+			// Single IP
+			if m4 != nil {
+				m.Counter++
+				printFound(m4[0], exclude, silent)
+				if exclude != true {
+					m.Includes = append(m.Includes, m4)
+				} else {
+					m.Excludes = append(m.Excludes, m4)
+				}
 			}
 
 			// IP/CIDR
