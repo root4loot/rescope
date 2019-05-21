@@ -51,6 +51,15 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 	//         5.   ftp://sub.example.com[:25]/d/foo.bar   // port
 	//         6.   ftp://sub.example.com:25[/d/foo.bar]   // path
 
+	r1 := regexp.MustCompile(`([a-z3]+:\/\/)?([a-z]+\.)?(\*\.)?(\*?[a-z0-9-.]+(\.[a-z]+))(:\d+)?([A-Za-z0-9-._~:/?#@!$&'*+=]+)?`)
+	// Groups: 1.  [ftp]://sub.example.com:25/d/foo.bar    		// scheme
+	//         2.   ftp://[sub].example.com:25/d/foo.bar        // first subdomain
+	//         3.   ftp://[*.]example.com:25/d/foo.bar     		// wildcarded subdomain
+	//	       4.   ftp://sub.[sub.example.com]:25/d/foo.bar   	// second, third.. subdomain + toplevel
+	//         5.   ftp://sub.example[.com]:25/d/foo.bar   		// extension
+	//         6.   ftp://sub.example.com[:25]/d/foo.bar   		// port
+	//         7.   ftp://sub.example.com:25[/d/foo.bar]   		// path
+
 	r2 := regexp.MustCompile(`((\d+\.\d+\.\d+\.)(\d+)-(\d+))`)
 	// Matches IP-Range
 	// Groups: 1.  [d.d.d.d-d]
