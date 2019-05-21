@@ -238,6 +238,51 @@ func checkIgnored(source string, includes [][]string, ignores []string) [][]stri
 	}
 	return includes
 }
+
+// checkConflict attempts to identify conflicting includes/excludes
+// returns a modified list of excludes depending on user input
+func checkConflict(source string, includes, excludes [][]string) [][]string {
+	found := false
+	var conflicts []string
+
+	for _, include := range includes {
+		if !isIP(include[0]) {
+			for _, exclude := range excludes {
+				if exclude[4] == include[4] && exclude[3] == "*." {
+					if !found {
+						fmt.Printf("\n%s Encountered scope conflict in %s,", color.FgYellow.Text("[!]"), color.FgYellow.Text(source))
+						fmt.Printf("\n%s\n\n", color.FgGray.Text("This prevents target from being proxied unless exclude in red is removed (safe)"))
+						found = true
+					} else {
+						fmt.Printf("%s %s excludes %s\n", color.FgGray.Text(" - "), color.FgRed.Text(exclude[0]), color.FgGreen.Text(include[0]))
+						conflicts = append(conflicts, include[0])
+					}
+				}
+			}
+		}
+	}
+
+	if found == true {
+		answer := getAnswer("Remove now?")
+		if answer == "Y" || answer == "" {
+			excludes = resort(conflicts, excludes)
+		}
+	}
+	return excludes
+}
+
+// resort removes a from b, if a is found and returns it
+func resort(a []string, b [][]string) [][]string {
+	for _, av := range a {
+		for i, bv := range b {
+			if av == bv[0] {
+				b = append(b[:i], b[i+1:]...)
+			}
+		}
+	}
+	return b
+}
+
 // prints item in color depending on whether it is part of include or exclude
 func printFound(item string, exclude bool, silent bool) {
 	if exclude == true {
