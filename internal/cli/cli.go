@@ -26,6 +26,7 @@ type Args struct {
 	Outfile   string
 	Burp      bool
 	Zap       bool
+	Raw       bool
 	Silent    bool
 	Scopename string
 	verbose   string
@@ -41,7 +42,7 @@ func ArgParse() Args {
  | '__/ _ \/ __|/ __/ _ \| '_ \ / _ \
  | | |  __/\__ \ (_| (_) | |_) |  __/
  |_|  \___||___/\___\___/| .__/ \___|
-  @ r o o t 4 l o o t    |_|     v1.1
+  @ r o o t 4 l o o t    |_|     v1.1 
      
 Example Usage:
   rescope --burp -u hackerone.com/security -o burpscope.json  
@@ -71,12 +72,14 @@ Documentation:
 	ex := parser.String("", "itag", &argparse.Options{Help: "Custom include tag (default: !INCLUDE)"})
 	in := parser.String("", "etag", &argparse.Options{Help: "Custom exclude tag (default: !EXCLUDE)"})
 	s := parser.Flag("s", "silent", &argparse.Options{Help: "Do not print identified targets"})
+	r := parser.Flag("r", "raw", &argparse.Options{Help: "Output raw in-scope definitions to outfile"})
 	ver := parser.Flag("", "version", &argparse.Options{Help: "Display version"})
 
 	_ = parser.Parse(os.Args)
 
 	a.Burp = *b
 	a.Zap = *z
+	a.Raw = *r
 	a.Infiles = *i
 	a.URLs = *u
 	a.Outfile = *o
@@ -99,8 +102,8 @@ Documentation:
 	}
 
 	// check for args and add to list
-	if !a.Burp && !a.Zap {
-		argErr = append(argErr, "Missing Burp (--burp) or ZAP (--zap)")
+	if !a.Burp && !a.Zap && !a.Raw {
+		argErr = append(argErr, "Missing required arguments: [--burp] [--zap] [--raw]")
 	}
 	if !isList(a.Infiles) && !isList(a.URLs) {
 		argErr = append(argErr, "Missing (-i <file>) or bugbounty (-u <url>)")
