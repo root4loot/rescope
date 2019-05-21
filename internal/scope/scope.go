@@ -19,12 +19,10 @@ import (
 	"github.com/gookit/color"
 )
 
-// Match contains lists of regex matches
+// Match contains lists of regex submatches
 type Match struct {
-	L1       [][]string // all except ip-range & CIDR
-	L2       [][]string // ip-range
-	L3       [][]string // ip/CIDR
-	Excludes []string   // to be excluded
+	Includes [][]string
+	Excludes [][]string
 	Counter  int
 }
 
@@ -98,10 +96,10 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 						m.Counter++
 						printFound(arr, exclude, silent)
 					}
-					if exclude == true {
-						for _, host := range hosts {
-							m.Excludes = append(m.Excludes, host)
-						}
+					if exclude != true {
+						m.Includes = append(m.Includes, hosts)
+					} else {
+						m.Excludes = append(m.Excludes, hosts)
 					}
 				}
 
@@ -120,13 +118,15 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 						m.Counter++
 						m.L2 = append(m.L2, hosts)
 						printFound(arr[0], exclude, silent)
-						if exclude == true {
-							for _, host := range hosts {
-								m.Excludes = append(m.Excludes, host)
+
+						if exclude != true {
+							m.Includes = append(m.Includes, hosts)
+						} else {
+							m.Excludes = append(m.Excludes, hosts)
+
 							}
 						}
 					}
-				}
 
 				// anything but IP/Range/CIDR
 			} else if m1 != nil {
@@ -135,13 +135,13 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 					if strings.HasSuffix(arr[0], ".") {
 						continue
 					}
-					m.L1 = append(m.L1, arr)
 					m.Counter++
 					printFound(arr[0], exclude, silent)
-					if exclude == true {
-						m.Excludes = append(m.Excludes, arr[0])
+					if exclude != true {
+						m.Includes = append(m.Includes, arr)
+					} else {
+						m.Excludes = append(m.Excludes, arr)
 					}
-
 				}
 			}
 		}

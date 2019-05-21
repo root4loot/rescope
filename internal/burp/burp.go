@@ -67,47 +67,48 @@ var exslice ExcludeSlice
 // Parse takes slices containing regex matches and turns them into Burp
 // compatible JSON. Regex matches are split into groups. See internal scope package.
 // Returns JSON data as byte
-func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
+func Parse(Includes, Excludes [][]string) []byte {
 	var host, scheme, port, path string
+	var cludes [][][]string
+
+	cludes = append(cludes, Includes)
+	cludes = append(cludes, Excludes)
+
+	// file containing servicenames and ports
 	fr := File.ReadFromRoot("configs/services", "pkg")
 
-	// L1 (all matches except IP-range and IP/CIDR)
-	for _, submatch := range L1 {
-		scheme = strings.TrimRight(submatch[1], "://")
-		host = submatch[2] + submatch[3]
-		port = strings.TrimLeft(submatch[5], ":")
-		path = submatch[6]
+	for i, clude := range cludes {
+		for _, item := range clude {
+			ip := regexp.MustCompile(`\d+\.\d+\.\d+\.\d+`)
 
-		//fmt.Println("S:" + scheme + "H:" + host + "PO:" + port + "PA:" + path)
-		scheme, port = parseSchemeAndPort(fr, scheme, port)
+			if ip.MatchString(item[0]) {
+				for _, ip := range item {
+					host := parseHost(ip)
+					scheme = "Any"
+					if i == 0 {
+						add(scheme, host, "^(80|443)$", path, false)
+					} else {
+						add(scheme, host, "^(80|443)$", path, true)
+					}
+				}
+			} else {
+				scheme = strings.TrimRight(item[1], "://")
+				host = item[2] + item[3] + item[4]
+				port = strings.TrimLeft(item[6], ":")
+				path = item[7]
 
-		// parse regex for each group
-		host = parseHost(host)
-		path = parseFile(path)
+				//fmt.Println("S:" + scheme + "H:" + host + "PO:" + port + "PA:" + path)
+				scheme, port = parseSchemeAndPort(fr, scheme, port)
 
-		// check exclude
-		isexclude := isExclude(Excludes, submatch[0])
-		// add to list
-		add(scheme, host, port, path, isexclude)
-	}
+				host = parseHost(host)
+				path = parseFile(path)
 
-	// L2 (IP-range match)
-	for _, ipsets := range L2 {
-		for _, ip := range ipsets {
-			isexclude := isExclude(Excludes, ip)
-			host := parseHost(ip)
-			scheme = "Any"
-			add(scheme, host, "^(80|443)$", path, isexclude)
-		}
-	}
-
-	// L3 (IP/CIDR match)
-	for _, ipsets := range L3 {
-		for _, ip := range ipsets {
-			isexclude := isExclude(Excludes, ip)
-			host := parseHost(ip)
-			scheme = "Any"
-			add(scheme, host, "^(80|443)$", path, isexclude)
+				if i == 0 {
+					add(scheme, host, port, path, false)
+				} else {
+					add(scheme, host, port, path, true)
+				}
+			}
 		}
 	}
 
@@ -126,24 +127,13 @@ func Parse(L1, L2, L3 [][]string, Excludes []string) []byte {
 	return json
 }
 
-// add match to appropriate list
+// // add match to appropriate list
 func add(scheme, host, port, path string, exclude bool) {
 	if !exclude {
 		incslice.Include = append(incslice.Include, Include{Enabled: true, File: path, Host: host, Port: port, Protocol: scheme})
 	} else {
 		exslice.Exclude = append(exslice.Exclude, Exclude{Enabled: true, File: path, Host: host, Port: port, Protocol: scheme})
 	}
-}
-
-// isExclude takes a 2d slice and a string
-// returns bool depending on whether the string was found in slice
-func isExclude(Excludes []string, item string) bool {
-	for _, exclude := range Excludes {
-		if item == exclude {
-			return true
-		}
-	}
-	return false
 }
 
 // parseSchemeAndPort sets scheme and ports accordingly

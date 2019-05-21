@@ -89,10 +89,10 @@ func main() {
 	// Parse to burp/zap
 	if a.Burp {
 		fmt.Printf("%s Parsing to JSON (Burp Suite)", color.FgGray.Text("[-]"))
-		buf = burp.Parse(m.L1, m.L2, m.L3, m.Excludes)
+		buf = burp.Parse(m.Includes, m.Excludes)
 	} else if a.Zap {
 		fmt.Printf("%s Parsing to XML (OWASP ZAP)", color.FgGray.Text("[-]"))
-		buf = zap.Parse(m.L1, m.L2, m.L3, m.Excludes, a.Scopename)
+		buf = zap.Parse(m.Includes, m.Excludes, a.Scopename)
 	}
 
 	// Attempt to create outfile
