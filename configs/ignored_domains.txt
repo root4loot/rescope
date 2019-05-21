@@ -1,0 +1,8 @@
+# This file contains common third party domains to be ignored completely.
+# This will not affect non-third-party resources.
+
+github.com
+gitlab.com
+play.google.com
+itunes.apple.com
+amazonaws.com
