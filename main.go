@@ -50,7 +50,7 @@ func main() {
 
 			// check err
 			if err, ok := err.(*os.PathError); ok {
-				fmt.Println("\n%s Unable to read %s.", color.FgRed.Text("[!]"), f)
+				fmt.Printf("\n%s Unable to read %s.", color.FgRed.Text("[!]"), f)
 				log.Fatal(err)
 			}
 
@@ -66,7 +66,7 @@ func main() {
 		for _, fd := range fds {
 			data, err := file.Read(fd)
 			if err != nil {
-				fmt.Println("\n%s Unable to read contents of %s", color.FgRed.Text("[!]"), fd.Name())
+				fmt.Printf("\n%s Unable to read contents of %s", color.FgRed.Text("[!]"), fd.Name())
 				log.Fatal(err)
 			}
 
