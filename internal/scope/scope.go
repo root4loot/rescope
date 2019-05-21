@@ -177,6 +177,20 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 	return m
 }
 
+// getAnswer takes question and prompts user for y/n input
+// returns answer
+func getAnswer(question string) string {
+	var answer string
+	for {
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Printf("\n%s %s (%s/n): ", color.FgYellow.Text("[?]"), question, color.Bold.Text("Y"))
+		answer, _ = reader.ReadString('\n')
+		answer = strings.ToUpper((strings.TrimSuffix(answer, "\n")))
+		if answer == "Y" || answer == "N" || answer == "" {
+			return answer
+		}
+	}
+}
 // prints item in color depending on whether it is part of include or exclude
 func printFound(item string, exclude bool, silent bool) {
 	if exclude == true {
