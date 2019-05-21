@@ -105,9 +105,8 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 					}
 					hosts, err := hostsFromCIDR(arr)
 					if err != nil {
-						log.Fatalf("\n%s Failed to parse IP/CIDR: %s", color.FgRed.Text("[!]"), m3)
+						log.Fatalf("\n%s Failed to parse IP/CIDR: %s", color.FgRed.Text("[!]"), arr)
 					} else {
-						m.L3 = append(m.L3, hosts)
 						m.Counter++
 						printFound(arr, exclude, silent)
 					}
@@ -128,10 +127,9 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 
 					hosts, err1, err2 := hostsFromRange(arr)
 					if err1 != nil || err2 != nil {
-						log.Fatalf("\n%s Failed to parse IP-range: %s", color.FgRed.Text("[!]"), m2[0])
+						log.Fatalf("\n%s Failed to parse IP-range: %s", color.FgRed.Text("[!]"), arr[0])
 					} else {
 						m.Counter++
-						m.L2 = append(m.L2, hosts)
 						printFound(arr[0], exclude, silent)
 
 						if exclude != true {
