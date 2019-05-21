@@ -86,13 +86,19 @@ func main() {
 		log.Fatalf("%s Nothing to do here ¯\\_(ツ)_/¯", color.FgRed.Text("[!]"))
 	}
 
-	// Parse to burp/zap
+	// Parse as burp/zap/raw
 	if a.Burp {
 		fmt.Printf("%s Parsing to JSON (Burp Suite)", color.FgGray.Text("[-]"))
 		buf = burp.Parse(m.Includes, m.Excludes)
 	} else if a.Zap {
 		fmt.Printf("%s Parsing to XML (OWASP ZAP)", color.FgGray.Text("[-]"))
 		buf = zap.Parse(m.Includes, m.Excludes, a.Scopename)
+	} else if a.Raw {
+		fmt.Printf("%s Writing target includes (raw)", color.FgGray.Text("[-]"))
+		for _, v := range m.Includes {
+			buf = append(buf, v[0]...)
+			buf = append(buf, '\n')
+		}
 	}
 
 	// Attempt to create outfile
@@ -104,10 +110,9 @@ func main() {
 	// Write to outfile assuming we have permissions
 	meta, _ := file.Write(outfile, buf)
 
-	if a.Burp {
-		fmt.Printf("\n%s Done. Wrote %v bytes to %s\n", color.FgGreen.Text("[✓]"), meta, outfile.Name())
-	} else if a.Zap {
+	if a.Burp || a.Zap || a.Raw {
 		fmt.Printf("\n%s Done. Wrote %v bytes to %s\n", color.FgGreen.Text("[✓]"), meta, outfile.Name())
 	}
+
 	fmt.Println("")
 }
