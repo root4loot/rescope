@@ -205,6 +205,39 @@ func isIP(s string) bool {
 	}
 	return false
 }
+
+// checkIgnored attempts to identify identifiers in scope that should be ignored based on config
+// returns a modified list of includes depending on user input
+func checkIgnored(source string, includes [][]string, ignores []string) [][]string {
+	domain := regexp.MustCompile(`\/(\w+\/?$)`)
+	found := false
+
+	for _, ignore := range ignores {
+		for _, include := range includes {
+			if !isIP(include[0]) {
+				program := domain.FindStringSubmatch(strings.TrimSuffix(source, "/"))
+				if include[4] == ignore && ignore != program[1]+".com" && ignore != program[1]+".jp" {
+					if found == false {
+						fmt.Printf("\n%s Encountered third party resources in %s", color.FgYellow.Text("[!]"), color.FgYellow.Text(source))
+						fmt.Printf("\n%s\n\n", color.FgGray.Text("    You generally don't want those in your proxy"))
+						found = true
+					}
+					if found == true {
+						fmt.Printf("%s %s \n", color.FgGray.Text(" - "), color.FgCyan.Text((include[0])))
+						ignores = append(ignores, include[0])
+					}
+				}
+			}
+		}
+	}
+	if found == true {
+		answer := getAnswer("Remove now?")
+		if answer == "Y" || answer == "" {
+			includes = resort(ignores, includes)
+		}
+	}
+	return includes
+}
 // prints item in color depending on whether it is part of include or exclude
 func printFound(item string, exclude bool, silent bool) {
 	if exclude == true {
