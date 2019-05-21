@@ -191,6 +191,15 @@ func getAnswer(question string) string {
 		}
 	}
 }
+
+// isIP returns bool depending on whether string matches IP address
+func isIP(s string) bool {
+	re := regexp.MustCompile(`^\d+\.\d+\.\d+\.\d+$`)
+	if re.MatchString(s) {
+		return true
+	}
+	return false
+}
 // prints item in color depending on whether it is part of include or exclude
 func printFound(item string, exclude bool, silent bool) {
 	if exclude == true {
