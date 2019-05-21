@@ -179,6 +179,11 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 			fmt.Printf("%s No targets found in %s\n", color.FgRed.Text("[!]"), source[i])
 		}
 	}
+
+	for i := range scopes {
+		m.Includes = checkIgnored(source[i], m.Includes, ignores)
+		m.Excludes = checkConflict(source[i], m.Includes, m.Excludes)
+	}
 	return m
 }
 
