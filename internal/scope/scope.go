@@ -12,11 +12,13 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/gookit/color"
+	file "github.com/root4loot/rescope/pkg/file"
 )
 
 // Match contains lists of regex submatches
@@ -32,6 +34,7 @@ type Match struct {
 // Returns a Match object
 func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, bbaas bool) Match {
 	var exclude bool
+	var ignores []string
 
 	// Set Tag used to indicate beginning of Includes
 	if len(incTag) == 0 {
@@ -43,13 +46,15 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 		exTag = "!EXCLUDE"
 	}
 
-	r1 := regexp.MustCompile(`([a-z3]+:\/\/)?(\*\.)?(\*?[a-z0-9-.]+(\.[a-z]+))(:\d+)?([A-Za-z0-9-._~:/?#@!$&'*+=]+)?`)
-	// Groups: 1.  [ftp]://sub.example.com:25/d/foo.bar    // scheme
-	//         2.   ftp://[*.]example.com:25/d/foo.bar     // wildcarded subdomain
-	//	       3.   ftp://[sub.example.com]:25/d/foo.bar   // host
-	//         4.   ftp://sub.example[.com]:25/d/foo.bar   // extension
-	//         5.   ftp://sub.example.com[:25]/d/foo.bar   // port
-	//         6.   ftp://sub.example.com:25[/d/foo.bar]   // path
+	// Read URIs to be ignored from scope
+	fr := file.ReadFromRoot("configs/ignored_domains.txt", "pkg")
+	scanner := bufio.NewScanner(strings.NewReader(string(fr[:])))
+	re := regexp.MustCompile(`^\w+.+$`)
+	for scanner.Scan() {
+		if re.MatchString(scanner.Text()) {
+			ignores = append(ignores, scanner.Text())
+		}
+	}
 
 	r1 := regexp.MustCompile(`([a-z3]+:\/\/)?([a-z]+\.)?(\*\.)?(\*?[a-z0-9-.]+(\.[a-z]+))(:\d+)?([A-Za-z0-9-._~:/?#@!$&'*+=]+)?`)
 	// Groups: 1.  [ftp]://sub.example.com:25/d/foo.bar    		// scheme
