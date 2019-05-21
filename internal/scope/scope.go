@@ -193,13 +193,12 @@ func printFound(item string, exclude bool, silent bool) {
 // hostsFromRange takes a m2 slice containing IP-range substrings
 // converts range to a list of hosts and returns this
 func hostsFromRange(m []string) ([]string, error, error) {
-	ip := m[1] // [192.168.]0.1-255
+	ip := m[2] // [192.168.0].1-255
 
-	start, err1 := strconv.Atoi(m[2]) // 192.168.0.(1)-255
-	end, err2 := strconv.Atoi(m[3])   // 192.168.(0).(1)-(255)
+	start, err1 := strconv.Atoi(m[3]) // 192.168.0.(1)-255
+	end, err2 := strconv.Atoi(m[4])   // 192.168.(0).(1)-(255)
 	var ips []string
 
-	// loop range and append to list
 	for i := start; i <= end; i++ {
 		ip := ip + strconv.Itoa(i)
 		ips = append(ips, ip)
