@@ -5,7 +5,9 @@ import (
 	"log"
 	"regexp"
 
+	bugbountyjp "github.com/root4loot/rescope/internal/bbaas/bugbounty.jp"
 	bugcrowd "github.com/root4loot/rescope/internal/bbaas/bugcrowd"
+	federacy "github.com/root4loot/rescope/internal/bbaas/federacy"
 	hackenproof "github.com/root4loot/rescope/internal/bbaas/hackenproof"
 	hackerone "github.com/root4loot/rescope/internal/bbaas/hackerone"
 	intigriti "github.com/root4loot/rescope/internal/bbaas/intigriti"
@@ -21,7 +23,7 @@ func BBaas(urls, scopes, source []string) ([]string, []string, bool) {
 	var bbaas bool
 	// Move bounty URLs from infile to a.URLs
 	for i, scope := range scopes {
-		re := regexp.MustCompile(`((https?:\/\/)?(www\.)?(hackerone\.com|bugcrowd\.com|hackenproof\.com|intigriti\.com\/([\w-_\/]+)|openbugbounty.org|yeswehack.com)(\/[\w-_]+)?\/[\w-_]+)\/?`)
+		re := regexp.MustCompile(`((https?:\/\/)?(www\.)?(hackerone\.com|bugcrowd\.com|hackenproof\.com|intigriti\.com\/([\w-_\/]+)|openbugbounty\.org|yeswehack\.com|bugbounty\.jp|(one\.)?federacy\.com)(\/[\w-_]+)?\/[\w-_]+)\/?`)
 
 		// get all bb URLs from scope
 		bountyuris := re.FindAllString(scope, -1)
@@ -39,10 +41,10 @@ func BBaas(urls, scopes, source []string) ([]string, []string, bool) {
 
 	// Get scope from bugbounty URL(s)
 	if urls != nil {
-		re := regexp.MustCompile(`^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.[a-z]+)\/([a-zA-Z0-9-_]+)(\/[a-zA-Z0-9-_\/]+)?`)
+		re := regexp.MustCompile(`^(https?:\/\/)?(www\.)?(([a-z]+\.)?[a-zA-Z0-9-]+\.[a-z]+)\/([a-zA-Z0-9-_]+)(\/[a-zA-Z0-9-_\/]+)?`)
 		// relevant groups
 		// 1. [www.example.com/biz/program]
-		// 4. [www.[example.com]/biz/program]
+		// 3. [www.[example.com]/biz/program]
 
 		for _, v := range urls {
 			r := re.FindStringSubmatch(v)
@@ -74,6 +76,12 @@ func BBaas(urls, scopes, source []string) ([]string, []string, bool) {
 				source = append(source, url)
 			} else if host == "yeswehack.com" {
 				scopes = append(scopes, yeswehack.Scrape(url))
+				source = append(source, url)
+			} else if host == "bugbounty.jp" {
+				scopes = append(scopes, bugbountyjp.Scrape(url))
+				source = append(source, url)
+			} else if host == "federacy.com" {
+				scopes = append(scopes, federacy.Scrape(url))
 				source = append(source, url)
 			} else {
 				log.Fatalf("%s Unsupported bug bounty program: %s\n", color.FgRed.Text("[!]"), host)
