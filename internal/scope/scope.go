@@ -29,7 +29,7 @@ type Match struct {
 // Parse function takes a slice containing scope file data and
 // applies regex to each line in order to extract targets from scope-
 // matched targets are split into groups varying on type (host, url, iprange, etc)
-// Returns a Match object containing all lists
+// Returns a Match object
 func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, bbaas bool) Match {
 	var exclude bool
 
@@ -53,9 +53,10 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 
 	r2 := regexp.MustCompile(`((\d+\.\d+\.\d+\.)(\d+)-(\d+))`)
 	// Matches IP-Range
-	// Groups: 1.  [192.168.0].1-255
-	//         2.   192.168.0.[1]-255
-	//         3.   192.168.0.1-[255]
+	// Groups: 1.  [d.d.d.d-d]
+	//         2.  [d.d.d].d-d
+	//         3.   d.d.d.[d]-d
+	//         4.   d.d.d.d-[d]
 
 	r3 := regexp.MustCompile(`([0-9]+[\.0-9]+\/)([0-9]{1,2})`)
 	// Matches IP/CIDR
@@ -141,7 +142,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 						}
 					}
 
-				// anything but IP/Range/CIDR
+				// anything else
 			} else if m1 != nil {
 				// not interested in those ending with '.'
 				for _, arr := range m1 {
