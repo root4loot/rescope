@@ -121,7 +121,7 @@ Documentation:
 	}
 
 	// check/set scopename
-	if a.Command == "zap" {
+	if a.Zap {
 		if !isVar(a.Scopename) {
 			a.Scopename = setScopeName()
 		}
