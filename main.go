@@ -27,9 +27,9 @@ func main() {
 	var fds []*os.File
 	// data to be written to outfile
 	var buf []byte
-	// slice containing scope definitions
-	var source []string
 	// slice containing scope origins (filename or bugbounty url)
+	var source []string
+	// slice containing scope definitions
 	var scopes []string
 	// indicates whether BBaaS url was found
 	var bbaas bool
