@@ -110,11 +110,9 @@ Documentation:
 	}
 	if !isVar(a.Outfile) {
 		argErr = append(argErr, "Missing (-o <outfile>)")
-	}
-	if len(strings.Split(a.Outfile, ".")) < 2 {
+	} else if len(strings.Split(a.Outfile, ".")) < 2 {
 		argErr = append(argErr, "Outfile must have an extension (-o filename.ext)")
 	}
-
 	if btoi(a.Burp)+btoi(a.Zap)+btoi(a.Raw) > 1 {
 		argErr = append(argErr, "You can only have one instance of [b|--burp] [z|--zap] [r|--raw]")
 	}
