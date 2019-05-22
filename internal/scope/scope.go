@@ -34,7 +34,7 @@ type Match struct {
 // Returns a Match object
 func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, bbaas bool) Match {
 	var exclude bool
-	var ignores []string
+	var serviceIgnores []string
 
 	// Set Tag used to indicate beginning of Includes
 	if len(incTag) == 0 {
@@ -46,13 +46,13 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 		exTag = "!EXCLUDE"
 	}
 
-	// Read URIs to be ignored from scope
+	// Append services to be ignored from scope
 	fr := file.ReadFromRoot("configs/ignore.txt", "pkg")
 	scanner := bufio.NewScanner(strings.NewReader(string(fr[:])))
 	re := regexp.MustCompile(`^\w+.+$`)
 	for scanner.Scan() {
 		if re.MatchString(scanner.Text()) {
-			ignores = append(ignores, scanner.Text())
+			serviceIgnores = append(serviceIgnores, scanner.Text())
 		}
 	}
 
@@ -152,9 +152,9 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 						} else {
 							m.Excludes = append(m.Excludes, hosts)
 
-							}
 						}
 					}
+				}
 
 				// anything else
 			} else if m1 != nil {
@@ -181,7 +181,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 	}
 
 	for i := range scopes {
-		m.Includes = checkIgnored(source[i], m.Includes, ignores)
+		m.Includes = checkIgnored(source[i], m.Includes, serviceIgnores)
 		m.Excludes = checkConflict(source[i], m.Includes, m.Excludes)
 	}
 	return m
@@ -213,15 +213,16 @@ func isIP(s string) bool {
 
 // checkIgnored attempts to identify identifiers in scope that should be ignored based on config
 // returns a modified list of includes depending on user input
-func checkIgnored(source string, includes [][]string, ignores []string) [][]string {
+func checkIgnored(source string, includes [][]string, services []string) [][]string {
+	var targetIgnores [][]string
 	domain := regexp.MustCompile(`\/(\w+\/?$)`)
 	found := false
 
-	for _, ignore := range ignores {
+	for _, service := range services {
 		for _, include := range includes {
 			if !isIP(include[0]) {
 				program := domain.FindStringSubmatch(strings.TrimSuffix(source, "/"))
-				if include[4] == ignore && ignore != program[1]+".com" && ignore != program[1]+".jp" {
+				if include[4] == service && service != program[1]+".com" && service != program[1]+".jp" {
 					if found == false {
 						fmt.Printf("\n%s Encountered third party resources in %s", color.FgYellow.Text("[!]"), color.FgYellow.Text(source))
 						fmt.Printf("\n%s\n\n", color.FgGray.Text("    You generally don't want those in your proxy"))
@@ -229,7 +230,7 @@ func checkIgnored(source string, includes [][]string, ignores []string) [][]stri
 					}
 					if found == true {
 						fmt.Printf("%s %s \n", color.FgGray.Text(" - "), color.FgCyan.Text((include[0])))
-						ignores = append(ignores, include[0])
+						targetIgnores = append(targetIgnores, include)
 					}
 				}
 			}
@@ -238,7 +239,7 @@ func checkIgnored(source string, includes [][]string, ignores []string) [][]stri
 	if found == true {
 		answer := getAnswer("Remove now?")
 		if answer == "Y" || answer == "" {
-			includes = resort(ignores, includes)
+			includes = resort(targetIgnores, includes)
 		}
 	}
 	return includes
@@ -248,7 +249,7 @@ func checkIgnored(source string, includes [][]string, ignores []string) [][]stri
 // returns a modified list of excludes depending on user input
 func checkConflict(source string, includes, excludes [][]string) [][]string {
 	found := false
-	var conflicts []string
+	var targetConflicts [][]string
 
 	for _, include := range includes {
 		if !isIP(include[0]) {
@@ -256,11 +257,11 @@ func checkConflict(source string, includes, excludes [][]string) [][]string {
 				if exclude[4] == include[4] && exclude[3] == "*." {
 					if !found {
 						fmt.Printf("\n%s Encountered scope conflict in %s,", color.FgYellow.Text("[!]"), color.FgYellow.Text(source))
-						fmt.Printf("\n%s\n\n", color.FgGray.Text("This prevents target from being proxied unless exclude in red is removed (safe)"))
+						fmt.Printf("\n%s\n\n", color.FgGray.Text("    This prevents target in green from being targeted unless exclude in red is removed"))
 						found = true
 					} else {
-						fmt.Printf("%s %s excludes %s\n", color.FgGray.Text(" - "), color.FgRed.Text(exclude[0]), color.FgGreen.Text(include[0]))
-						conflicts = append(conflicts, include[0])
+						fmt.Printf("%s %s excludes %s\n", color.FgDefault.Text("   "), color.FgRed.Text(exclude[0]), color.FgGreen.Text(include[0]))
+						targetConflicts = append(targetConflicts, include)
 					}
 				}
 			}
@@ -270,17 +271,18 @@ func checkConflict(source string, includes, excludes [][]string) [][]string {
 	if found == true {
 		answer := getAnswer("Remove now?")
 		if answer == "Y" || answer == "" {
-			excludes = resort(conflicts, excludes)
+			excludes = resort(targetConflicts, excludes)
 		}
 	}
 	return excludes
 }
 
 // resort removes a from b, if a is found and returns it
-func resort(a []string, b [][]string) [][]string {
+func resort(a [][]string, b [][]string) [][]string {
+
 	for _, av := range a {
 		for i, bv := range b {
-			if av == bv[0] {
+			if av[4] == bv[4] {
 				b = append(b[:i], b[i+1:]...)
 			}
 		}
