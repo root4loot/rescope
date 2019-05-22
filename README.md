@@ -6,10 +6,14 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/root4loot/rescope/issues)
 ![Twitter Follow](https://img.shields.io/twitter/follow/root4loot.svg?style=social)
 
-**NEW: Define scopes directly from nearly any public "bugbounty-service" program.**     
-**Blog post:** http://root4loot.com/post/announcing_rescope_v1.0
 
 Rescope is a cli-tool (written in Go) that aims to make life easier when defining scopes in Burp Suite and OWASP ZAP, by eliminating the many hoops one has to go through with current workflows - geared towards pentesters and bug-bounty researchers.
+
+**New 05-19-2019**:
+- Support for [bugbounty.jp](https://bugbounty.jp) and [federacy.com](https://www.federacy.com)
+- New `--raw` flag to output naked "in-scope" definitions. Useful in working with other programs.
+- Method for resolving identifiers that conflict (overlap) with wilcarded excludes.
+- Method for avoiding certain third party resources, such as github.com, itunes.apple.com, play.google.com, etc. See [changelog](changelog.md) for more information.
 
 ### How it works
 1. Provide any public or private scope.
@@ -38,19 +42,21 @@ Requires [Go](<https://golang.org/>) and git
 go get -u github.com/root4loot/rescope
 ```
 
-Make sure go/bin is added to PATH: `export PATH=$PATH:$GOPATH/bin`
+Make sure [GOPATH is set](https://github.com/golang/go/wiki/SettingGOPATH) and that go/bin is added to PATH: `export PATH=$PATH:$GOPATH/bin`
 
-If you run into merge issues from v0.1 then delete the repo and install once again (sorry for the inconvenience.)
 
 ## Features
 
-* **New:** Define public scope(s) directly from any supported BBaaS (**Bug-Bounty-as-a-Service**) platform.
+* Define public scope(s) directly from any supported BBaaS (**Bug-Bounty-as-a-Service**) platform.
 * Define private scopes by copy/pasting target definitions from pretty much anywhere.
+* Outputs results that is compatible with Burp Suite and Zaproxy for direct import.
 * Combine private and public scopes.
 * Easily separate excludes from includes.
 * Parse multiple scopes to the same result.
 * Supports IP-ranges & CIDR.
-* Outputs results that is compatible with Burp Suite and Zaproxy for direct import.
+* Resolves conflicting includes/excludes
+* Avoid resources from third party services such as github.com, github.com, itunes.apple.com, etc.
+
 
 ### Supported Bug-Bounty Services (BBaaS)
 
@@ -60,6 +66,8 @@ If you run into merge issues from v0.1 then delete the repo and install once aga
 - [intigriti.com](https://www.intigriti.com/public)
 - [openbugbounty.com](https://www.openbugbounty.org)
 - [yeswehack.com](https://yeswehack.com)
+- [bugbounty.jp](https://bugbounty.jp)
+- [federacy.com](https://www.federacy.com)
 
 ## Usage
 ```
@@ -68,19 +76,21 @@ usage: rescope [arguments]
 
 ### Arguments
 
-| Short | Long       | Description                   | Required     |
-| :----: |:---------:| :---------------------------  | :--------    |
-| -h    | --help     | Print help information        | Optional     |
-| -b    | --burp     | Parse to Burp Suite JSON      | Required     |
-| -z    | --zap      | Parse to OWASP ZAP XML        | Required     |
-| -u    | --url      | Public bug bounty program URL | Required     |
-| -i    | --infile   | File (scope) to be parsed     | Required     |
-| -o    | --outfile  | File to write parsed results  | Required     |
-| -s    | --silent   | Do not print identified targets | Optional   |
-| -n    | --name     | Name of ZAP context           | Optional     |
-|       | --itag    | Custom include tag (default: !INCLUDE) | Optional |
-|       | --etag    | Custom exclude tag (default: !EXCLUDE) | Optional |
-|       | --version  | Print version                 | Optional     |
+| Short | Long       	| Description                   					| Required     |
+| :----: |:------------:| :------------------------------------------------ | :--------    |
+| -h    | --help     	| Print help information        					| Optional     |
+| -b    | --burp     	| Parse to Burp Suite JSON      					| Required     |
+| -z    | --zap      	| Parse to OWASP ZAP XML        					| Required     |
+| -r    | --raw      	| Output raw in-scope definitions to outfile        | Required     |
+| -u    | --url      	| Public bug bounty program URL 					| Required     |
+| -i    | --infile   	| File (scope) to be parsed     					| Required     |
+| -o    | --outfile  	| File to write parsed results  					| Required     |
+| -s    | --silent   	| Do not print identified targets 					| Optional     |
+| -n    | --name     	| Name of ZAP context           					| Optional     |
+|       | --itag     	| Custom include tag (default: !INCLUDE) 			| Optional 	   |
+|       | --etag     	| Custom exclude tag (default: !EXCLUDE) 			| Optional     |
+|       | --version     | Print version                 					| Optional     |
+
 
 ### Example Usage
 Parse scopes from public bugbounty program to Burp (JSON)  
@@ -295,7 +305,7 @@ If you set `-o` filename extension to anything other than `.context` then you'll
 
 ## Caveats
 
-rescope cannot guarantee accurate results all the time. For instance, a bugbounty program may decide to list targets in a non-conventional way that is not accounted for. Therefore, always verify the results yourself before importing.
+rescope cannot guarantee accurate results. For instance, a bugbounty program may opt to list targets in a non-conventional way that is not accounted for. Therefore, always verify the results yourself before importing.
 
 ## Author
 * Daniel Antonsen ([root4loot](https://twitter.com/root4loot))
