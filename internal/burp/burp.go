@@ -75,7 +75,7 @@ func Parse(Includes, Excludes [][]string) []byte {
 	cludes = append(cludes, Excludes)
 
 	// file containing servicenames and ports
-	fr := File.ReadFromRoot("configs/services", "pkg")
+	fr := File.ReadFromRoot("configs/known-ports.txt", "pkg")
 
 	for i, clude := range cludes {
 		for _, item := range clude {
