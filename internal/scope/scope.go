@@ -220,9 +220,10 @@ func checkAvoid(source string, includes [][]string, services []string) [][]strin
 
 	for _, service := range services {
 		for _, include := range includes {
+			host := include[2] + include[4]
 			if !isIP(include[0]) {
 				program := domain.FindStringSubmatch(strings.TrimSuffix(source, "/"))
-				if include[4] == service && service != program[1]+".com" && service != program[1]+".jp" {
+				if host == service && service != program[1]+".com" && service != program[1]+".jp" {
 					if found == false {
 						fmt.Printf("\n%s Encountered third party resources in %s", color.FgYellow.Text("[!]"), color.FgYellow.Text(source))
 						fmt.Printf("\n%s\n\n", color.FgGray.Text("    You generally don't want those in your proxy"))
