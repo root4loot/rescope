@@ -193,7 +193,7 @@ func getAnswer(question string) string {
 	var answer string
 	for {
 		reader := bufio.NewReader(os.Stdin)
-		fmt.Printf("\n%s %s (%s/n): ", color.FgYellow.Text("[?]"), question, color.Bold.Text("Y"))
+		fmt.Printf("\n%s %s [%s/n]: ", color.FgYellow.Text("[?]"), question, color.Bold.Text("Y"))
 		answer, _ = reader.ReadString('\n')
 		answer = strings.ToUpper((strings.TrimSuffix(answer, "\n")))
 		if answer == "Y" || answer == "N" || answer == "" {
@@ -226,11 +226,10 @@ func checkAvoid(source string, includes [][]string, services []string) [][]strin
 				if host == service && service != program[1]+".com" && service != program[1]+".jp" {
 					if found == false {
 						fmt.Printf("\n%s Encountered third party resources in %s", color.FgYellow.Text("[!]"), color.FgYellow.Text(source))
-						fmt.Printf("\n%s\n\n", color.FgGray.Text("    You generally don't want those in your proxy"))
 						found = true
 					}
 					if found == true {
-						fmt.Printf("%s %s \n", color.FgGray.Text(" - "), color.FgCyan.Text((include[0])))
+						fmt.Printf("%s %s\n", color.FgGray.Text(" - "), color.FgCyan.Text((include[0])))
 						targetAvoids = append(targetAvoids, include)
 					}
 				}
@@ -238,7 +237,7 @@ func checkAvoid(source string, includes [][]string, services []string) [][]strin
 		}
 	}
 	if found == true {
-		answer := getAnswer("Remove now?")
+		answer := getAnswer("Avoid?")
 		if answer == "Y" || answer == "" {
 			includes = resort(targetAvoids, includes)
 		}
