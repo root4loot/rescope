@@ -5,6 +5,24 @@ Unreleased changes will go in the below heading.
 
 ## [Unreleased]
 
+### Added
+- Support for [bugbounty.jp](https://bugbounty.jp)
+- Support for [federacy.com](https://www.federacy.com/)
+- New flag `--raw` that outputs naked (in-scope) definitions to file. Useful in working with other tools and programs.
+- Method for resolving identifiers that conflict (overlap) with wilcarded excludes. Such conflict renders affected "in-scope" targets ineffective as excludes are prioritized in Burp/ZAP. This occurs when scopes are not properly defined, which if fairly common to see in BaaS programs.
+- Method for avoiding certain third party resources, such as github.com, itunes.apple.com, play.google.com, etc, which is generally not something you want to scan/spider. Services are defined in [configs/avoid.txt](configs/avoid.txt). Met condition will prompt user as to whether affected targets should be ignored.
+
+
+### Fixed
+- Missing scopename prompt when parsing to ZAP without `--name` specified
+- Targets like `www.*.example.com` and `*.*.example.com` should now parse correctly.
+- Single IP's should now identify correctly.
+- Bug that resulted in IP-ranges from being identified.
+
+### Improved
+- List handling to free up some unnecessary looping and improve extensibility.
+
+
 ## [1.1] - 2019-04-22
 
 ### Added
