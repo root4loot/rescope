@@ -79,9 +79,9 @@ usage: rescope [arguments]
 | Short | Long       	| Description                   					| Required     |
 | :----: |:------------:| :------------------------------------------------ | :--------    |
 | -h    | --help     	| Print help information        					| Optional     |
-| -b    | --burp     	| Parse to Burp Suite JSON      					| Required     |
-| -z    | --zap      	| Parse to OWASP ZAP XML        					| Required     |
-| -r    | --raw      	| Output raw in-scope definitions to outfile        | Required     |
+| -b    | --burp     	| Parse to Burp Suite JSON      					| Required?    |
+| -z    | --zap      	| Parse to OWASP ZAP XML        					| Required?    |
+| -r    | --raw      	| Output raw in-scope definitions to outfile        | Required?    |
 | -u    | --url      	| Public bug bounty program URL 					| Required     |
 | -i    | --infile   	| File (scope) to be parsed     					| Required     |
 | -o    | --outfile  	| File to write parsed results  					| Required     |
