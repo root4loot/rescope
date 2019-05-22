@@ -164,3 +164,11 @@ func isList(l []string) bool {
 	}
 	return false
 }
+
+// btoi bool to int
+func btoi(b bool) int {
+	if b {
+		return 1
+	}
+	return 0
+}
