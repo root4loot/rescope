@@ -1,4 +1,4 @@
-# Do not scope targets from the following services
+# Ask to include or ignore resources from the following services
 # Affects only third parties
 
 github.com
