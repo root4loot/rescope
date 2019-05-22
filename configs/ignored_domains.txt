@@ -1,5 +1,5 @@
-# This file contains common third party domains to be ignored completely.
-# This will not affect non-third-party resources.
+# Domains to be ignored completely
+# Affects only third party resources
 
 github.com
 gitlab.com
