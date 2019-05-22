@@ -1,5 +1,5 @@
-# Domains to be ignored completely
-# Affects only third party resources
+# Do not scope targets from the following services
+# Affects only third parties
 
 github.com
 gitlab.com
