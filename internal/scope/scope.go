@@ -34,7 +34,7 @@ type Match struct {
 // Returns a Match object
 func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, bbaas bool) Match {
 	var exclude bool
-	var serviceIgnores []string
+	var serviceAvoids []string
 
 	// Set Tag used to indicate beginning of Includes
 	if len(incTag) == 0 {
@@ -47,12 +47,12 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 	}
 
 	// Append services to be ignored from scope
-	fr := file.ReadFromRoot("configs/ignore.txt", "pkg")
+	fr := file.ReadFromRoot("configs/avoid.txt", "pkg")
 	scanner := bufio.NewScanner(strings.NewReader(string(fr[:])))
 	re := regexp.MustCompile(`^\w+.+$`)
 	for scanner.Scan() {
 		if re.MatchString(scanner.Text()) {
-			serviceIgnores = append(serviceIgnores, scanner.Text())
+			serviceAvoids = append(serviceAvoids, scanner.Text())
 		}
 	}
 
@@ -181,7 +181,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 	}
 
 	for i := range scopes {
-		m.Includes = checkIgnored(source[i], m.Includes, serviceIgnores)
+		m.Includes = checkAvoid(source[i], m.Includes, serviceAvoids)
 		m.Excludes = checkConflict(source[i], m.Includes, m.Excludes)
 	}
 	return m
@@ -211,10 +211,10 @@ func isIP(s string) bool {
 	return false
 }
 
-// checkIgnored attempts to identify identifiers in scope that should be ignored based on config
+// checkAvoid attempts to identify identifiers in scope that should be avoided based on config
 // returns a modified list of includes depending on user input
-func checkIgnored(source string, includes [][]string, services []string) [][]string {
-	var targetIgnores [][]string
+func checkAvoid(source string, includes [][]string, services []string) [][]string {
+	var targetAvoids [][]string
 	domain := regexp.MustCompile(`\/(\w+\/?$)`)
 	found := false
 
@@ -230,7 +230,7 @@ func checkIgnored(source string, includes [][]string, services []string) [][]str
 					}
 					if found == true {
 						fmt.Printf("%s %s \n", color.FgGray.Text(" - "), color.FgCyan.Text((include[0])))
-						targetIgnores = append(targetIgnores, include)
+						targetAvoids = append(targetAvoids, include)
 					}
 				}
 			}
@@ -239,7 +239,7 @@ func checkIgnored(source string, includes [][]string, services []string) [][]str
 	if found == true {
 		answer := getAnswer("Remove now?")
 		if answer == "Y" || answer == "" {
-			includes = resort(targetIgnores, includes)
+			includes = resort(targetAvoids, includes)
 		}
 	}
 	return includes
