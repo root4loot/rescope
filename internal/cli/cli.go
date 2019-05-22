@@ -115,6 +115,10 @@ Documentation:
 		argErr = append(argErr, "Outfile must have an extension (-o filename.ext)")
 	}
 
+	if btoi(a.Burp)+btoi(a.Zap)+btoi(a.Raw) > 1 {
+		argErr = append(argErr, "You can only have one instance of [b|--burp] [z|--zap] [r|--raw]")
+	}
+
 	// print arg errors from list
 	if len(argErr) > 0 {
 		for i := 1; i <= len(argErr); i++ {
