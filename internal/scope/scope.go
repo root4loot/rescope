@@ -47,7 +47,7 @@ func Parse(m Match, scopes, source []string, silent bool, incTag, exTag string, 
 	}
 
 	// Read URIs to be ignored from scope
-	fr := file.ReadFromRoot("configs/ignored_domains.txt", "pkg")
+	fr := file.ReadFromRoot("configs/ignore.txt", "pkg")
 	scanner := bufio.NewScanner(strings.NewReader(string(fr[:])))
 	re := regexp.MustCompile(`^\w+.+$`)
 	for scanner.Scan() {
