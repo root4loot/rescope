@@ -34,7 +34,7 @@ That's it! No more pulling your hair dealing with regular expressions and endles
 - [Importing to Burp/ZAP](#importing-results)
 
 
-## Installation
+## ☛ Installation
 
 Requires [Go](<https://golang.org/>) and git
 
