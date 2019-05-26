@@ -5,6 +5,8 @@ Unreleased changes will go in the below heading.
 
 ## [Unreleased]
 
+## [2.0] - 2019-06-26
+
 ### Added
 - Support for [bugbounty.jp](https://bugbounty.jp)
 - Support for [federacy.com](https://www.federacy.com/)
