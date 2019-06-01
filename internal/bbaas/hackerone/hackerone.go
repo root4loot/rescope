@@ -19,7 +19,7 @@ import (
 
 var scope []string
 
-// Scrape tries to grab scope table for a given program on hackerone.com.com
+// Scrape tries to grab scope table for a given program on hackerone.com
 func Scrape(url string) string {
 	re := regexp.MustCompile(`([\w-]+)\/([\w-]+$)`)
 	match := re.FindStringSubmatch(url)
