@@ -9,6 +9,7 @@ package bugbountyjp
 
 import (
 	"strings"
+	"regexp"
 
 	"github.com/antchfx/htmlquery"
 
@@ -19,9 +20,13 @@ import (
 // Scrape returns a string containing scope that was scraped from the given program on bugbounty.jp
 func Scrape(url string) string {
 	var scope []string
+	re := regexp.MustCompile(`([\w-]+)\/([\w-]+$)`)
+	match := re.FindStringSubmatch(url)
+	program := match[2]
+	endpoint := "https://bugbounty.jp/program/" + program
 
 	// GET request to endpoint
-	respBody := req.GET(url)
+	respBody := req.GET(endpoint)
 
 	// parse response body to xQuery doc
 	doc, _ := htmlquery.Parse(strings.NewReader(respBody))
