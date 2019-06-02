@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 
+	color "github.com/gookit/color"
 	bugbountyjp "github.com/root4loot/rescope/internal/bbaas/bugbounty.jp"
 	bugcrowd "github.com/root4loot/rescope/internal/bbaas/bugcrowd"
 	federacy "github.com/root4loot/rescope/internal/bbaas/federacy"
@@ -13,80 +15,80 @@ import (
 	intigriti "github.com/root4loot/rescope/internal/bbaas/intigriti"
 	openbugbounty "github.com/root4loot/rescope/internal/bbaas/openbugbounty"
 	yeswehack "github.com/root4loot/rescope/internal/bbaas/yeswehack"
-
-	"github.com/gookit/color"
 )
 
-// BBaas identifies supported bounty programs and calls Scrape functions to get scopes.
+// BBaas identifies supported bounty programs and calls scrape functions to grab scopes
 func BBaas(urls, scopes, source []string) ([]string, []string, bool) {
-	// indicates whether BBaaS url was found
-	var bbaas bool
-	// Move bounty URLs from infile to a.URLs
+	var matches [][]string
+	var foundInScope bool
+
+	if len(urls) > 0 {
+		for _, url := range urls {
+			match := getBBmatch(url)
+			if match != nil {
+				matches = append(matches, match)
+			} else {
+				log.Fatalf("%s Invalid bug bounty URI: %s\n", color.FgRed.Text("[!]"), url)
+			}
+		}
+	}
+
 	for i, scope := range scopes {
-		re := regexp.MustCompile(`((https?:\/\/)?(www\.)?(hackerone\.com|bugcrowd\.com|hackenproof\.com|intigriti\.com\/([\w-_\/]+)|openbugbounty\.org|yeswehack\.com|bugbounty\.jp|(one\.)?federacy\.com)(\/[\w-_]+)?\/[\w-_]+)\/?`)
-
-		// get all bb URLs from scope
-		bountyuris := re.FindAllString(scope, -1)
-
-		// add them to the list of bb URLs
-		for _, v := range bountyuris {
-			bbaas = true
-			fmt.Printf("%s Identified BBaaS program (%s) in %s\n", color.FgYellow.Text("[-]"), v, source[i])
-			urls = append(urls, v)
-		}
-
-		// remove from infile
-		scopes[i] = re.ReplaceAllString(scope, "")
-	}
-
-	// Get scope from bugbounty URL(s)
-	if urls != nil {
-		re := regexp.MustCompile(`^(https?:\/\/)?(www\.)?(([a-z]+\.)?[a-zA-Z0-9-]+\.[a-z]+)\/([a-zA-Z0-9-_]+)(\/[a-zA-Z0-9-_\/]+)?`)
-		// relevant groups
-		// 1. [www.example.com/biz/program]
-		// 3. [www.[example.com]/biz/program]
-
-		for _, v := range urls {
-			r := re.FindStringSubmatch(v)
-			var url, host string
-
-			if r != nil {
-				url = r[0]
-				host = r[3]
-				// program = r[5]
-			} else {
-				log.Fatalf("%s Invalid bug bounty URL: %s\n", color.FgRed.Text("[!]"), v)
-			}
-
-			// Scrape scopes from BB program tables
-			if host == "hackerone.com" {
-				scopes = append(scopes, hackerone.Scrape(url))
-				source = append(source, url)
-			} else if host == "bugcrowd.com" {
-				scopes = append(scopes, bugcrowd.Scrape(url))
-				source = append(source, url)
-			} else if host == "hackenproof.com" {
-				scopes = append(scopes, hackenproof.Scrape(url))
-				source = append(source, url)
-			} else if host == "intigriti.com" {
-				scopes = append(scopes, intigriti.Scrape(url))
-				source = append(source, url)
-			} else if host == "openbugbounty.org" {
-				scopes = append(scopes, openbugbounty.Scrape(url))
-				source = append(source, url)
-			} else if host == "yeswehack.com" {
-				scopes = append(scopes, yeswehack.Scrape(url))
-				source = append(source, url)
-			} else if host == "bugbounty.jp" {
-				scopes = append(scopes, bugbountyjp.Scrape(url))
-				source = append(source, url)
-			} else if host == "federacy.com" {
-				scopes = append(scopes, federacy.Scrape(url))
-				source = append(source, url)
-			} else {
-				log.Fatalf("%s Unsupported bug bounty program: %s\n", color.FgRed.Text("[!]"), host)
+		matched := getBBinScope(scope)
+		if len(matched) != 0 {
+			foundInScope = true
+			for _, match := range matched {
+				fmt.Printf("%s Found BBaaS URI (%s) in %s\n", color.FgYellow.Text("[-]"), match[0], source[i])
+				scopes[i] = strings.Replace(scopes[i], match[0], "", -1)
+				matches = append(matches, match)
 			}
 		}
 	}
-	return scopes, source, bbaas
+
+	m := map[string]func(string) string{
+		"hackerone.com":     hackerone.Scrape,
+		"bugcrowd.com":      bugcrowd.Scrape,
+		"hackenproof.com":   hackenproof.Scrape,
+		"intigriti.com":     intigriti.Scrape,
+		"openbugbounty.org": openbugbounty.Scrape,
+		"yeswehack.com":     yeswehack.Scrape,
+		"bugbounty.jp":      bugbountyjp.Scrape,
+		"federacy.com":      federacy.Scrape,
+	}
+
+	for _, match := range matches {
+		scopes = append(scopes, m[match[4]](match[0]))
+		source = append(source, match[0])
+	}
+	return scopes, source, foundInScope
+}
+
+// getBBinScope returns matched BB URIs from scope
+func getBBinScope(s string) [][]string {
+	lines := strings.FieldsFunc(s, split)
+	var matches [][]string
+
+	for _, line := range lines {
+		match := getBBmatch(line)
+		if match != nil {
+			matches = append(matches, match)
+		}
+	}
+	return matches
+}
+
+// getBBmatch returns slice containing submatches from expression that checks for valid URIs
+func getBBmatch(s string) []string {
+	re := regexp.MustCompile(`((https?:\/\/)?(www\.)?(hackerone\.com|bugcrowd\.com|hackenproof\.com|intigriti\.com\/([\w-_\/]+)|openbugbounty\.org|yeswehack\.com|bugbounty\.jp|(one\.)?federacy\.com)(\/[\w-_]+)?\/[\w-_]+)\/?`)
+	var match []string
+
+	if re.MatchString(s) {
+		match = re.FindStringSubmatch(s)
+	}
+	return match
+}
+
+// Used with FieldsFunc to split on multiple delimiters
+func split(r rune) bool {
+	return r == ' ' || r == '\n'
 }
