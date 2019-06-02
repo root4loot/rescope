@@ -239,7 +239,7 @@ func checkAvoid(source string, includes [][]string, services []string) [][]strin
 	if found == true {
 		answer := getAnswer("Avoid?")
 		if answer == "Y" || answer == "" {
-			includes = resort(targetAvoids, includes)
+			includes = remove(targetAvoids, includes)
 		}
 	}
 	return includes
@@ -271,14 +271,14 @@ func checkConflict(source string, includes, excludes [][]string) [][]string {
 	if found == true {
 		answer := getAnswer("Remove now?")
 		if answer == "Y" || answer == "" {
-			excludes = resort(targetConflicts, excludes)
+			excludes = remove(targetConflicts, excludes)
 		}
 	}
 	return excludes
 }
 
-// resort removes a from b, if a is found and returns it
-func resort(a [][]string, b [][]string) [][]string {
+// remove a from b, if a is found and return b
+func remove(a [][]string, b [][]string) [][]string {
 	for _, av := range a {
 		for i, bv := range b {
 			if av[4] == bv[4] {
