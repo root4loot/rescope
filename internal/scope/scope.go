@@ -279,11 +279,15 @@ func checkConflict(source string, includes, excludes [][]string) [][]string {
 
 // resort removes a from b, if a is found and returns it
 func resort(a [][]string, b [][]string) [][]string {
-
 	for _, av := range a {
 		for i, bv := range b {
 			if av[4] == bv[4] {
-				b = append(b[:i], b[i+1:]...)
+				if len(b) == i {
+					// when last index
+					b = append(b[:i], b[i:]...)
+				} else {
+					b = append(b[:i], b[i+1:]...)
+				}
 			}
 		}
 	}
