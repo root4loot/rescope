@@ -225,14 +225,16 @@ func checkAvoid(source string, includes [][]string, services []string) [][]strin
 				program := domain.FindStringSubmatch(strings.TrimSuffix(source, "/"))
 
 				// do not avoid domains equal to avoid
-				if host == service && service != program[1]+".com" && service != program[1]+".jp" {
-					if found == false {
-						fmt.Printf("\n%s Encountered third party resources in %s", color.FgYellow.Text("[!]"), color.FgYellow.Text(source))
-						found = true
-					}
-					if found == true {
-						fmt.Printf("\n%s %s", color.FgGray.Text(" - "), color.FgCyan.Text((include[0])))
-						targetAvoids = append(targetAvoids, include)
+				if program != nil {
+					if host == service && service != program[1]+".com" && service != program[1]+".jp" {
+						if found == false {
+							fmt.Printf("\n%s Encountered third party resources in %s", color.FgYellow.Text("[!]"), color.FgYellow.Text(source))
+							found = true
+						}
+						if found == true {
+							fmt.Printf("\n%s %s", color.FgGray.Text(" - "), color.FgCyan.Text((include[0])))
+							targetAvoids = append(targetAvoids, include)
+						}
 					}
 				}
 			}
