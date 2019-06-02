@@ -229,7 +229,7 @@ func checkAvoid(source string, includes [][]string, services []string) [][]strin
 						found = true
 					}
 					if found == true {
-						fmt.Printf("%s %s\n", color.FgGray.Text(" - "), color.FgCyan.Text((include[0])))
+						fmt.Printf("\n%s %s", color.FgGray.Text(" - "), color.FgCyan.Text((include[0])))
 						targetAvoids = append(targetAvoids, include)
 					}
 				}
