@@ -261,10 +261,10 @@ func checkConflict(source string, includes, excludes [][]string) [][]string {
 				if exclude[4] == include[4] && exclude[3] == "*." {
 					if !found {
 						fmt.Printf("\n%s Encountered scope conflict in %s", color.FgYellow.Text("[!]"), color.FgYellow.Text(source))
-						fmt.Printf("\n%s\n\n", color.FgGray.Text("    This prevents target in green from being targeted unless exclude in red is removed"))
+						fmt.Printf("\n%s\n", color.FgGray.Text("    This prevents target in green from being targeted unless exclude in red is removed"))
 						found = true
 					} else {
-						fmt.Printf("%s %s excludes %s\n", color.FgDefault.Text("   "), color.FgRed.Text(exclude[0]), color.FgGreen.Text(include[0]))
+						fmt.Printf("\n%s %s excludes %s", color.FgDefault.Text("   "), color.FgRed.Text(exclude[0]), color.FgGreen.Text(include[0]))
 						targetConflicts = append(targetConflicts, include)
 					}
 				}
