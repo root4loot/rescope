@@ -1,6 +1,7 @@
 package error
 
 import (
+	"fmt"
 	color "github.com/gookit/color"
 	"log"
 )
@@ -21,6 +22,7 @@ func NoResponse(url string) {
 }
 
 // BadStatusCode fatal error when bad status code
-func BadStatusCode(url string, code int) {
-	log.Fatalf("\n%s Program %s returned with status code %d. Make sure it's correct", color.FgRed.Text("[!]"), color.FgYellow.Text(url), code)
+func BadStatusCode(url string, c int) {
+	code := fmt.Sprintf("%d", c)
+	log.Fatalf("\n%s %s responded with status code %s. Make sure it's correct", color.FgRed.Text("[!]"), color.FgYellow.Text(url), color.FgRed.Text(code))
 }
