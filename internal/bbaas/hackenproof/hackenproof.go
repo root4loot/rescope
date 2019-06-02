@@ -29,7 +29,12 @@ func Scrape(url string) string {
 	endpoint := "https://hackenproof.com/" + business + "/" + program
 
 	// GET request to endpoint
-	respBody := req.GET(endpoint)
+	respBody, status := req.GET(endpoint)
+
+	// check bad status code
+	if status != 200 {
+		errors.BadStatusCode(url, status)
+	}
 
 	// parse response body to xQuery doc
 	doc, _ := htmlquery.Parse(strings.NewReader(respBody))

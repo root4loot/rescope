@@ -14,6 +14,7 @@ import (
 
 	color "github.com/gookit/color"
 	req "github.com/root4loot/rescope/internal/bbaas/pkg/request"
+	errors "github.com/root4loot/rescope/internal/bbaas/pkg/errors"
 )
 
 var include, exclude, scope []string
@@ -25,7 +26,12 @@ func Scrape(url string) string {
 	program := match[2]
 
 	// GET program ID
-	resp := req.GET("https://one.federacy.com/api/programs/" + program)
+	resp, status := req.GET("https://one.federacy.com/api/programs/" + program)
+
+	// check bad status code
+	if status != 200 {
+		errors.BadStatusCode(url, status)
+	}
 
 	re = regexp.MustCompile(`"id":"([0-9a-z-]+)+`)
 	match = re.FindStringSubmatch(resp)
@@ -34,7 +40,8 @@ func Scrape(url string) string {
 		id := match[1]
 
 		// GET scope
-		resp = req.GET("https://one.federacy.com/api/program_scopes?program_id=" + id)
+		id = "3g3357b5-0feb-4545-8c74-61ac2d6ffa35"
+		resp, _ = req.GET("https://one.federacy.com/api/program_scopes?program_id=" + id)
 		re = regexp.MustCompile(`"identifier":"([^,]+)","in_scope":(true|false)`)
 		matches := re.FindAllStringSubmatch(resp, -1)
 

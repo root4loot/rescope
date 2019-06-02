@@ -9,9 +9,9 @@ package yeswehack
 
 import (
 	"encoding/json"
-	"fmt"
 	"regexp"
 	"strings"
+	"fmt"
 
 	errors "github.com/root4loot/rescope/internal/bbaas/pkg/errors"
 	req "github.com/root4loot/rescope/internal/bbaas/pkg/request"
@@ -30,7 +30,12 @@ func Scrape(url string) string {
 	scope = nil
 
 	// GET request to endpoint
-	resp := req.GET(endpoint)
+	resp, status := req.GET(endpoint)
+
+	// check bad status code
+	if status != 200 {
+		errors.BadStatusCode(url, status)
+	}
 
 	// map interfaces
 	m := map[string]interface{}{}

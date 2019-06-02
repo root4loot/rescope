@@ -26,7 +26,12 @@ func Scrape(url string) string {
 	var includes, excludes, scope []string
 
 	// GET request to endpoint
-	resp := req.GET(endpoint)
+	resp, status := req.GET(endpoint)
+
+	// check bad status code
+	if status != 200 {
+		errors.BadStatusCode(url, status)
+	}
 
 	// parse response body to xQuery doc
 	doc, _ := htmlquery.Parse(strings.NewReader(resp))

@@ -31,7 +31,12 @@ func Scrape(url string) string {
 	scope = nil
 
 	// GET request to endpoint
-	respJSON := req.GET(endpoint)
+	respJSON, status := req.GET(endpoint)
+
+	// check bad status code
+	if status != 200 {
+		errors.BadStatusCode(url, status)
+	}
 
 	// map interfaces
 	m := map[string]interface{}{}

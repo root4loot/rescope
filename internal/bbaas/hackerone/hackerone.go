@@ -40,7 +40,7 @@ func Scrape(url string) string {
 	 }`)
 
 	// POST request to endpoint
-	resp = (req.POST(endpoint, data))
+	resp, _ = (req.POST(endpoint, data))
 
 	// map interfaces
 	m := map[string]interface{}{}

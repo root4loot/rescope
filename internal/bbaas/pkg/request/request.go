@@ -15,11 +15,12 @@ import (
 	errors "github.com/root4loot/rescope/internal/bbaas/pkg/errors"
 )
 
-// GET returns response body of a given URL as string
-func GET(url string) string {
+// GET returns response body and status code for a given URL
+func GET(url string) (string, int) {
 
 	// request url
 	resp, err := http.Get(url)
+	respS := resp.StatusCode
 
 	// check response
 	if err != nil {
@@ -35,11 +36,11 @@ func GET(url string) string {
 	// response body string
 	respBS := string(respB)
 
-	return respBS
+	return respBS, respS
 }
 
-// POST returns response body of a given URL as bytes
-func POST(url string, data []byte) []byte {
+// POST returns response body and status code for a given URL
+func POST(url string, data []byte) ([]byte, int) {
 
 	// request
 	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(data))
@@ -47,6 +48,7 @@ func POST(url string, data []byte) []byte {
 	req.Header.Set("Connection", "close")
 	client := &http.Client{}
 	resp, err := client.Do(req)
+	respS := resp.StatusCode
 
 	// check response
 	if err != nil {
@@ -59,5 +61,5 @@ func POST(url string, data []byte) []byte {
 	// JSON response body
 	respB, _ := ioutil.ReadAll(resp.Body)
 
-	return respB
+	return respB, respS
 }

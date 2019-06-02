@@ -26,7 +26,7 @@ func Scrape(url string) string {
 	endpoint := "https://bugbounty.jp/program/" + program
 
 	// GET request to endpoint
-	respBody := req.GET(endpoint)
+	respBody, _ := req.GET(endpoint)
 
 	// parse response body to xQuery doc
 	doc, _ := htmlquery.Parse(strings.NewReader(respBody))
