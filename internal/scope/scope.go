@@ -256,7 +256,7 @@ func checkConflict(source string, includes, excludes [][]string) [][]string {
 			for _, exclude := range excludes {
 				if exclude[4] == include[4] && exclude[3] == "*." {
 					if !found {
-						fmt.Printf("\n%s Encountered scope conflict in %s,", color.FgYellow.Text("[!]"), color.FgYellow.Text(source))
+						fmt.Printf("\n%s Encountered scope conflict in %s", color.FgYellow.Text("[!]"), color.FgYellow.Text(source))
 						fmt.Printf("\n%s\n\n", color.FgGray.Text("    This prevents target in green from being targeted unless exclude in red is removed"))
 						found = true
 					} else {
