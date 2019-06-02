@@ -20,7 +20,7 @@ func NoResponse(url string) {
 	log.Fatalf("\n%s No HTTP response from %s. Please make sure the URI is correct", color.FgRed.Text("[!]"), url)
 }
 
-// // BadResponse when http code is le 200 and ge 299
-// func BadResponse(url string, code int, desc string) {
-// 	log.Fatalf("\n%s %s %d (%s). Is the program public?", color.FgRed.Text("[!]"), url, code, desc)
-// }
+// BadStatusCode fatal error when bad status code
+func BadStatusCode(url string, code int) {
+	log.Fatalf("\n%s Program %s returned with status code %d. Make sure it's correct", color.FgRed.Text("[!]"), color.FgYellow.Text(url), code)
+}
