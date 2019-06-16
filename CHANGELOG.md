@@ -11,7 +11,7 @@ Unreleased changes will go in the below heading.
 ### Fixed
 - bugbounty.jp with missing scheme will no longer cause segfault.
 - Scopes having avoided or conflicted targets on the last line should no longer cause out-of-bounds in removing them.
-
+- Rare occurence where identifiers ending in `.*` extension, that also has multiple wildcards in domain did not parse correctly.
 
 ## [2.0] - 2019-06-26
 
