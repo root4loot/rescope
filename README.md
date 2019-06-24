@@ -304,7 +304,8 @@ $ rescope --zap --name CoolScope -i scope.txt -o zapscope.context --silent
 Choose **File** -> **Import Context** and select XML file.
 
 **Note:**
-If you set `-o` filename extension to anything other than `.context` then you'll have to choose "All Format" in file select.
+- If you set `-o` filename extension to anything other than `.context` then you'll have to choose "All Format" in file select.
+- For ZAP HUD; set context `--name "HUD Context"`
 
 ## Caveats
 
