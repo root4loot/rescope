@@ -18,6 +18,7 @@ import (
 )
 
 var scope []string
+var isAssetURL bool
 
 // Scrape tries to grab scope table for a given program on hackerone.com
 func Scrape(url string) string {
@@ -33,7 +34,7 @@ func Scrape(url string) string {
 
 	// JSON POST data
 	var data = []byte(`{  
-		"query":"query Team_assets($first_0:Int!) {query {id,...F0}} fragment F0 on Query {_teamAgUhl:team(handle:\"` + program + `\") {handle,_structured_scope_versions2ZWKHQ:structured_scope_versions(archived:false) {max_updated_at},_structured_scopeszxYtW:structured_scopes(first:$first_0,archived:false,eligible_for_submission:true) {edges {node {asset_identifier}},pageInfo {hasNextPage,hasPreviousPage}},_structured_scopes3FF98f:structured_scopes(first:$first_0,archived:false,eligible_for_submission:false) {edges {node {asset_identifier,},},},},}",
+		"query":"query Team_assets($first_0:Int!) {query {id,...F0}} fragment F0 on Query {_teamAgUhl:team(handle:\"` + program + `\") {handle,_structured_scope_versions2ZWKHQ:structured_scope_versions(archived:false) {max_updated_at},_structured_scopeszxYtW:structured_scopes(first:$first_0,archived:false,eligible_for_submission:true) {edges {node {asset_type, asset_identifier}},pageInfo {hasNextPage,hasPreviousPage}},_structured_scopes3FF98f:structured_scopes(first:$first_0,archived:false,eligible_for_submission:false) {edges {node {asset_type,asset_identifier,},},},},}",
 		"variables":{  
 		   "first_0":1337
 		}
@@ -80,8 +81,15 @@ func parseMap(aMap map[string]interface{}) {
 			// fmt.Println(key)
 			parseArray(val.([]interface{}))
 		default:
-			//fmt.Println(key, ":", concreteVal)
-			scope = append(scope, fmt.Sprint(concreteVal))
+			if key == "asset_type" && concreteVal == "URL" {
+				//fmt.Println("yes")
+				isAssetURL = true
+			}
+
+			if isAssetURL {
+				scope = append(scope, fmt.Sprint(concreteVal))
+			}
+			// fmt.Println(key, ":", concreteVal)
 		}
 	}
 }
@@ -89,6 +97,7 @@ func parseMap(aMap map[string]interface{}) {
 // parseArray does the same thing as parseMap though it iterates the keys instead.
 func parseArray(anArray []interface{}) {
 	for _, val := range anArray {
+		isAssetURL = false
 		switch concreteVal := val.(type) {
 		case map[string]interface{}:
 			// fmt.Println("Index:", i)
