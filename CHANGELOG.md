@@ -13,6 +13,9 @@ Unreleased changes will go in the below heading.
 - Scopes having avoided or conflicted targets on the last line should no longer cause out-of-bounds in removing them.
 - Rare occurence where identifiers ending in `.*` extension, that also has multiple wildcards in domain did not parse correctly.
 
+## Improved
+- rescope should now target domain assets only, when parsed from hackerone.com
+
 ## [2.0] - 2019-06-26
 
 ### Added
