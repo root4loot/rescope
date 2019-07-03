@@ -9,6 +9,7 @@ Unreleased changes will go in the below heading.
 - Some unit test functions
 
 ### Fixed
+- [#6](https://github.com/root4loot/rescope/issues/6) Identifiers with upper-case should no longer be omitted.
 - bugbounty.jp with missing scheme will no longer cause segfault.
 - Scopes having avoided or conflicted targets on the last line should no longer cause out-of-bounds in removing them.
 - Rare occurence where identifiers ending in `.*` extension, that also has multiple wildcards in domain did not parse correctly.
