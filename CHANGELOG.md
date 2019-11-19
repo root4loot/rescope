@@ -5,6 +5,9 @@ Unreleased changes will go in the below heading.
 
 ## [Unreleased]
 
+
+## [2.1] - 2019-11-19
+
 ### Added
 - Some unit test functions
 
