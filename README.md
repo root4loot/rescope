@@ -9,14 +9,6 @@
 
 Rescope is a cli-tool (written in Go) that aims to make life easier when defining scopes in Burp Suite and OWASP ZAP, by eliminating the many hoops one has to go through with current workflows - geared towards pentesters and bug-bounty researchers.
 
-| New in v2 (05-19-2019) - Details in [changelog](CHANGELOG.md)                                  |
-| :--------------------------------------------------------------------------------------------- |
-| Support for [bugbounty.jp](https://bugbounty.jp) and [federacy.com](https://www.federacy.com)  |
-| New `--raw` flag to output naked "in-scope" definitions. Useful in working with other programs |
-| Support for resolving identifiers that conflict (overlap) with wilcarded excludes              |
-| Support for avoiding resources from third party services such as github, apple, google, etc.   |
-| General bugfixes and improvements                                                              |
-
 
 ## How it works
 1. Provide any public or private scope.
