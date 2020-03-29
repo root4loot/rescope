@@ -50,7 +50,7 @@ Make sure [GOPATH is set](https://github.com/golang/go/wiki/SettingGOPATH) and t
 * Parse multiple scopes to the same result.
 * Supports IP-ranges & CIDR.
 * Resolves conflicting includes/excludes
-* Avoid resources from third party services such as github.com, github.com, itunes.apple.com, etc.
+* Avoid resources from third party services such as github.com, gitlab.com, itunes.apple.com, etc.
 
 
 ### Supported Bug-Bounty Services (BBaaS)
@@ -295,7 +295,7 @@ $ rescope --zap --name CoolScope -i scope.txt -o zapscope.context --silent
 ### OWASP ZAP
 Choose **File** -> **Import Context** and select XML file.
 
-**Note:**
+**Note for OWASP ZAP:**
 - If you set `-o` filename extension to anything other than `.context` then you'll have to choose "All Format" in file select.
 - For ZAP HUD; set context `--name "HUD Context"`
 
