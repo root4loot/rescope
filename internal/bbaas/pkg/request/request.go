@@ -12,7 +12,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	errors "github.com/root4loot/rescope/internal/bbaas/pkg/errors"
+	doerror "github.com/root4loot/rescope/internal/bbaas/pkg/errors"
 )
 
 // GET returns response body and status code for a given URL
@@ -24,7 +24,7 @@ func GET(url string) (string, int) {
 
 	// check response
 	if err != nil {
-		errors.NoResponse(url)
+		doerror.NoResponse(url)
 	}
 
 	// close response
@@ -52,7 +52,7 @@ func POST(url string, data []byte) ([]byte, int) {
 
 	// check response
 	if err != nil {
-		errors.NoResponse(url)
+		doerror.NoResponse(url)
 	}
 
 	// close response

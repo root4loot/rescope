@@ -13,7 +13,7 @@ import (
 	"regexp"
 	"strings"
 
-	errors "github.com/root4loot/rescope/internal/bbaas/pkg/errors"
+	doerror "github.com/root4loot/rescope/internal/bbaas/pkg/errors"
 	req "github.com/root4loot/rescope/internal/bbaas/pkg/request"
 )
 
@@ -51,16 +51,13 @@ func Scrape(url string) string {
 
 	// check for errors
 	if err != nil {
-		errors.BadJSON()
+		doerror.BadJSON()
 	}
 
 	// parse map
 	parseMap(m)
 
-	// throw error if scope array is nil
-	if strings.Contains(scope[0], "<nil>") || strings.Contains(scope[1], "<nil>") {
-		errors.NoScope(url)
-	}
+
 
 	return strings.Join(scope, "\n")
 }
