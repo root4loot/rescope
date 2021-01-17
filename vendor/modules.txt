@@ -10,13 +10,14 @@ github.com/antchfx/xpath
 # github.com/gookit/color v1.1.6
 ## explicit
 github.com/gookit/color
+# github.com/stretchr/testify v1.7.0
+## explicit
 # golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3
 ## explicit
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/html/charset
 # golang.org/x/text v0.3.0
-## explicit
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/htmlindex
