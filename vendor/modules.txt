@@ -1,0 +1,34 @@
+# github.com/akamensky/argparse v0.0.0-20190309155458-28b0496b54cb
+## explicit
+github.com/akamensky/argparse
+# github.com/antchfx/htmlquery v1.0.0
+## explicit
+github.com/antchfx/htmlquery
+# github.com/antchfx/xpath v1.0.0
+## explicit
+github.com/antchfx/xpath
+# github.com/gookit/color v1.1.6
+## explicit
+github.com/gookit/color
+# golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3
+## explicit
+golang.org/x/net/html
+golang.org/x/net/html/atom
+golang.org/x/net/html/charset
+# golang.org/x/text v0.3.0
+## explicit
+golang.org/x/text/encoding
+golang.org/x/text/encoding/charmap
+golang.org/x/text/encoding/htmlindex
+golang.org/x/text/encoding/internal
+golang.org/x/text/encoding/internal/identifier
+golang.org/x/text/encoding/japanese
+golang.org/x/text/encoding/korean
+golang.org/x/text/encoding/simplifiedchinese
+golang.org/x/text/encoding/traditionalchinese
+golang.org/x/text/encoding/unicode
+golang.org/x/text/internal/tag
+golang.org/x/text/internal/utf8internal
+golang.org/x/text/language
+golang.org/x/text/runes
+golang.org/x/text/transform
