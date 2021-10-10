@@ -231,8 +231,8 @@ func checkAvoid(source string, includes [][]string, services []string, avoid3P b
 
 	for _, service := range services {
 		for _, include := range includes {
-			host := include[2] + include[4]
 			if !isIP(include[0]) {
+				host := include[2] + include[4]
 				program := domain.FindStringSubmatch(strings.TrimSuffix(source, "/"))
 
 				// do not avoid domains equal to avoid
