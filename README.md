@@ -6,8 +6,7 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/root4loot/rescope/issues)
 ![Twitter Follow](https://img.shields.io/twitter/follow/root4loot.svg?style=social)
 
-
-Rescope is a cli-tool (written in Go) that aims to make life easier when defining scopes in Burp Suite and OWASP ZAP, by eliminating the many hoops one has to go through with current workflows - geared towards pentesters and bug-bounty researchers.
+Rescope is a cli-tool (written in Go) that aims to make life easier when defining scopes in Burp Suite and OWASP ZAP.
 
 
 ## How it works
@@ -275,7 +274,6 @@ $ rescope --zap --name CoolScope -i scope.txt -o zapscope.context --silent
 [-] Parsing to XML (OWASP ZAP)
 [✓] Done. Wrote 68994 bytes to zapscope.context
 ```
-
 
 ## Importing results
 
