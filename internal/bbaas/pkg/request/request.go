@@ -11,12 +11,18 @@ import (
 	"bytes"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	doerror "github.com/root4loot/rescope/internal/bbaas/pkg/errors"
 )
 
 // GET returns response body and status code for a given URL
 func GET(url string) (string, int) {
+
+	// prepend https:// unless prefixed
+	if !strings.HasPrefix(url, "https://") {
+		url = "https://" + url
+	}
 
 	// request url
 	resp, err := http.Get(url)
