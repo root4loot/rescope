@@ -12,8 +12,6 @@ github.com/golang/groupcache/lru
 # github.com/gookit/color v1.5.0
 ## explicit
 github.com/gookit/color
-# github.com/stretchr/testify v1.7.0
-## explicit
 # github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778
 github.com/xo/terminfo
 # golang.org/x/net v0.0.0-20211020060615-d418f374d309
