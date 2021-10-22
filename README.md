@@ -12,10 +12,8 @@ Rescope is a cli-tool (written in Go) that aims to make life easier when definin
 
 ## How it works
 1. Provide any public or private scope.
-2. rescope takes care of the rest and spits out a (JSON/XML) file that is compatible with Burp/Zap.
+2. rescope takes care of the rest and spits out a Burp/ZAP compatible JSON/XML file.
 3. Import results from Burp/Zap.
-
-That's it! No more pulling your hair dealing with regular expressions and endlessly adding targets from the sitemap. Your scope should be ready and you are good to go.
 
 
 - [Installation](#installation)
@@ -42,15 +40,15 @@ Make sure [GOPATH is set](https://github.com/golang/go/wiki/SettingGOPATH) and t
 
 ## Features
 
-* Define public scope(s) directly from any supported BBaaS (**Bug-Bounty-as-a-Service**) platform.
-* Define private scopes by copy/pasting target definitions from pretty much anywhere.
-* Outputs results that is compatible with Burp Suite and Zaproxy for direct import.
-* Combine private and public scopes.
-* Easily separate excludes from includes.
-* Parse multiple scopes to the same result.
-* Supports IP-ranges & CIDR.
+* Define public scope(s) directly from any supported BBaaS (**Bug-Bounty-as-a-Service**) platform
+* Define private scopes by copy/pasting target definitions from pretty much anywhere
+* Outputs results that is compatible with Burp Suite and Zaproxy for direct import
+* Combine private and public scopes
+* Scope include/exclude separation
+* Parse multiple scopes to the same result
+* Supports IP-ranges & CIDR
 * Resolves conflicting includes/excludes
-* Avoid resources from third party services such as github.com, gitlab.com, itunes.apple.com, etc.
+* Avoid resources from third party services such as github.com, gitlab.com, itunes.apple.com, etc
 
 
 ### Supported Bug-Bounty Services (BBaaS)
@@ -135,9 +133,7 @@ $ rescope --burp -u hackerone.com/security -o burpscope.json
 [-] Parsing to JSON (Burp Suite)
 [✓] Done. Wrote 185786 bytes to burpscope.json
 ```
-The outputted results are ready to be [imported](#importing-results) to either Burp or Zap- depending on your choice. But before you do, make sure that you've read (and understood) the program policy ;)
-
-Note: You are not required to remove http(s):// from the program URL prior to running.  
+The resulting file may now be imported to Burp or ZAP depending on your choice. See [importing results](#importing-results) for details.
 
 ### Defining multiple scopes
 Defining multiple scopes at once (to the same result) is only a matter of setting `-u` <url> several times.
@@ -157,9 +153,6 @@ And pass this as an infile.
 ```
 rescope --burp -i combined.txt -o burpscope.json
 ```
-
-There are no restrictions here so technically you could include every public program out there in existence to create one gigantic scope but needless to say, this is not a good idea. Always read through the entire policy for a given program before proceeding to import. 
-
 
 ## Private Scopes
 
@@ -300,10 +293,6 @@ Choose **File** -> **Import Context** and select XML file.
 **Note for OWASP ZAP:**
 - If you set `-o` filename extension to anything other than `.context` then you'll have to choose "All Format" in file select.
 - For ZAP HUD; set context `--name "HUD Context"`
-
-## Caveats
-
-rescope cannot guarantee accurate results. For instance, a bugbounty program may opt to list targets in a non-conventional way that is not accounted for. Therefore, always verify the results yourself before importing.
 
 ## Author
 * Daniel Antonsen ([root4loot](https://twitter.com/root4loot))
