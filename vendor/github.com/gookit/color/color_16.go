@@ -8,6 +8,7 @@ import (
 // Color Color16, 16 color value type
 // 3(2^3=8) OR 4(2^4=16) bite color.
 type Color uint8
+type Basic = Color // alias of Color
 
 // Opts basic color options. code: 0 - 9
 type Opts []Color
@@ -41,9 +42,14 @@ func (o Opts) String() string {
  *************************************************************/
 
 // Base value for foreground/background color
+// base: fg 30~37, bg 40~47
+// light: fg 90~97, bg 100~107
 const (
 	FgBase uint8 = 30
 	BgBase uint8 = 40
+
+	HiFgBase uint8 = 90
+	HiBgBase uint8 = 100
 )
 
 // Foreground colors. basic foreground colors 30 - 37
@@ -142,6 +148,22 @@ const (
 	LightWhite   = FgLightWhite
 	LightYellow  = FgLightYellow
 	LightMagenta = FgLightMagenta
+
+	HiRed     = FgLightRed
+	HiCyan    = FgLightCyan
+	HiBlue    = FgLightBlue
+	HiGreen   = FgLightGreen
+	HiWhite   = FgLightWhite
+	HiYellow  = FgLightYellow
+	HiMagenta = FgLightMagenta
+
+	BgHiRed     = BgLightRed
+	BgHiCyan    = BgLightCyan
+	BgHiBlue    = BgLightBlue
+	BgHiGreen   = BgLightGreen
+	BgHiWhite   = BgLightWhite
+	BgHiYellow  = BgLightYellow
+	BgHiMagenta = BgLightMagenta
 )
 
 // Bit4 an method for create Color
@@ -152,6 +174,15 @@ func Bit4(code uint8) Color {
 /*************************************************************
  * Color render methods
  *************************************************************/
+
+// Name get color code name.
+func (c Color) Name() string {
+	name, ok := basic2nameMap[uint8(c)]
+	if ok {
+		return name
+	}
+	return "unknown"
+}
 
 // Text render a text message
 func (c Color) Text(message string) string {
@@ -211,6 +242,7 @@ func (c Color) Println(a ...interface{}) {
 }
 
 // Light current color. eg: 36(FgCyan) -> 96(FgLightCyan).
+//
 // Usage:
 // 	lightCyan := Cyan.Light()
 // 	lightCyan.Print("message")
@@ -225,6 +257,7 @@ func (c Color) Light() Color {
 }
 
 // Darken current color. eg. 96(FgLightCyan) -> 36(FgCyan)
+//
 // Usage:
 // 	cyan := LightCyan.Darken()
 // 	cyan.Print("message")
@@ -236,6 +269,60 @@ func (c Color) Darken() Color {
 
 	// don't change
 	return c
+}
+
+// C256 convert 16 color to 256-color code.
+func (c Color) C256() Color256 {
+	val := uint8(c)
+	if val < 10 { // is option code
+		return emptyC256 // empty
+	}
+
+	var isBg uint8
+	if val >= BgBase && val <= 47 { // is bg
+		isBg = AsBg
+		val = val - 10 // to fg code
+	} else if val >= HiBgBase && val <= 107 { // is hi bg
+		isBg = AsBg
+		val = val - 10 // to fg code
+	}
+
+	if c256, ok := basicTo256Map[val]; ok {
+		return Color256{c256, isBg}
+	}
+
+	// use raw value direct convert
+	return Color256{val}
+}
+
+// ToFg always convert fg
+func (c Color) ToFg() Color {
+	val := uint8(c)
+	// is option code, don't change
+	if val < 10 {
+		return c
+	}
+	return Color(Bg2Fg(val))
+}
+
+// ToBg always convert bg
+func (c Color) ToBg() Color {
+	val := uint8(c)
+	// is option code, don't change
+	if val < 10 {
+		return c
+	}
+	return Color(Fg2Bg(val))
+}
+
+// RGB convert 16 color to 256-color code.
+func (c Color) RGB() RGBColor {
+	val := uint8(c)
+	if val < 10 { // is option code
+		return emptyRGBColor
+	}
+
+	return HEX(Basic2hex(val))
 }
 
 // Code convert to code string. eg "35"
@@ -324,4 +411,74 @@ var AllOptions = map[string]Color{
 	"blink":      OpBlink,
 	"reverse":    OpReverse,
 	"concealed":  OpConcealed,
+}
+
+var (
+	// TODO basic name alias
+	// basicNameAlias = map[string]string{}
+
+	// basic color name to code
+	name2basicMap = initName2basicMap()
+	// basic2nameMap basic color code to name
+	basic2nameMap = map[uint8]string{
+		30: "black",
+		31: "red",
+		32: "green",
+		33: "yellow",
+		34: "blue",
+		35: "magenta",
+		36: "cyan",
+		37: "white",
+		// hi color code
+		90: "lightBlack",
+		91: "lightRed",
+		92: "lightGreen",
+		93: "lightYellow",
+		94: "lightBlue",
+		95: "lightMagenta",
+		96: "lightCyan",
+		97: "lightWhite",
+		// options
+		0: "reset",
+		1: "bold",
+		2: "fuzzy",
+		3: "italic",
+		4: "underscore",
+		5: "blink",
+		7: "reverse",
+		8: "concealed",
+	}
+)
+
+// Bg2Fg bg color value to fg value
+func Bg2Fg(val uint8) uint8 {
+	if val >= BgBase && val <= 47 { // is bg
+		val = val - 10
+	} else if val >= HiBgBase && val <= 107 { // is hi bg
+		val = val - 10
+	}
+	return val
+}
+
+// Fg2Bg fg color value to bg value
+func Fg2Bg(val uint8) uint8 {
+	if val >= FgBase && val <= 37 { // is fg
+		val = val + 10
+	} else if val >= HiFgBase && val <= 97 { // is hi fg
+		val = val + 10
+	}
+	return val
+}
+
+// Basic2nameMap data
+func Basic2nameMap() map[uint8]string {
+	return basic2nameMap
+}
+
+func initName2basicMap() map[string]uint8 {
+	n2b := make(map[string]uint8, len(basic2nameMap))
+	for u, s := range basic2nameMap {
+		n2b[s] = u
+	}
+	return n2b
 }

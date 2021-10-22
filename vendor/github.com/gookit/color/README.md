@@ -28,10 +28,16 @@ Now, 256 colors and RGB colors have also been supported to work in Windows CMD a
     - 16-color output is the most commonly used and most widely supported, working on any Windows version
     - Since `v1.2.4` **the 256-color (8-bit), true color (24-bit) support windows CMD and PowerShell**
     - See [this gist](https://gist.github.com/XVilka/8346728) for information on true color support
+  - Support converts `HEX` `HSL` value to RGB color
   - Generic API methods: `Print`, `Printf`, `Println`, `Sprint`, `Sprintf`
-  - Supports HTML tag-style color rendering, such as `<green>message</>`. Support working on windows `cmd` `powerShell`
+  - Supports HTML tag-style color rendering, such as `<green>message</>`.
+    - In addition to using built-in tags, it also supports custom color attributes
+    - Custom color attributes support the use of 16 color names, 256 color values, rgb color values and hex color values
+    - Support working on Windows `cmd` and `powerShell` terminal
   - Basic colors: `Bold`, `Black`, `White`, `Gray`, `Red`, `Green`, `Yellow`, `Blue`, `Magenta`, `Cyan`
   - Additional styles: `Info`, `Note`, `Light`, `Error`, `Danger`, `Notice`, `Success`, `Comment`, `Primary`, `Warning`, `Question`, `Secondary`
+  - Support by set `NO_COLOR` for disable color or use `FORCE_COLOR` for force open color render.
+  - Support Rgb, 256, 16 color conversion
 
 ## GoDoc
 
@@ -43,22 +49,6 @@ Now, 256 colors and RGB colors have also been supported to work in Windows CMD a
 ```bash
 go get github.com/gookit/color
 ```
-
-### NOTICE
-
-If you want print custom colors message on windows, should use `color.PrintX` instead of `fmt.PrintX`
-
-```go
-str := color.Red.Sprint("an colored message string")
-
-// Color will not be output under Windows
-fmt.Println(str)
-
-// Color will be output under Windows
-color.Println(str)
-```
-
-> `color.PrintX` is universal, you can use it directly instead of `fmt.PrintX`
 
 ## Quick start
 
@@ -72,6 +62,13 @@ import (
 )
 
 func main() {
+	// quick use package func
+	color.Redp("Simple to use color")
+	color.Redln("Simple to use color")
+	color.Greenp("Simple to use color\n")
+	color.Cyanln("Simple to use color")
+	color.Yellowln("Simple to use color")
+
 	// quick use like fmt.Print*
 	color.Red.Println("Simple to use color")
 	color.Green.Print("Simple to use color\n")
@@ -98,6 +95,8 @@ func main() {
 
 	// use style tag
 	color.Print("<suc>he</><comment>llo</>, <cyan>wel</><red>come</>\n")
+	// Custom label attr: Supports the use of 16 color names, 256 color values, rgb color values and hex color values
+	color.Println("<fg=11aa23>he</><bg=120,35,156>llo</>, <fg=167;bg=232>wel</><fg=red>come</>")
 
 	// apply a style tag
 	color.Tag("info").Println("info style text")
@@ -116,14 +115,34 @@ Run demo: `go run ./_examples/demo.go`
 
 ![colored-out](_examples/images/color-demo.jpg)
 
-## Custom Build Color
+## Basic/16 color
+
+Supported on any Windows version. Provide generic API methods: `Print`, `Printf`, `Println`, `Sprint`, `Sprintf`
 
 ```go
+color.Bold.Println("bold message")
+color.Black.Println("bold message")
+color.White.Println("bold message")
+color.Gray.Println("bold message")
+color.Red.Println("yellow message")
+color.Blue.Println("yellow message")
+color.Cyan.Println("yellow message")
+color.Yellow.Println("yellow message")
+color.Magenta.Println("yellow message")
+
 // Only use foreground color
 color.FgCyan.Printf("Simple to use %s\n", "color")
 // Only use background color
 color.BgRed.Printf("Simple to use %s\n", "color")
+```
 
+Run demo: `go run ./_examples/color_16.go`
+
+![basic-color](_examples/images/basic-color.png)
+
+### Custom build color
+
+```go
 // Full custom: foreground, background, option
 myStyle := color.New(color.FgWhite, color.BgBlack, color.OpBold)
 myStyle.Println("custom color style")
@@ -145,49 +164,9 @@ fmt.Print("message")
 color.Reset()
 ```
 
-## Basic Color
+### Additional styles
 
-Supported on any Windows version.
-
-  - `color.Bold`
-  - `color.Black`
-  - `color.White`
-  - `color.Gray`
-  - `color.Red`
-  - `color.Green`
-  - `color.Yellow`
-  - `color.Blue`
-  - `color.Magenta`
-  - `color.Cyan`
-
-```go
-color.Bold.Println("bold message")
-color.Yellow.Println("yellow message")
-```
-
-Run demo: `go run ./_examples/basiccolor.go`
-
-![basic-color](_examples/images/basic-color.png)
-
-## Additional styles
-
-Supported on any Windows version.
-
-  - `color.Info`
-  - `color.Note`
-  - `color.Warn`
-  - `color.Light`
-  - `color.Error`
-  - `color.Danger`
-  - `color.Debug`
-  - `color.Notice`
-  - `color.Success`
-  - `color.Comment`
-  - `color.Primary`
-  - `color.Question`
-  - `color.Secondary`
-
-### Basic Style
+provide generic API methods: `Print`, `Printf`, `Println`, `Sprint`, `Sprintf`
 
 print message use defined style:
 
@@ -208,7 +187,7 @@ Run demo: `go run ./_examples/theme_basic.go`
 
 ![theme-basic](_examples/images/theme-basic.png)
 
-### Tips Style
+**Tips style**
 
 ```go
 color.Info.Tips("Info tips message")
@@ -227,7 +206,7 @@ Run demo: `go run ./_examples/theme_tips.go`
 
 ![theme-tips](_examples/images/theme-tips.png)
 
-### Prompt Style
+**Prompt Style**
 
 ```go
 color.Info.Prompt("Info prompt message")
@@ -246,7 +225,7 @@ Run demo: `go run ./_examples/theme_prompt.go`
 
 ![theme-prompt](_examples/images/theme-prompt.png)
 
-### Block Style
+**Block Style**
 
 ```go
 color.Info.Block("Info block message")
@@ -264,34 +243,6 @@ color.Secondary.Block("Secondary block message")
 Run demo: `go run ./_examples/theme_block.go`
 
 ![theme-block](_examples/images/theme-block.png)
-
-## HTML-like tag usage
-
-**Supported** on Windows `cmd.exe` `PowerShell` .
-
-```go
-// use style tag
-color.Print("<suc>he</><comment>llo</>, <cyan>wel</><red>come</>")
-color.Println("<suc>hello</>")
-color.Println("<error>hello</>")
-color.Println("<warning>hello</>")
-
-// custom color attributes
-color.Print("<fg=yellow;bg=black;op=underscore;>hello, welcome</>\n")
-```
-
-- `color.Tag`
-
-```go
-// set a style tag
-color.Tag("info").Print("info style text")
-color.Tag("info").Printf("%s style text", "info")
-color.Tag("info").Println("info style text")
-```
-
-Run demo: `go run ./_examples/colortag.go`
-
-![color-tags](_examples/images/color-tags.png)
 
 ## 256-color usage
 
@@ -311,7 +262,7 @@ c.Println("message")
 c.Printf("format %s", "message")
 ```
 
-### Use a 256-color style
+### 256-color style
 
 Can be used to set foreground and background colors at the same time.
 
@@ -333,11 +284,11 @@ s.Println("style with options")
 s.Printf("style with %s\n", "options")
 ```
 
-Run demo: `go run ./_examples/color256.go`
+Run demo: `go run ./_examples/color_256.go`
 
 ![color-tags](_examples/images/color-256.png)
 
-## Use RGB color
+## RGB/True color
 
 > RGB colors support Windows `CMD`, `PowerShell` environment after `v1.2.4`
 
@@ -387,7 +338,7 @@ c.Println("message")
 c.Printf("format %s", "message")
 ```
 
-### Use an RGB color style
+### RGB color style
 
 Can be used to set the foreground and background colors at the same time.
 
@@ -419,9 +370,65 @@ s.Println("style with options")
 s.Printf("style with %s\n", "options")
 ```
 
+## HTML-like tag usage
+
+**Supported** on Windows `cmd.exe` `PowerShell` .
+
+```go
+// use style tag
+color.Print("<suc>he</><comment>llo</>, <cyan>wel</><red>come</>")
+color.Println("<suc>hello</>")
+color.Println("<error>hello</>")
+color.Println("<warning>hello</>")
+
+// custom color attributes
+color.Print("<fg=yellow;bg=black;op=underscore;>hello, welcome</>\n")
+
+// Custom label attr: Supports the use of 16 color names, 256 color values, rgb color values and hex color values
+color.Println("<fg=11aa23>he</><bg=120,35,156>llo</>, <fg=167;bg=232>wel</><fg=red>come</>")
+```
+
+- `color.Tag`
+
+```go
+// set a style tag
+color.Tag("info").Print("info style text")
+color.Tag("info").Printf("%s style text", "info")
+color.Tag("info").Println("info style text")
+```
+
+Run demo: `go run ./_examples/color_tag.go`
+
+![color-tags](_examples/images/color-tags.png)
+
+## Color convert
+
+Supports conversion between Rgb, 256, 16 colors, `Rgb <=> 256 <=> 16`
+
+```go
+basic := color.Red
+basic.Println("basic color")
+
+c256 := color.Red.C256()
+c256.Println("256 color")
+c256.C16().Println("basic color")
+
+rgb := color.Red.RGB()
+rgb.Println("rgb color")
+rgb.C256().Println("256 color")
+```
+
+**More functions for convert to `RGBColor`**:
+
+- `func RGBFromSlice(rgb []uint8, isBg ...bool) RGBColor`
+- `func RGBFromString(rgb string, isBg ...bool) RGBColor`
+- `func HEX(hex string, isBg ...bool) RGBColor`
+- `func HSL(h, s, l float64, isBg ...bool) RGBColor`
+- `func HSLInt(h, s, l int, isBg ...bool) RGBColor`
+
 ## Func refer
 
-there are some useful functions reference
+There are some useful functions reference
 
 - `Disable()` disable color render
 - `SetOutput(io.Writer)` custom set the colored text output writer
@@ -432,6 +439,21 @@ there are some useful functions reference
 - `IsConsole(w io.Writer)` Determine whether w is one of stderr, stdout, stdin
 - `HexToRgb(hex string) (rgb []int)` Convert hex color string to RGB numbers
 - `RgbToHex(rgb []int) string` Convert RGB to hex code
+- More useful func please see https://pkg.go.dev/github.com/gookit/color
+
+## Projects using color
+
+Check out these projects, which use https://github.com/gookit/color :
+
+- https://github.com/Delta456/box-cli-maker Make Highly Customized Boxes for your CLI
+- https://github.com/flipped-aurora/gin-vue-admin 基于gin+vue搭建的（中）后台系统框架
+- https://github.com/JanDeDobbeleer/oh-my-posh A prompt theme engine for any shell.
+- https://github.com/jesseduffield/lazygit Simple terminal UI for git commands
+- https://github.com/olivia-ai/olivia 💁‍♀️Your new best friend powered by an artificial neural network  
+- https://github.com/pterm/pterm PTerm is a modern Go module to beautify console output. Featuring charts, progressbars, tables, trees, etc.
+- https://github.com/securego/gosec Golang security checker
+- https://github.com/TNK-Studio/lazykube ⎈ The lazier way to manage kubernetes.
+- [+ See More](https://pkg.go.dev/github.com/gookit/color?tab=importedby)
 
 ## Gookit packages
 
@@ -456,6 +478,7 @@ there are some useful functions reference
   - [issue9/term](https://github.com/issue9/term)
   - [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code)
   - [Standard ANSI color map](https://conemu.github.io/en/AnsiEscapeCodes.html#Standard_ANSI_color_map)
+  - [Terminal Colors](https://gist.github.com/XVilka/8346728)
 
 ## License
 

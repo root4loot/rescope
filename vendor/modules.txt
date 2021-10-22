@@ -1,25 +1,31 @@
-# github.com/akamensky/argparse v1.2.2
+# github.com/akamensky/argparse v1.3.1
 ## explicit
 github.com/akamensky/argparse
-# github.com/antchfx/htmlquery v1.2.3
+# github.com/antchfx/htmlquery v1.2.4
 ## explicit
 github.com/antchfx/htmlquery
-# github.com/antchfx/xpath v1.1.11
-## explicit
+# github.com/antchfx/xpath v1.2.0
 github.com/antchfx/xpath
-# github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e
+# github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
+## explicit
 github.com/golang/groupcache/lru
-# github.com/gookit/color v1.3.7
+# github.com/gookit/color v1.5.0
 ## explicit
 github.com/gookit/color
 # github.com/stretchr/testify v1.7.0
 ## explicit
-# golang.org/x/net v0.0.0-20210222171744-9060382bd457
+# github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778
+github.com/xo/terminfo
+# golang.org/x/net v0.0.0-20211020060615-d418f374d309
 ## explicit
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/html/charset
-# golang.org/x/text v0.3.5
+# golang.org/x/sys v0.0.0-20211020174200-9d6173849985
+## explicit
+golang.org/x/sys/internal/unsafeheader
+golang.org/x/sys/windows
+# golang.org/x/text v0.3.7
 ## explicit
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
