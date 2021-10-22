@@ -19,6 +19,7 @@ Unreleased changes will go in the below heading.
 - rescope will no longer throw exceptions when program names are upper-cased.
 - Fixed segfault when parsing scopes from openbugbounty.org caused by changes to program URL structure.
 - Fixed multi-scope conflict entanglement.
+- [#9](https://github.com/root4loot/rescope/issues/9) Fixed bug that caused segfault when infile contained single IP's (3423ba0).
 
 ### Improvements
 - Migrated vendoring to Go Modules
