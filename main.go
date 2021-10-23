@@ -87,10 +87,7 @@ func main() {
 	}
 
 	// Parse as burp/zap/raw
-	if a.Burp {
-		fmt.Printf("%s Parsing to JSON (Burp Suite)", color.FgGray.Text("[-]"))
-		buf = burp.Parse(m.Includes, m.Excludes)
-	} else if a.Zap {
+	if a.Zap {
 		fmt.Printf("%s Parsing to XML (OWASP ZAP)", color.FgGray.Text("[-]"))
 		buf = zap.Parse(m.Includes, m.Excludes, a.Scopename)
 	} else if a.Raw {
@@ -99,6 +96,9 @@ func main() {
 			buf = append(buf, v[0]...)
 			buf = append(buf, '\n')
 		}
+	} else {
+		fmt.Printf("%s Parsing to JSON (Burp Suite)", color.FgGray.Text("[-]"))
+		buf = burp.Parse(m.Includes, m.Excludes)
 	}
 
 	// Attempt to create outfile
@@ -110,9 +110,7 @@ func main() {
 	// Write to outfile assuming we have permissions
 	meta, _ := file.Write(outfile, buf)
 
-	if a.Burp || a.Zap || a.Raw {
-		fmt.Printf("\n%s Done. Wrote %v bytes to %s\n", color.FgGreen.Text("[✓]"), meta, outfile.Name())
-	}
+	fmt.Printf("\n%s Done. Wrote %v bytes to %s\n", color.FgGreen.Text("[✓]"), meta, outfile.Name())
 
 	fmt.Println("")
 }

@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/akamensky/argparse"
@@ -44,44 +45,36 @@ func ArgParse() Args {
  | '__/ _ \/ __|/ __/ _ \| '_ \ / _ \
  | | |  __/\__ \ (_| (_) | |_) |  __/
  |_|  \___||___/\___\___/| .__/ \___|
-  @ r o o t 4 l o o t    |_|     v2.5 
+  @ r o o t 4 l o o t    |_|     v2.1 
      
 Example Usage:
-  rescope --burp -u hackerone.com/security -o burpscope.json  
-  rescope --zap  -u hackerone.com/security -o zapscope.context 
+  rescope -u hackerone.com/security -o burpscope.json  
+  rescope -u hackerone.com/security --zap -o zapscope.context 
   rescope --zap  -i scope.txt -o zap.context --name CoolScope
 
 Exclude targets from infile:
   specify !EXCLUDE in -i <file> prior to targets you wish to exclude.    
 
-Upgrading:
-  go get -u github.com/root4loot/rescope 
-
-Documentation:
-  https://github.com/root4loot/rescope
 `
 	version := "2.0"
 	parser := argparse.NewParser("rescope", banner)
 
 	//usage := parser.Usage
 	a := Args{}
-	b := parser.Flag("b", "burp", &argparse.Options{Help: "Parse to Burp Suite JSON (required)"})
-	z := parser.Flag("z", "zap", &argparse.Options{Help: "Parse to OWASP ZAP XML (required)"})
-	u := parser.List("u", "url", &argparse.Options{Help: "Public bug bounty program URL (required)\n\t\t\t  URL can be set multiple times"})
-	i := parser.List("i", "infile", &argparse.Options{Help: "File (scope) to be parsed (required)\n\t\t\t  Infile can be set multiple times"})
-	o := parser.String("o", "outfile", &argparse.Options{Help: "File to write parsed results (required)"})
-	n := parser.String("n", "name", &argparse.Options{Help: "Name of ZAP context (optional)"})
-	ex := parser.String("", "itag", &argparse.Options{Help: "Custom include tag (default: !INCLUDE)"})
-	in := parser.String("", "etag", &argparse.Options{Help: "Custom exclude tag (default: !EXCLUDE)"})
-	s := parser.Flag("s", "silent", &argparse.Options{Help: "Do not print identified targets"})
-	r := parser.Flag("r", "raw", &argparse.Options{Help: "Output raw in-scope definitions to outfile"})
-	res := parser.Flag("", "resolveConflicts", &argparse.Options{Help: "Resolve all exclude conflicts (Say 'Y' to all)"})
-	avoid3P := parser.Flag("", "avoid3P", &argparse.Options{Help: "Avoid all third party resources (Say 'Y' to all)"})
-	ver := parser.Flag("", "version", &argparse.Options{Help: "Display version"})
-
+	z := parser.Flag("z", "zap", &argparse.Options{Required: false, Help: "Export scope to ZAP-compatible XML instead of default (Burp JSON)"})
+	u := parser.List("u", "url", &argparse.Options{Required: false, Help: "Public bug bounty program URL (required)\n\t\t\t  URL can be set multiple times"})
+	i := parser.List("i", "infile", &argparse.Options{Required: false, Help: "File (scope) to be parsed (required)\n\t\t\t  Infile can be set multiple times"})
+	n := parser.String("n", "name", &argparse.Options{Required: false, Help: "Name of ZAP context (optional)"})
+	o := parser.String("o", "outfile", &argparse.Options{Required: false, Help: "Save results to given filename"})
+	s := parser.Flag("s", "silent", &argparse.Options{Required: false, Help: "Required: false, Do not print identified targets"})
+	r := parser.Flag("r", "raw", &argparse.Options{Required: false, Help: "Export raw scope-definitions to list of text"})
+	ex := parser.String("", "itag", &argparse.Options{Required: false, Help: "Custom include tag (default: !INCLUDE)"})
+	in := parser.String("", "etag", &argparse.Options{Required: false, Help: "Custom exclude tag (default: !EXCLUDE)"})
+	res := parser.Flag("", "resolveConflicts", &argparse.Options{Required: false, Help: "Resolve all exclude conflicts (Say 'Y' to all)"})
+	avoid3P := parser.Flag("", "avoid3P", &argparse.Options{Required: false, Help: "Avoid all third party resources (Say 'Y' to all)"})
+	ver := parser.Flag("", "version", &argparse.Options{Required: false, Help: "Display version"})
 	_ = parser.Parse(os.Args)
 
-	a.Burp = *b
 	a.Zap = *z
 	a.Raw = *r
 	a.Infiles = *i
@@ -107,20 +100,27 @@ Documentation:
 		os.Exit(0)
 	}
 
-	// check for args and add to list
-	if !a.Burp && !a.Zap && !a.Raw {
-		argErr = append(argErr, "Missing required arguments: [--burp] [--zap] [--raw]")
-	}
 	if !isList(a.Infiles) && !isList(a.URLs) {
 		argErr = append(argErr, "Missing (-i <file>) or bugbounty (-u <url>)")
 	}
+
 	if !isVar(a.Outfile) {
-		argErr = append(argErr, "Missing (-o <outfile>)")
+		if a.Zap && a.Raw {
+			argErr = append(argErr, "You cannot have both (-z|--zap) and (-r|--raw) in one command (mutually exclusive)")
+		} else if a.Zap {
+			if !isVar(a.Scopename) {
+				a.Scopename = setScopeName()
+				re_nonalpha, _ := regexp.Compile("[^A-Za-z0-9]+")
+				a.Scopename = re_nonalpha.ReplaceAllString(a.Scopename, "_")
+			}
+			a.Outfile = "./scope_" + a.Scopename + "_zap" + ".context"
+		} else if a.Raw {
+			a.Outfile = "./scope_raw.txt"
+		} else {
+			a.Outfile = "./scope_burp.json"
+		}
 	} else if len(strings.Split(a.Outfile, ".")) < 2 {
-		argErr = append(argErr, "Outfile must have an extension (-o filename.ext)")
-	}
-	if btoi(a.Burp)+btoi(a.Zap)+btoi(a.Raw) > 1 {
-		argErr = append(argErr, "You can only have one instance of [b|--burp] [z|--zap] [r|--raw]")
+		argErr = append(argErr, "Outfile must have an extension (E.g: -o coolScope.burp)")
 	}
 
 	// print arg errors from list
@@ -131,12 +131,6 @@ Documentation:
 		os.Exit(1)
 	}
 
-	// check/set scopename
-	if a.Zap {
-		if !isVar(a.Scopename) {
-			a.Scopename = setScopeName()
-		}
-	}
 	return a
 }
 
