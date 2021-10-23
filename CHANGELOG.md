@@ -22,9 +22,11 @@ Unreleased changes will go in the below heading.
 - [#9](https://github.com/root4loot/rescope/issues/9) Fixed bug that caused segfault when infile contained single IP's (3423ba0).
 - [#10](https://github.com/root4loot/rescope/issues/10) Fixed issue that led rescope to crash when https:// were missing in `-u|--url` for hackerone programs.
 
-### Improvements
+### Improved
 - Migrated vendoring to Go Modules
 - HackerOne scopes will now include IP/CIDR in addition to URLs.
+- The `-b|--burp` flag is no longer needed as results are outputted as Burp-compatible JSON - by default.
+- The `-o|--outfile` is no longer required as results are saved to a default filename in the working dir.
 
 ## [2.1] - 2019-11-19
 
