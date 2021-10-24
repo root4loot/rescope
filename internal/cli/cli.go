@@ -59,7 +59,7 @@ Example Usage:
 	a := Args{}
 	z := parser.Flag("z", "zap", &argparse.Options{Required: false, Help: "Export scope to ZAP-compatible XML instead of default (Burp JSON)"})
 	u := parser.List("u", "url", &argparse.Options{Required: false, Help: "Public bug bounty program URL"})
-	i := parser.List("i", "infile", &argparse.Options{Required: false, Help: "File (scope) to be parsed"})
+	i := parser.List("i", "infile", &argparse.Options{Required: false, Help: "File containing scope-definitions"})
 	n := parser.String("n", "name", &argparse.Options{Required: false, Help: "Name of ZAP context"})
 	o := parser.String("o", "outfile", &argparse.Options{Required: false, Help: "Save results to given filename"})
 	s := parser.Flag("s", "silent", &argparse.Options{Required: false, Help: "Do not print identified targets"})
