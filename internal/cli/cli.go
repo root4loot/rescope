@@ -38,14 +38,14 @@ type Args struct {
 	Avoid3P    bool
 }
 
-// ArgParse and check arguments etc
 func ArgParse() Args {
+	version := "2.1"
 	banner := `
   _ __ ___  ___  ___ ___  _ __   ___ 
  | '__/ _ \/ __|/ __/ _ \| '_ \ / _ \
  | | |  __/\__ \ (_| (_) | |_) |  __/
  |_|  \___||___/\___\___/| .__/ \___|
-  @ r o o t 4 l o o t    |_|     v2.1 
+  @ r o o t 4 l o o t    |_|     ` + version + ` 
      
 Example Usage:
   rescope -u hackerone.com/security -o burpscope.json  
@@ -56,7 +56,6 @@ Exclude targets from infile:
   specify !EXCLUDE in -i <file> prior to targets you wish to exclude.    
 
 `
-	version := "2.0"
 	parser := argparse.NewParser("rescope", banner)
 
 	//usage := parser.Usage
