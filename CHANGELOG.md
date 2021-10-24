@@ -3,7 +3,7 @@
 All notable changes to rescope will be documented here.
 Unreleased changes will go in the below heading.
 
-## [Unreleased]
+## [2.2] 2021-10-24
 
 ### Added
 - New flag `--resolveConflicts` (Resolve all exclude conflicts (Say 'Y' to all)

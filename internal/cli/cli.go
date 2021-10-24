@@ -39,7 +39,7 @@ type Args struct {
 }
 
 func ArgParse() Args {
-	version := "2.1"
+	version := "2.2"
 	banner := `
   _ __ ___  ___  ___ ___  _ __   ___ 
  | '__/ _ \/ __|/ __/ _ \| '_ \ / _ \
