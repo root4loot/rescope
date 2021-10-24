@@ -8,7 +8,7 @@ Unreleased changes will go in the below heading.
 ### Added
 - New flag `--resolveConflicts` (Resolve all exclude conflicts (Say 'Y' to all)
 - New flag `--avoid3P` (Avoid all third party resources (Say 'Y' to all))
-- Parse private HackerOne scopes by setting `X-Auth-Token` in `h1token` environment variable
+- Parse private HackerOne scopes by setting `X-Auth-Token` in `H1_TOKEN` environment variable
 
 ### Fixed
 - Fixed package that was conflicting with errors interface introduced in golang 1.13. This led to unexpected panics when using the `-u|--url` flags to obtain scopes from bugbounty programs.
