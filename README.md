@@ -154,6 +154,8 @@ rescope  -i combined.txt -o burpscope.json
 
 ## Private Scopes
 
+**Update:** HackerOne users may parse private scopes directly by setting environment variable `H1_TOKEN` to the value of `X-Auth-Token`.  
+
 rescope is not limited to public BBaaS scopes.  
 If your scope is private then list targets in a text file and pass it to `--infile` (`-i`).
 
@@ -176,7 +178,7 @@ Defining multiple scopes at once (to the same result) is only a matter of settin
 rescope --zap -i scope1.txt -i scope2.txt --name CoolScope -o zapscope.context
 ```
 
-One of the "cool" things about rescope is that it'll "automagically" detect the targets from the scope you provide- meaning they don't have to be in a specific structure/format. This allows you to simply copy/paste the scope from pretty much anywhere and provide it to rescope without the need of having to filter it out in advance.
+One of the neat things about rescope is that it'll automagically detect the targets from the scope you provide- meaning they don't have to be in a specific structure/format. This allows you to simply copy/paste the scope from pretty much anywhere and provide it to rescope without the need of having to filter it out in advance.
 
 I.e., the same scope as above, but with some leading/ending text and multiple targets on the same line.
 
