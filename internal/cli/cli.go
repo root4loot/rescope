@@ -45,32 +45,29 @@ func ArgParse() Args {
  | '__/ _ \/ __|/ __/ _ \| '_ \ / _ \
  | | |  __/\__ \ (_| (_) | |_) |  __/
  |_|  \___||___/\___\___/| .__/ \___|
-  @ r o o t 4 l o o t    |_|     ` + version + ` 
+  @ r o o t 4 l o o t    |_|     ` + version + `
+https://github.com/root4loot/rescope 
      
 Example Usage:
   rescope -u hackerone.com/security -o burpscope.json  
   rescope -u hackerone.com/security --zap -o zapscope.context 
   rescope --zap  -i scope.txt -o zap.context --name CoolScope
-
-Exclude targets from infile:
-  specify !EXCLUDE in -i <file> prior to targets you wish to exclude.    
-
 `
 	parser := argparse.NewParser("rescope", banner)
 
 	//usage := parser.Usage
 	a := Args{}
 	z := parser.Flag("z", "zap", &argparse.Options{Required: false, Help: "Export scope to ZAP-compatible XML instead of default (Burp JSON)"})
-	u := parser.List("u", "url", &argparse.Options{Required: false, Help: "Public bug bounty program URL (required)\n\t\t\t  URL can be set multiple times"})
-	i := parser.List("i", "infile", &argparse.Options{Required: false, Help: "File (scope) to be parsed (required)\n\t\t\t  Infile can be set multiple times"})
-	n := parser.String("n", "name", &argparse.Options{Required: false, Help: "Name of ZAP context (optional)"})
+	u := parser.List("u", "url", &argparse.Options{Required: false, Help: "Public bug bounty program URL"})
+	i := parser.List("i", "infile", &argparse.Options{Required: false, Help: "File (scope) to be parsed"})
+	n := parser.String("n", "name", &argparse.Options{Required: false, Help: "Name of ZAP context"})
 	o := parser.String("o", "outfile", &argparse.Options{Required: false, Help: "Save results to given filename"})
-	s := parser.Flag("s", "silent", &argparse.Options{Required: false, Help: "Required: false, Do not print identified targets"})
+	s := parser.Flag("s", "silent", &argparse.Options{Required: false, Help: "Do not print identified targets"})
 	r := parser.Flag("r", "raw", &argparse.Options{Required: false, Help: "Export raw scope-definitions to list of text"})
 	ex := parser.String("", "itag", &argparse.Options{Required: false, Help: "Custom include tag (default: !INCLUDE)"})
 	in := parser.String("", "etag", &argparse.Options{Required: false, Help: "Custom exclude tag (default: !EXCLUDE)"})
-	res := parser.Flag("", "resolveConflicts", &argparse.Options{Required: false, Help: "Resolve all exclude conflicts (Say 'Y' to all)"})
-	avoid3P := parser.Flag("", "avoid3P", &argparse.Options{Required: false, Help: "Avoid all third party resources (Say 'Y' to all)"})
+	res := parser.Flag("", "resolveConflicts", &argparse.Options{Required: false, Help: "Resolve all exclude conflicts"})
+	avoid3P := parser.Flag("", "avoid3P", &argparse.Options{Required: false, Help: "Avoid all third party resources"})
 	ver := parser.Flag("", "version", &argparse.Options{Required: false, Help: "Display version"})
 	_ = parser.Parse(os.Args)
 
