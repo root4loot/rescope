@@ -12,7 +12,7 @@ Rescope is a cli-tool (written in Go) that aims to make life easier when definin
 ## How it works
 1. Provide any public or private scope.
 2. rescope takes care of the rest and spits out a Burp/ZAP compatible JSON/XML file.
-3. Import results from Burp/Zap.
+3. Import results from Burp/ZAP.
 
 
 - [Installation](#installation)
@@ -68,33 +68,32 @@ usage: rescope [arguments]
 
 ### Arguments
 
-| Short | Long       	     | Description                   					 | Required     |
-| :---: |:------------------:| :------------------------------------------------ | :----------- |
-| -h    | --help     	     | Print help information        					 | Optional     |
-| -b    | --burp     	     | Parse to Burp Suite JSON      					 | Required?    |
-| -z    | --zap      	     | Parse to OWASP ZAP XML        					 | Required?    |
-| -r    | --raw      	     | Output raw in-scope definitions to outfile        | Required?    |
-| -u    | --url      	     | Public bug bounty program URL 					 | Required     |
-| -i    | --infile   	     | File (scope) to be parsed     					 | Required     |
-| -o    | --outfile  	     | File to write parsed results  					 | Required     |
-| -s    | --silent   	     | Do not print identified targets 					 | Optional     |
-| -n    | --name     	     | Name of ZAP context           					 | Optional     |
-|       | --itag     	     | Custom include tag (default: !INCLUDE) 			 | Optional 	|
-|       | --etag     	     | Custom exclude tag (default: !EXCLUDE) 			 | Optional     |
-|       | --resolveConflicts | Resolve all exclude conflicts (Say 'Y' to all)    | Optional     |
-|       | --avoid3P          | Avoid all third party resources (Say 'Y' to all)  | Optional     |
-|       | --version          | Print version                 					 | Optional     |
+| Short | Long       	     | Description                   					                 |
+| :---: |:------------------:| :---------------------------------------------------------------- |
+| -h    | --help     	     | Print help information        					 
+| -z    | --zap      	     | Export scope to ZAP-compatible XML instead of default (Burp JSON) |
+| -r    | --raw      	     | Export raw scope-definitions to list of text                      |
+| -u    | --url      	     | Public bug bounty program URL 					                 |
+| -i    | --infile   	     | File containing scope-definitions     					         |
+| -o    | --outfile  	     | Save results to given filename  					                 |
+| -s    | --silent   	     | Do not print identified targets 					                 |
+| -n    | --name     	     | Name of ZAP context           					                 |
+|       | --itag     	     | Custom include tag (default: !INCLUDE) 			                 |
+|       | --etag     	     | Custom exclude tag (default: !EXCLUDE) 			                 |
+|       | --resolveConflicts | Resolve all exclude conflicts                                     |
+|       | --avoid3P          | Avoid all third party resources                                   |
+|       | --version          | Print version                 					                 |
 
 
 ### Example Usage
 Parse scopes from public bugbounty program to Burp (JSON)  
-`rescope --burp -u hackerone.com/security -o burpscope.json`  
+`rescope -u hackerone.com/security -o burpscope.json`  
 
 Parse scopes from public bugbounty programs to ZAP (XML)  
 `rescope --zap --name CoolScope -u hackerone.com/security -o zapscope.context`
 
 Parse scope from infile having target definitions to Burp (JSON)  
-`rescope --burp -i scope.txt -o burpscope.json`
+`rescope -i scope.txt -o burpscope.json`
 
 ### Example Result
 <img src="assets/example_result.png" width="730">
@@ -105,13 +104,13 @@ Defining scopes as a bugbounty researcher has never been this easy.
 (For private bugbounty scopes, see [Private Scopes](#private-scopes))
 
 ```
-rescope --burp -u hackerone.com/security -o burpscope.json
+rescope -u hackerone.com/security -o burpscope.json
 ```
 rescope will print out a list of identified targets as seen below. Use this list to verify that it got what you wanted.  
 Includes (+) are highlighted in Green, and Excludes (-) in Red.
 
 ```diff
-$ rescope --burp -u hackerone.com/security -o burpscope.json
+$ rescope -u hackerone.com/security -o burpscope.json
 [-] Grabbing targets from hackerone.com/security 
 +  https://hackerone.com
 +  https://api.hackerone.com
@@ -150,7 +149,7 @@ intigriti.com/intigriti/intigriti
 And pass this as an infile.
 
 ```
-rescope --burp -i combined.txt -o burpscope.json
+rescope  -i combined.txt -o burpscope.json
 ```
 
 ## Private Scopes
@@ -170,7 +169,7 @@ target3.example.com
 ```
 
 ```
-rescope --burp -i scope.txt -o burpscope.json
+rescope  -i scope.txt -o burpscope.json
 ```
 Defining multiple scopes at once (to the same result) is only a matter of setting `-i` <infile> several times.
 ```
@@ -192,7 +191,7 @@ Internal: 192.168.0.1/24 (department A)
 As seen below, rescope was able to identify the targets, despite having leading text or multiple hosts on the same line. Includes (+) are highlighted in Green, and Excludes (-) in Red. Use this list to verify that it got what you wanted.
 
 ```diff
-$ rescope --burp -i scope.txt -o burpscope.json
+$ rescope -i scope.txt -o burpscope.json
 [-] Grabbing targets from scope.txt
 +  target1.example.com
 +  target2.example.com
@@ -244,7 +243,7 @@ Rescope is flexible in that you can define both public and private scopes to the
 This is accomplished by simply combining `-u` <url> and `-i` <infile> as seen below.
 
 ```sh
-rescope --burp -i scope.txt -u bugcrowd.com/bugcrowd -o burpscope.json
+rescope -i scope.txt -u bugcrowd.com/bugcrowd -o burpscope.json
 ```
 
 Alternatively, you can include BBaaS URL's in an infile, along with your private identifiers.  
@@ -291,6 +290,14 @@ Choose **File** -> **Import Context** and select XML file.
 **Note for OWASP ZAP:**
 - If you set `-o` filename extension to anything other than `.context` then you'll have to choose "All Format" in file select.
 - For ZAP HUD; set context `--name "HUD Context"`
+
+## TODO
+
+- Scrap argparse
+- Pipe support
+- Docker support
+- Add more unit tests
+- CI
 
 ## Author
 * Daniel Antonsen ([root4loot](https://twitter.com/root4loot))
