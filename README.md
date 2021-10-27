@@ -4,7 +4,7 @@
 ![GitHub](https://img.shields.io/github/license/root4loot/rescope.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/root4loot/rescope)](https://goreportcard.com/report/github.com/root4loot/rescope)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/root4loot/rescope/issues)
-![Twitter Follow](https://img.shields.io/twitter/follow/root4loot.svg?style=social)
+![Twitter Follow](https://img.shields.io/twitter/follow/danielantonsen.svg?style=social)
 
 Rescope is a cli-tool (written in Go) that aims to make life easier when defining scopes in Burp Suite and OWASP ZAP.
 
@@ -302,7 +302,7 @@ Choose **File** -> **Import Context** and select XML file.
 - CI
 
 ## Author
-* Daniel Antonsen ([root4loot](https://twitter.com/root4loot))
+* Daniel Antonsen [@danielantonsen](https://twitter.com/danielantonsen)
 
 ## License
 Licensed under MIT (see license file)
