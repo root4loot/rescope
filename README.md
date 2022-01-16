@@ -31,11 +31,8 @@ Rescope is a cli-tool (written in Go) that aims to make life easier when definin
 Requires [Go](<https://golang.org/>) and git
 
 ```
-go get -u github.com/root4loot/rescope
+go install github.com/root4loot/rescope@latest
 ```
-
-Make sure [GOPATH is set](https://github.com/golang/go/wiki/SettingGOPATH) and that go/bin is added to PATH: `export PATH=$PATH:$GOPATH/bin`
-
 
 ## Features
 
