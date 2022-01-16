@@ -33,7 +33,8 @@ func GET(url string) (string, int) {
 
 	// headers
 	req.Header = http.Header{
-		"Accept": []string{"*/*"},
+		"User-Agent": []string{""},
+		"Accept":     []string{"*/*"},
 	}
 
 	// do req

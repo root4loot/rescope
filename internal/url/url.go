@@ -79,7 +79,7 @@ func getBBinScope(s string) [][]string {
 
 // getBBmatch returns slice containing submatches from expression that checks for valid URIs
 func getBBmatch(s string) []string {
-	re := regexp.MustCompile(`((https?:\/\/)?(www\.)?(hackerone\.com|bugcrowd\.com|hackenproof\.com|app\.intigriti\.com|openbugbounty\.org|yeswehack\.com|bugbounty\.jp|(one\.)?federacy\.com)[\w/_-]+)`)
+	re := regexp.MustCompile(`((https?:\/\/)?(www\.)?(hackerone\.com|bugcrowd\.com|hackenproof\.com|app\.intigriti\.com|openbugbounty\.org|yeswehack\.com|bugbounty\.jp|federacy\.com)[\w/_-]+)`)
 	var match []string
 
 	if re.MatchString(s) {
