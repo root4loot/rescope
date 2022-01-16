@@ -3,6 +3,11 @@
 All notable changes to rescope will be documented here.
 Unreleased changes will go in the below heading.
 
+## [Unreleased]
+
+### Fixed
+- Fixed [#11](https://github.com/root4loot/rescope/issues/11) where rescope failed to grab targets from bugcrowd.com due to changes in webapp layout.
+
 ## [2.2] 2021-10-24
 
 ### Added
