@@ -8,7 +8,6 @@
 package bugcrowd
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 
@@ -44,7 +43,6 @@ func Scrape(url string) string {
 			resp, _ := req.GET(scheme + domain + match[2])
 			names := re_nameKey.FindAllStringSubmatch(resp, -1)
 			for _, v := range names {
-				fmt.Println(v[1])
 				scope = append(scope, v[1])
 			}
 		}
@@ -56,7 +54,6 @@ func Scrape(url string) string {
 			resp, _ := req.GET(scheme + domain + match[2])
 			names := re_nameKey.FindAllStringSubmatch(resp, -1)
 			for _, v := range names {
-				fmt.Println(v[1])
 				scope = append(scope, v[1])
 			}
 		}
