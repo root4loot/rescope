@@ -9,6 +9,7 @@ package request
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -24,23 +25,34 @@ func GET(url string) (string, int) {
 		url = "https://" + url
 	}
 
-	// request url
-	resp, err := http.Get(url)
-	respS := resp.StatusCode
+	client := http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+	}
 
-	// check response
+	// headers
+	req.Header = http.Header{
+		"Accept": []string{"*/*"},
+	}
+
+	// do req
+	resp, err := client.Do(req)
 	if err != nil {
 		doerror.NoResponse(url)
 	}
 
-	// close response
-	defer resp.Body.Close()
+	// status code
+	respS := resp.StatusCode
 
-	// response body
+	// body
 	respB, _ := ioutil.ReadAll(resp.Body)
 
-	// response body string
+	// body string
 	respBS := string(respB)
+
+	// close response
+	defer resp.Body.Close()
 
 	return respBS, respS
 }
