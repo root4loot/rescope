@@ -6,7 +6,7 @@ Unreleased changes will go in the below heading.
 ## [Unreleased]
 
 ### Fixed
-- Fixed [#11](https://github.com/root4loot/rescope/issues/11) where rescope failed to grab targets from bugcrowd.com due to changes in webapp layout.
+- Updated parser to reflect changes in bugcrowd/federacy site layout. Resolves [#11](https://github.com/root4loot/rescope/issues/11)
 
 ## [2.2] 2021-10-24
 
