@@ -7,6 +7,7 @@ Unreleased changes will go in the below heading.
 
 ### Fixed
 - Updated parser to reflect changes in bugcrowd/federacy site layout. Resolves [#11](https://github.com/root4loot/rescope/issues/11)
+- Updated http client request to reflect changes in hackerone site layout. Resolves [#12](https://github.com/root4loot/rescope/issues/12)
 
 ## [2.2] 2021-10-24
 
