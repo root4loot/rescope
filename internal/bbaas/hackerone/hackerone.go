@@ -77,14 +77,14 @@ func BytesToString(b []byte) string {
 
 // Post makes a post request with custom X-Auth-Token header
 func Post(url string, data []byte) ([]byte, int) {
-
-	// HackerOne X-Auth-Token
 	token := os.Getenv("H1_TOKEN")
-
 	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Connection", "close")
 	req.Header.Set("X-Auth-Token", token)
+	req.Header.Set("Cookie", "__Host-session=SGFVODkyZDFJaU5pUXB3WFFpTTJzN2J4SU52MkU4Nmg3Nmo3dVo3YkJlQ29INEtVSGFoZW44cWlSWFdLLzBGR28xQTBNUTArMkVkaSt0bFVYV3loS2RvbTJqZnprK1JqWVJTS0gxNGxuMjBxUVJzUzRkeHdNT2VtSmc1dzQ4aXdQS0lid0FsaStrcS9pRDQ2WE9sclNEMFBvTnVPMGorQUkwVDE4NXVxcUhLOHd5VDFsWndQZUVYOXh3Q05CWURaU3NkODRVUFJKZGNTZE1wa3YxRlB5ZW5FbTF2cTlkeVdoTWw2NHprejFjVnVnY24wMWlQdkdOMWJNZGszdWFRckJaazI5QWh6amNPMGFaWVVZWlU5ODB1UmVwa3RDTVFzbG8yWHRvWGpqTzA9LS1SVkxyRGk2YXlDSmtIMmV1MXY2RitnPT0%3D--d4d79937e04894b7c2cabbf0ce56ed69ae3cdd8f;")
+	req.Header.Set("X-Csrf-Token", "nonlX8VXBB5caid8i5u5njLdgLJKYjn/0sFd0A9+HWZz/6M4Bjb9iu16Ac/7n0mkvk3jAywTyTKvx+S2GnUbJQ==")
+	
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	respS := resp.StatusCode
