@@ -82,9 +82,9 @@ func Post(url string, data []byte) ([]byte, int) {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Connection", "close")
 	req.Header.Set("X-Auth-Token", token)
-	req.Header.Set("Cookie", "__Host-session=SGFVODkyZDFJaU5pUXB3WFFpTTJzN2J4SU52MkU4Nmg3Nmo3dVo3YkJlQ29INEtVSGFoZW44cWlSWFdLLzBGR28xQTBNUTArMkVkaSt0bFVYV3loS2RvbTJqZnprK1JqWVJTS0gxNGxuMjBxUVJzUzRkeHdNT2VtSmc1dzQ4aXdQS0lid0FsaStrcS9pRDQ2WE9sclNEMFBvTnVPMGorQUkwVDE4NXVxcUhLOHd5VDFsWndQZUVYOXh3Q05CWURaU3NkODRVUFJKZGNTZE1wa3YxRlB5ZW5FbTF2cTlkeVdoTWw2NHprejFjVnVnY24wMWlQdkdOMWJNZGszdWFRckJaazI5QWh6amNPMGFaWVVZWlU5ODB1UmVwa3RDTVFzbG8yWHRvWGpqTzA9LS1SVkxyRGk2YXlDSmtIMmV1MXY2RitnPT0%3D--d4d79937e04894b7c2cabbf0ce56ed69ae3cdd8f;")
-	req.Header.Set("X-Csrf-Token", "nonlX8VXBB5caid8i5u5njLdgLJKYjn/0sFd0A9+HWZz/6M4Bjb9iu16Ac/7n0mkvk3jAywTyTKvx+S2GnUbJQ==")
-	
+	req.Header.Set("Cookie", "__Host-session=dzQzc28yMlFrL2tsNmVGUmE5bFR0RC9qK2NsU3pmVEdkb0NyVmtjMU85V25kTUZkUHcvVFp5VEdSS1N1RUxrSjlzZjY2VlF0NzNSUlpNWUZsK1VpSjhqK3lsVVR1VkVCMFNQbTZDSUJMYmVQYjB3T2xqNUVkTVI4NE9PNHlEdXhxeXZPTFNObHJJM2lzdFRYOFZrRjJaYXBFMUZKelFLZVB2WU9uYTlkbG9GNm0rVnNWajhzOTBuKzF3ekViOS9KZzhzVjlvY3lEVmhEVDROV091WHV0TXhiVGdScTBRR2xYNlhhU3lpeEtLNlNrSS85R2YvaE95YjVTYnNWU0RLNmFlWFExenVQaGl1ODhzNmNFK2E1bUJNT054RU8ySHRUZmcrVS9aVHIvTkE9LS05TE9qNSt6TW9ocnNYaGZNUnRhTU5nPT0%3D--baa089405ea2c9c72ce46c8c7d78940e4eefb40e;")
+	req.Header.Set("X-Csrf-Token", "dzO0nLmnGT+YirJwGeXSm2OLGfs2cCIqvTahjX5nAEb9CyDWaByMXdNAVaTCBT/XTuZODcumKuj/973Ytbw/Qg==")
+
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	respS := resp.StatusCode
