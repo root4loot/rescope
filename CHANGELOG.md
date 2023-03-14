@@ -5,12 +5,17 @@ Unreleased changes will go in the below heading.
 
 ## [Unreleased]
 
+## [2.4] - 2023-03-14
 ### Fixed
 - Fixed issue with hackerone resulting in panic due to missing security headers. Resolves [#13](https://github.com/root4loot/rescope/issues/13)
 - Updated parser to reflect changes in bugcrowd/federacy site layout. Resolves [#11](https://github.com/root4loot/rescope/issues/11)
 - Updated http client request to reflect changes in hackerone site layout. Resolves [#12](https://github.com/root4loot/rescope/issues/12)
 
-## [2.2] 2021-10-24
+## [2.3] - 2022-02-20
+### Fixed
+Updated parser to reflect changes in bugcrowd/federacy site layout. Resolves #11
+
+## [2.2] - 2021-10-24
 
 ### Added
 - New flag `--resolveConflicts` (Resolve all exclude conflicts (Say 'Y' to all)
