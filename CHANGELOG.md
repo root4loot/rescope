@@ -6,6 +6,7 @@ Unreleased changes will go in the below heading.
 ## [Unreleased]
 
 ### Fixed
+- Fixed issue with hackerone resulting in panic due to missing security headers. Resolves [#13](https://github.com/root4loot/rescope/issues/13)
 - Updated parser to reflect changes in bugcrowd/federacy site layout. Resolves [#11](https://github.com/root4loot/rescope/issues/11)
 - Updated http client request to reflect changes in hackerone site layout. Resolves [#12](https://github.com/root4loot/rescope/issues/12)
 
