@@ -276,12 +276,9 @@ $ rescope --zap --name CoolScope -i scope.txt -o zapscope.context --silent
 ## Importing results
 
 ### Burp Suite
-1. Head to **Target** 
-2. Head to **Scope** 
-3. Tick the **Use advanced scope control** checkbox
-4. Click the ⚙︎ icon 
-5. Select **Load options**
-6. Choose JSON file
+1. Head to **Target** -> ⚙︎ Scope settings
+2. Click the ⚙︎ icon below "Target Scope" and choose "Load Settings"
+3. Choose file exported from rescope
 
 ### OWASP ZAP
 Choose **File** -> **Import Context** and select XML file.
