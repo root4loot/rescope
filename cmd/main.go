@@ -137,7 +137,6 @@ func parseCLI() ([]string, *CLI, error) {
 			log.Info(Version)
 			return nil, nil, fmt.Errorf("version: %s", Version)
 		} else {
-			log.Error("Missing URL/file input. No targets provided.")
 			return nil, nil, fmt.Errorf("missing URL/file input. No targets provided")
 		}
 	}
