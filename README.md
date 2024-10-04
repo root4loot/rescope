@@ -1,27 +1,34 @@
-<img src="logo.png" alt="Logo" width="900"/>
+<div align="center">
+  <img src="logo.png" alt="Logo" width="970"/>
+  <a href="https://img.shields.io/twitter/follow/danielantonsen"> </a>
+  <p>Use this tool to fetch public/private scopes from bug bounty programs and output them in various formats.</p>
+  <img src="https://img.shields.io/twitter/follow/danielantonsen" alt="Twitter Follow"/>
+</div>
 
-[![HackerOne](https://github.com/root4loot/rescope/actions/workflows/test-hackerone.yml/badge.svg)](https://github.com/root4loot/rescope/actions/workflows/test-hackerone.yml)
-[![Bugcrowd](https://github.com/root4loot/rescope/actions/workflows/test-bugcrowd.yml/badge.svg)](https://github.com/root4loot/rescope/actions/workflows/test-bugcrowd.yml)
-[![Intigriti](https://github.com/root4loot/rescope/actions/workflows/test-intigriti.yml/badge.svg)](https://github.com/root4loot/rescope/actions/workflows/test-intigriti.yml)
-[![YesWeHack](https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml/badge.svg)](https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml)
-[![HackenProof](https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml/badge.svg)](https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml)
-[![Test CLI](https://github.com/root4loot/rescope/actions/workflows/test-cli.yml/badge.svg)](https://github.com/root4loot/rescope/actions/workflows/test-cli.yml)
-![Twitter Follow](https://img.shields.io/twitter/follow/danielantonsen.svg?style=dark)
+<hr>
 
+<div align="center" style="padding: 20px; margin: 20px;">
+  <a href="https://github.com/root4loot/rescope/actions/workflows/test-hackerone.yml">
+    <img src="https://img.shields.io/badge/HackerOne-passing-brightgreen?style=flat-square" alt="HackerOne" style="margin: 10px;"/>
+  </a>
+  <a href="https://github.com/root4loot/rescope/actions/workflows/test-bugcrowd.yml">
+    <img src="https://img.shields.io/badge/Bugcrowd-passing-brightgreen?style=flat-square" alt="Bugcrowd" style="margin: 10px;"/>
+  </a>
+  <a href="https://github.com/root4loot/rescope/actions/workflows/test-intigriti.yml">
+    <img src="https://img.shields.io/badge/Intigriti-passing-brightgreen?style=flat-square" alt="Intigriti" style="margin: 10px;"/>
+  </a>
+  <a href="https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml">
+    <img src="https://img.shields.io/badge/YesWeHack-passing-brightgreen?style=flat-square" alt="YesWeHack" style="margin: 10px;"/>
+  </a>
+  <a href="https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml">
+    <img src="https://img.shields.io/badge/HackenProof-failing-red?style=flat-square" alt="HackenProof" style="margin: 10px;"/>
+  </a>
+</div>
 
-Use this tool to fetch public/private scopes from bugbounty programs and output them in various formats. 
-
-## Supported platforms
-
-- [HackerOne](https://hackerone.com)
-- [Bugcrowd](https://bugcrowd.com)
-- [Intigriti](https://www.intigriti.com)
-- [YesWeHack](https://yeswehack.com)
-- [HackenProof](https://hackenproof.com)
 
 ## Installation
 
-Requires Go 1.23 or later.
+Requires Go 1.21 or later.
 
 ```bash
 go install github.com/root4loot/rescope2/cmd/rescope@latest
