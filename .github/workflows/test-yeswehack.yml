@@ -1,6 +1,9 @@
 name: YesWeHack
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: "0 8 * * *"
 
