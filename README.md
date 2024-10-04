@@ -1,11 +1,11 @@
 <img src="logo.png" alt="Logo" width="900"/>
 
-[![HackerOne](https://github.com/root4loot/rescope/actions/workflows/test-hackerone.yml/badge.svg?branch=main)](https://github.com/root4loot/rescope/actions/workflows/test-hackerone.yml)
-[![Bugcrowd](https://github.com/root4loot/rescope/actions/workflows/test-bugcrowd.yml/badge.svg?branch=main)](https://github.com/root4loot/rescope/actions/workflows/test-bugcrowd.yml)
-[![Intigriti](https://github.com/root4loot/rescope/actions/workflows/test-intigriti.yml/badge.svg?branch=main)](https://github.com/root4loot/rescope/actions/workflows/test-intigriti.yml)
-[![YesWeHack](https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml/badge.svg?branch=main)](https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml)
-[![HackenProof](https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml/badge.svg?branch=main)](https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml)
-[![Test CLI](https://github.com/root4loot/rescope/actions/workflows/test-cli.yml/badge.svg?branch=main)](https://github.com/root4loot/rescope/actions/workflows/test-cli.yml)
+[![HackerOne](https://github.com/root4loot/rescope/actions/workflows/test-hackerone.yml/badge.svg)](https://github.com/root4loot/rescope/actions/workflows/test-hackerone.yml)
+[![Bugcrowd](https://github.com/root4loot/rescope/actions/workflows/test-bugcrowd.yml/badge.svg)](https://github.com/root4loot/rescope/actions/workflows/test-bugcrowd.yml)
+[![Intigriti](https://github.com/root4loot/rescope/actions/workflows/test-intigriti.yml/badge.svg)](https://github.com/root4loot/rescope/actions/workflows/test-intigriti.yml)
+[![YesWeHack](https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml/badge.svg)](https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml)
+[![HackenProof](https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml/badge.svg)](https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml)
+[![Test CLI](https://github.com/root4loot/rescope/actions/workflows/test-cli.yml/badge.svg)](https://github.com/root4loot/rescope/actions/workflows/test-cli.yml)
 ![Twitter Follow](https://img.shields.io/twitter/follow/danielantonsen.svg?style=dark)
 
 
