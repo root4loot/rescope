@@ -1,13 +1,8 @@
-name: Test All
+name: HackenProof
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_call:
+  schedule:
+    - cron: "0 8 * * *"
 
 jobs:
   test:
@@ -25,6 +20,5 @@ jobs:
       - name: Install Dependencies
         run: go mod download
 
-      - name: Run Tests
-        run: |
-          go list ./... | xargs -I {} sh -c 'go test -v {} || [ $? -eq 5 ]'
+      - name: Run HackenProof Tests
+        run: go test -v ./pkg/bugbounty/hackenproof/...
