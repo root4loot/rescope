@@ -9,19 +9,19 @@
 
 <div align="center" style="padding: 20px; margin: 20px;">
   <a href="https://github.com/root4loot/rescope/actions/workflows/test-hackerone.yml">
-    <img src="https://img.shields.io/badge/HackerOne-passing-brightgreen?style=flat-square" alt="HackerOne" style="margin: 10px;"/>
+    <img src="https://github.com/root4loot/rescope/actions/workflows/test-hackerone.yml/badge.svg" alt="HackerOne" style="margin: 10px;"/>
   </a>
   <a href="https://github.com/root4loot/rescope/actions/workflows/test-bugcrowd.yml">
-    <img src="https://img.shields.io/badge/Bugcrowd-passing-brightgreen?style=flat-square" alt="Bugcrowd" style="margin: 10px;"/>
+    <img src="https://github.com/root4loot/rescope/actions/workflows/test-bugcrowd.yml/badge.svg" alt="Bugcrowd" style="margin: 10px;"/>
   </a>
   <a href="https://github.com/root4loot/rescope/actions/workflows/test-intigriti.yml">
-    <img src="https://img.shields.io/badge/Intigriti-passing-brightgreen?style=flat-square" alt="Intigriti" style="margin: 10px;"/>
+    <img src="https://github.com/root4loot/rescope/actions/workflows/test-intigriti.yml/badge.svg" alt="Intigriti" style="margin: 10px;"/>
   </a>
   <a href="https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml">
-    <img src="https://img.shields.io/badge/YesWeHack-passing-brightgreen?style=flat-square" alt="YesWeHack" style="margin: 10px;"/>
+    <img src="https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml/badge.svg" alt="YesWeHack" style="margin: 10px;"/>
   </a>
   <a href="https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml">
-    <img src="https://img.shields.io/badge/HackenProof-failing-red?style=flat-square" alt="HackenProof" style="margin: 10px;"/>
+    <img src="https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml/badge.svg" alt="HackenProof" style="margin: 10px;"/>
   </a>
 </div>
 
@@ -77,33 +77,46 @@ GENERAL:
       --version               display version
 ```
 
-### Examples
-
-#### Basic Usage
+## Example Usage
 
 ```bash
 rescope https://hackerone.com/security https://bugcrowd.com/tesla
 ```
 
 ```bash
-rescope --output-file burp_scope.json --output-burp https://hackerone.com/security https://bugcrowd.com/tesla
+rescope --output-burp --output-file burp_scope.json https://hackerone.com/security https://bugcrowd.com/tesla
 ```
 
-#### Custom includes / excludes
+### Custom Include and Exclude Lists
 
-Note that `--include-list` file may also contain bug bounty URLs.
+The `--include-list` (`-iL`) and `--exclude-list` (`-eL`) options allow you to define custom scope rules that may include wildcard domains, IP ranges, and specific ports.
 
+#### Example `include.txt`:
+```
+*.example.com
+api.example.com
+192.168.1.0/24
+10.0.0.1
+10.0.0.1:8080
+```
+
+#### Example `exclude.txt`:
+```
+test.example.com
+192.168.1.100
+```
+
+You can use these lists to specify which targets should be included or excluded in your scope definitions.
 ```bash
 rescope -iL include.txt -eL exclude.txt
 ```
 
-#### Piping to rescope
-
-You may also pipe a list of bug bounty URLs directly to rescope:
-
+You can also pipe a list of bug bounty URLs directly into `rescope` using standard input:
 ```bash
 cat urls.txt | rescope
 ```
+
+This will process the URLs in `urls.txt` using the default configuration or any additional flags provided.
 
 ## As a library
 
