@@ -1,0 +1,30 @@
+name: Test CLI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "0 8 * * *"
+
+jobs:
+  test-cli:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Install Dependencies
+        run: go mod download
+
+      - name: Run CLI Tests
+        run: go test -v ./cmd

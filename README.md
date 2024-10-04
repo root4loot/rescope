@@ -5,7 +5,7 @@
 [![Intigriti](https://github.com/root4loot/rescope/actions/workflows/test-intigriti.yml/badge.svg?branch=main)](https://github.com/root4loot/rescope/actions/workflows/test-intigriti.yml)
 [![YesWeHack](https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml/badge.svg?branch=main)](https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml)
 [![HackenProof](https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml/badge.svg?branch=main)](https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml)
-![Test CLI](https://github.com/root4loot/rescope/actions/workflows/test.yml/badge.svg?branch=main)
+[![Test CLI](https://github.com/root4loot/rescope/actions/workflows/test-cli.yml/badge.svg?branch=main)](https://github.com/root4loot/rescope/actions/workflows/test-cli.yml)
 ![Twitter Follow](https://img.shields.io/twitter/follow/danielantonsen.svg?style=dark)
 
 
