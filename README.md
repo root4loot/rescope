@@ -37,8 +37,9 @@ go install github.com/root4loot/rescope2/cmd/rescope@latest
 ## Docker
 
 ```bash
-docker build -t rescope .
-docker run --rm -it rescope [options] [<BugBountyURL>...]
+git clone https://github.com/root4loot/rescope.git
+cd rescope
+docker run --rm -it $(docker build -q .) [options] [<BugBountyURL>...]
 ```
 
 ## Usage
