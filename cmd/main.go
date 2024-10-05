@@ -132,12 +132,14 @@ func parseCLI() ([]string, *CLI, error) {
 	if help || version || (len(flag.Args()) == 0 && cli.IncludeList == "" && cli.ExcludeList == "" && !hasStdin()) {
 		if help {
 			fmt.Fprint(os.Stdout, usage)
-			return nil, nil, nil
+			os.Exit(0)
 		} else if version {
-			log.Info(Version)
-			return nil, nil, fmt.Errorf("version: %s", Version)
+			log.Infof("version: %s", Version)
+			os.Exit(0)
 		} else {
-			return nil, nil, fmt.Errorf("missing URL/file input. No targets provided")
+			log.Error("Missing URL/file input. No targets provided")
+			fmt.Fprint(os.Stdout, usage)
+			os.Exit(1)
 		}
 	}
 
