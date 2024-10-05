@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	github.com/pkg/errors v0.9.1
-	github.com/root4loot/goutils v0.0.0-20241001082813-799fb4f452c1
+	github.com/root4loot/goutils v0.0.0-20241005165219-eb1bcf33780f
 	github.com/root4loot/scope v0.0.0-20240904154416-13aa57c33326
 	github.com/stretchr/testify v1.8.4
 )

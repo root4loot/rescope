@@ -7,6 +7,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/root4loot/goutils v0.0.0-20241001082813-799fb4f452c1 h1:CZO8axBguxktTElMJwM9rHc7TUg0lh35kdb3hoA1fmE=
 github.com/root4loot/goutils v0.0.0-20241001082813-799fb4f452c1/go.mod h1:PDY2j4kbvwpRIO8QqpBRyIEywBc8qhFPXCcyzsK7Y5w=
+github.com/root4loot/goutils v0.0.0-20241005165219-eb1bcf33780f h1:sYBJtCZHEviFJHFZpXlXousp1D2eVuKFDuI1WQ2ACGA=
+github.com/root4loot/goutils v0.0.0-20241005165219-eb1bcf33780f/go.mod h1:PDY2j4kbvwpRIO8QqpBRyIEywBc8qhFPXCcyzsK7Y5w=
 github.com/root4loot/scope v0.0.0-20240904154416-13aa57c33326 h1:GqyC9TdIDXUnG6dgtd1yCw4cUREzutzmS2MeQgRSIUE=
 github.com/root4loot/scope v0.0.0-20240904154416-13aa57c33326/go.mod h1:Z56nlALAiTKdTbnazFIq8cwzHAQ00c/Us8oAZBQmmy0=
 github.com/sirupsen/logrus v1.9.3 h1:dueUQJ1C2q9oE3F7wvmSGAaVtTmUizReu6fjN8uqzbQ=
