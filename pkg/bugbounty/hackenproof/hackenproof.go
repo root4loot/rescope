@@ -39,10 +39,13 @@ func (i *HackenProof) Run(programURL string, client *http.Client) (*common.Resul
 
 	i.Result.ProgramDetails = *parsedURL
 
-	req, err := http.NewRequest("GET", parsedURL.InputURL, nil)
+	req, err := http.NewRequest("POST", parsedURL.InputURL, nil)
 	if err != nil {
 		return nil, err
 	}
+
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36")
+	req.Header.Set("Referer", "https://hackenproof.com/bug-bounty-programs-list")
 
 	if i.Auth != "" {
 		req.Header.Add("Cookie", "_hackenproof_session="+i.Auth)
