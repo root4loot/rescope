@@ -6,6 +6,8 @@ import (
 	"encoding/xml"
 	"flag"
 	"fmt"
+	"net/http"
+	"net/url"
 	"os"
 	"regexp"
 	"strings"
@@ -47,6 +49,7 @@ type CLI struct {
 	OutputJson      bool
 	OutputJsonLines bool
 	ExpandIPRanges  bool
+	Proxy           string
 	Debug           bool
 }
 
@@ -80,6 +83,7 @@ AUTHORIZATION:
 
 GENERAL:
   -c, --concurrency           maximum number of concurrent requests (default: 5)
+      --proxy                 proxy to use for requests (e.g. 127.0.0.1:8080)
       --debug                 enable debug mode
       --version               display version
 `
@@ -111,6 +115,7 @@ func parseCLI() ([]string, *CLI, error) {
 	flag.BoolVar(&cli.OutputJsonLines, "output-json-lines", false, "")
 	flag.BoolVar(&cli.ExpandIPRanges, "expand-ip-ranges", false, "")
 	flag.IntVar(&cli.Concurrency, "concurrency", 5, "")
+	flag.StringVar(&cli.Proxy, "proxy", "", "")
 	flag.BoolVar(&cli.Debug, "debug", false, "")
 	flag.BoolVar(&help, "h", false, "")
 	flag.BoolVar(&help, "help", false, "")
@@ -148,15 +153,26 @@ func parseCLI() ([]string, *CLI, error) {
 
 func main() {
 	args, cli, err := parseCLI()
+
 	if err != nil {
-		if err.Error() == fmt.Sprintf("version: %s", Version) {
-			log.Info(err.Error())
-		} else {
-			log.Error(err.Error())
-		}
+		log.Error("Failed to parse CLI arguments", "error", err)
 		return
 	}
+
 	opts := rescope.DefaultOptions()
+
+	if cli.Proxy != "" {
+		proxyURL, err := url.Parse("http://" + cli.Proxy)
+		if err != nil {
+			log.Errorf("Failed to parse proxy URL: %v\n", err)
+		}
+		transport := &http.Transport{
+			Proxy: http.ProxyURL(proxyURL),
+		}
+		opts.Client = &http.Client{
+			Transport: transport,
+		}
+	}
 
 	fileIncludes, fileExcludes, err := cli.getInputFileContents()
 	if err != nil {

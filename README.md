@@ -73,6 +73,7 @@ AUTHORIZATION:
 
 GENERAL:
   -c, --concurrency           maximum number of concurrent requests (default: 5)
+      --proxy                 proxy to use for requests (e.g. 127.0.0.1:8080)
       --debug                 enable debug mode
       --version               display version
 ```
