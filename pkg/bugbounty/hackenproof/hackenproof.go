@@ -44,7 +44,9 @@ func (i *HackenProof) Run(programURL string, client *http.Client) (*common.Resul
 		return nil, err
 	}
 
-	req.Header.Add("Cookie", "_hackenproof_session="+i.Auth)
+	if i.Auth != "" {
+		req.Header.Add("Cookie", "_hackenproof_session="+i.Auth)
+	}
 
 	if client == nil {
 		client = &http.Client{}
