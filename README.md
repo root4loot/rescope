@@ -31,7 +31,7 @@
 Requires Go 1.21 or later.
 
 ```bash
-go install github.com/root4loot/rescope2/cmd/rescope@latest
+go install github.com/root4loot/rescope/cmd/rescope@latest
 ```
 
 ## Docker
