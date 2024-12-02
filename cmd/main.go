@@ -18,9 +18,9 @@ import (
 	"github.com/root4loot/goutils/log"
 	"github.com/root4loot/goutils/sliceutil"
 	"github.com/root4loot/goutils/urlutil"
-	"github.com/root4loot/rescope2/config"
-	"github.com/root4loot/rescope2/pkg/common"
-	"github.com/root4loot/rescope2/pkg/rescope"
+	"github.com/root4loot/rescope/config"
+	"github.com/root4loot/rescope/pkg/common"
+	"github.com/root4loot/rescope/pkg/rescope"
 	"github.com/root4loot/scope"
 )
 

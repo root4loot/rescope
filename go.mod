@@ -1,4 +1,4 @@
-module github.com/root4loot/rescope2
+module github.com/root4loot/rescope
 
 go 1.23.0
 

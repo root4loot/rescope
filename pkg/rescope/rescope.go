@@ -10,12 +10,12 @@ import (
 	"github.com/root4loot/goutils/domainutil"
 	"github.com/root4loot/goutils/log"
 
-	"github.com/root4loot/rescope2/pkg/bugbounty/bugcrowd"
-	"github.com/root4loot/rescope2/pkg/bugbounty/hackenproof"
-	"github.com/root4loot/rescope2/pkg/bugbounty/hackerone"
-	"github.com/root4loot/rescope2/pkg/bugbounty/intigriti"
-	"github.com/root4loot/rescope2/pkg/bugbounty/yeswehack"
-	"github.com/root4loot/rescope2/pkg/common"
+	"github.com/root4loot/rescope/pkg/bugbounty/bugcrowd"
+	"github.com/root4loot/rescope/pkg/bugbounty/hackenproof"
+	"github.com/root4loot/rescope/pkg/bugbounty/hackerone"
+	"github.com/root4loot/rescope/pkg/bugbounty/intigriti"
+	"github.com/root4loot/rescope/pkg/bugbounty/yeswehack"
+	"github.com/root4loot/rescope/pkg/common"
 )
 
 type Result interface {

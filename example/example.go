@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/root4loot/rescope2/pkg/rescope"
+	"github.com/root4loot/rescope/pkg/rescope"
 )
 
 func main() {

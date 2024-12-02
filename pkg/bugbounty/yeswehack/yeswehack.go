@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/root4loot/goutils/log"
-	"github.com/root4loot/rescope2/pkg/common"
+	"github.com/root4loot/rescope/pkg/common"
 )
 
 type YesWeHack struct {

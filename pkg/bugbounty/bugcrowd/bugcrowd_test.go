@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/root4loot/rescope2/pkg/common"
+	"github.com/root4loot/rescope/pkg/common"
 )
 
 var platform = Bugcrowd{}

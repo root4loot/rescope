@@ -10,7 +10,7 @@ import (
 
 	"github.com/root4loot/goutils/log"
 	"github.com/root4loot/goutils/sliceutil"
-	"github.com/root4loot/rescope2/pkg/common"
+	"github.com/root4loot/rescope/pkg/common"
 )
 
 type HackenProof struct {
