@@ -20,9 +20,6 @@
   <a href="https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml">
     <img src="https://github.com/root4loot/rescope/actions/workflows/test-yeswehack.yml/badge.svg" alt="YesWeHack" style="margin: 10px;"/>
   </a>
-  <a href="https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml">
-    <img src="https://github.com/root4loot/rescope/actions/workflows/test-hackenproof.yml/badge.svg" alt="HackenProof" style="margin: 10px;"/>
-  </a>
 </div>
 
 
@@ -67,7 +64,6 @@ OUTPUT FILTER:
 
 AUTHORIZATION:
   --auth-bugcrowd             bugcrowd secret    (_bugcrowd_session=cookie.value) [Optional]
-  --auth-hackenproof          hackenproof secret (_hackenproof_session=cookie.value) [Optional]
   --auth-hackerone            hackerone secret   (Authorization bearer token) [Optional]
   --auth-yeswehack            yeswehack secret   (Authorization bearer token) [Optional]
   --auth-intigriti            intigriti secret   (see https://app.intigriti.com/researcher/personal-access-tokens) [Optional]

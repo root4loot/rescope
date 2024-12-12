@@ -11,7 +11,6 @@ import (
 	"github.com/root4loot/goutils/log"
 
 	"github.com/root4loot/rescope/pkg/bugbounty/bugcrowd"
-	"github.com/root4loot/rescope/pkg/bugbounty/hackenproof"
 	"github.com/root4loot/rescope/pkg/bugbounty/hackerone"
 	"github.com/root4loot/rescope/pkg/bugbounty/intigriti"
 	"github.com/root4loot/rescope/pkg/bugbounty/yeswehack"
@@ -29,24 +28,22 @@ type BugBountyProgram interface {
 }
 
 type Options struct {
-	Client          *http.Client
-	AuthHackerOne   string
-	AuthIntigriti   string
-	AuthBugcrowd    string
-	AuthHackenProof string
-	AuthYesWeHack   string
-	Debug           bool
+	Client        *http.Client
+	AuthHackerOne string
+	AuthIntigriti string
+	AuthBugcrowd  string
+	AuthYesWeHack string
+	Debug         bool
 }
 
 func DefaultOptions() *Options {
 	return &Options{
-		Client:          &http.Client{},
-		AuthHackerOne:   "",
-		AuthIntigriti:   "",
-		AuthBugcrowd:    "",
-		AuthHackenProof: "",
-		AuthYesWeHack:   "",
-		Debug:           false,
+		Client:        &http.Client{},
+		AuthHackerOne: "",
+		AuthIntigriti: "",
+		AuthBugcrowd:  "",
+		AuthYesWeHack: "",
+		Debug:         false,
 	}
 }
 
@@ -83,7 +80,7 @@ func IsBugBountyURL(bugbountyURL string) bool {
 	rootDomain := domainutil.GetRootDomain(u.Hostname())
 
 	switch rootDomain {
-	case "intigriti.com", "hackerone.com", "yeswehack.com", "bugcrowd.com", "hackenproof.com":
+	case "intigriti.com", "hackerone.com", "yeswehack.com", "bugcrowd.com":
 		return true
 	default:
 		return false
@@ -107,8 +104,6 @@ func IdentifyPlatform(bugbountyURL string, options *Options) (BugBountyProgram, 
 		return &yeswehack.YesWeHack{Auth: options.AuthYesWeHack}, nil
 	case "bugcrowd.com":
 		return &bugcrowd.Bugcrowd{Auth: options.AuthBugcrowd}, nil
-	case "hackenproof.com":
-		return &hackenproof.HackenProof{Auth: options.AuthHackenProof}, nil
 	default:
 		return nil, fmt.Errorf("unsupported bug bounty platform for URL: %s", bugbountyURL)
 	}

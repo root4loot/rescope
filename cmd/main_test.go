@@ -71,7 +71,6 @@ func TestInvalidFlags(t *testing.T) {
 	fs.String("auth-intigriti", "", "")
 	fs.String("auth-yeswehack", "", "")
 	fs.String("auth-bugcrowd", "", "")
-	fs.String("auth-hackenproof", "", "")
 	fs.String("output-file", "", "")
 	fs.Bool("output-text", false, "")
 	fs.Bool("output-burp", false, "")

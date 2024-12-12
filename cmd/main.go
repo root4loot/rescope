@@ -76,7 +76,6 @@ OUTPUT FILTER:
 
 AUTHORIZATION:
   --auth-bugcrowd             bugcrowd secret    (_bugcrowd_session=cookie.value) [Optional]
-  --auth-hackenproof          hackenproof secret (_hackenproof_session=cookie.value) [Optional]
   --auth-hackerone            hackerone secret   (Authorization bearer token) [Optional]
   --auth-yeswehack            yeswehack secret   (Authorization bearer token) [Optional]
   --auth-intigriti            intigriti secret   (see https://app.intigriti.com/researcher/personal-access-tokens) [Optional]
@@ -100,7 +99,6 @@ func parseCLI() ([]string, *CLI, error) {
 	flag.StringVar(&cli.TokenIntigriti, "auth-intigriti", "", "")
 	flag.StringVar(&cli.TokenYesWeHack, "auth-yeswehack", "", "")
 	flag.StringVar(&cli.TokenBugCrowd, "auth-bugcrowd", "", "")
-	flag.StringVar(&cli.TokenBugCrowd, "auth-hackenproof", "", "")
 	flag.StringVar(&cli.OutputFile, "oF", "", "")
 	flag.StringVar(&cli.OutputFile, "output-file", "", "")
 	flag.BoolVar(&cli.OutputText, "oT", false, "")
@@ -669,7 +667,6 @@ func (cli *CLI) setAuthTokens(opts *rescope.Options) {
 	opts.AuthIntigriti = cli.TokenIntigriti
 	opts.AuthYesWeHack = cli.TokenYesWeHack
 	opts.AuthBugcrowd = cli.TokenBugCrowd
-	opts.AuthHackenProof = cli.TokenBugCrowd
 
 	if cli.Debug {
 		opts.Debug = true
