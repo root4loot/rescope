@@ -10,7 +10,7 @@ import (
 )
 
 func TestParseCLI_WithIncludeExclude(t *testing.T) {
-	os.Args = []string{"cmd", "--include-list", "include.txt", "--exclude-list", "exclude.txt"}
+	os.Args = []string{"rescope", "--include-list", "include.txt", "--exclude-list", "exclude.txt"}
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	_, cli, err := parseCLI()
 	assert.NoError(t, err, "Expected no error with valid flags")

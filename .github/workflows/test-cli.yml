@@ -24,4 +24,4 @@ jobs:
         run: go mod download
 
       - name: Run CLI Tests
-        run: go test -v ./cmd
+        run: go test -v ./cmd/rescope
